@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "122639754198",
+    "firebase_url": "https://stomachhungry.firebaseio.com",
+    "project_id": "stomachhungry",
+    "storage_bucket": "stomachhungry.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122639754198:android:6cc24ff87b29c70d",
+        "android_client_info": {
+          "package_name": "com.example.hungrystomach"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "122639754198-1psnoct55ct30cbtrqsog3qgo3pmkoa3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARh-5P0D4_J4mH-a5-Yhw6kjzot7cgCvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "122639754198-1psnoct55ct30cbtrqsog3qgo3pmkoa3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
