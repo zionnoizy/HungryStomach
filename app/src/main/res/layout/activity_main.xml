@@ -48,7 +48,14 @@
         <Button
             android:layout_margin="15dp"
             android:hint="Register"
-            android:id="@+id/et_register"
+            android:id="@+id/btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_margin="15dp"
+            android:hint="Login"
+            android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

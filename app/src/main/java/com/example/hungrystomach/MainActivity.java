@@ -17,6 +17,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -30,7 +31,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
-
     String TAG = "fb_debug";
 
     FirebaseApp m_app;
@@ -39,10 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
     TextView m_displaytext;
     EditText et_email, et_password;
-
+    Button btn_register, btn_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -52,24 +53,28 @@ public class MainActivity extends AppCompatActivity {
 
         et_email = findViewById(R.id.et_email);
         et_password = findViewById(R.id.et_password);
+        btn_register = findViewById(R.id.btn_register);
+        btn_login = findViewById(R.id.btn_login);
 
         m_displaytext = (TextView)findViewById(R.id.tv_already_register);
         m_displaytext.setText("Unknown Auth State.");
 
         init_firebase();
-
         //read_database_data();
         //writeDatabaseData();
         //readObjects();
         //authentication();
 
-        register_new_user();
+        click_to_register_new_user();
+        
+
         logout();
     }
 
     private void init_firebase(){
         m_app = FirebaseApp.getInstance();
         m_database = FirebaseDatabase.getInstance(m_app);
+        m_auth = FirebaseAuth.getInstance();
     }
 
     /*
@@ -103,49 +108,36 @@ public class MainActivity extends AppCompatActivity {
     }
     */
 
-    private void register_new_user(){
-
-        /*
-        OnCompleteListener<AuthResult> success = new OnCompleteListener <AuthResult>(){
+    private void click_to_register_new_user(){
+        btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task){
-                if(task.isSuccessful())
-                    Log.e(TAG,"User Registration Successful");
-                else
-                    Log.e(TAG, "User Register Failed");
-            }
-        }
-        */
-
-        String email = et_email.getText().toString().trim();
-        String password = et_password.getText().toString().trim();
-
-        if(email.isEmpty()){
-            et_email.setError("Email is required");
-            et_email.requestFocus();
-            return;
-        }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            et_email.setError("Entering Valid Email is required");
-        }
-        if(password.isEmpty()){
-            et_password.setError("Password is required");
-            et_password.requestFocus();
-            return;
-        }
-        if(password.length()<3){
-            et_password.setError("Password Length Should More Than 3");
-            et_password.requestFocus();
-            return;
-        }
-
-        m_auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful())
-                    Log.e(TAG,"User Registration Successful");
-                else
-                    Log.e(TAG, "User Register Failed");
+            public void onClick(View v){
+                String email = et_email.getText().toString().trim();
+                String pwd = et_password.getText().toString().trim();
+                if(email.isEmpty() || pwd.isEmpty()){
+                    et_email.setError("Entering Email Password Is required");
+                    et_email.requestFocus();
+                    return;
+                }
+                if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    et_email.setError("Entering Valid Email is required");
+                }
+                if(pwd.length()<3) {
+                    et_password.setError("Password Length Should More Than 3");
+                    et_password.requestFocus();
+                    return;
+                }
+                else{
+                    m_auth.createUserWithEmailAndPassword(email,pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+                        @Override
+                        public void onComplete (@NonNull Task < AuthResult > task) {
+                            if (task.isSuccessful())
+                                Log.e(TAG, "User Registration Successful");
+                            else
+                                Log.e(TAG, "User Register Failed");
+                        }
+                    });
+                }
 
             }
         });
