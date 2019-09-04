@@ -4,6 +4,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -66,9 +67,8 @@ public class MainActivity extends AppCompatActivity {
         //authentication();
 
         click_to_register_new_user();
-        
-
-        logout();
+        //click_to_login();
+        click_to_logout();
     }
 
     private void init_firebase(){
@@ -138,12 +138,63 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
-
             }
+            /*
+            OnFailureListener fail = new OnFailureListener(){
+                @Override
+                public void onFailure(@NonNull Exception e){
+                    Log.e(TAG,"Registration Call Failed")
+                }
+            }
+            */
         });
     }
 
-    private void logout(){
+    /*
+    private void click_to_login(){
+        AuthStateListener = new FirebaseAuth.AuthStateListener(){
+            @Override
+            protected void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth){
+                FirebaseUser m_firebase_user = m_auth.getCurrentUser();
+                if(m_firebase_user != null){
+                    Log.e(TAG,"You Are Logged in");
+                    Intent i = new Intent(MainActivity.this, Home_Activity.class);
+                    startActivity(i);
+                }
+                else{
+                    Toast.makeText(TAG,"Login First");
+                }
+            }
+        };
+
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                String email = et_email.getText().toString();
+                String pwd = et_password.getText().toString();
+                if(email.isEmpty() && pwd.isEmpty()){
+                    et_email.setError("Entering Email Password Is required");
+                    et_email.requestFocus();
+                }
+                else if (!(email.isEmpty() && pwd.isEmpty())){
+                    m_auth.signInWithEmailAndPassword((email, pwd).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(!task.isSuccessful()){
+                                Toast.makeText(Home_Activity.this,"Login Errror", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
+                                startActivity(refer_to_home);
+                        }
+                    }
+                }))
+            }
+        });
+    }
+    */
+
+    private void click_to_logout(){
         m_auth.signOut();
     }
 
