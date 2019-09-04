@@ -12,19 +12,19 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+
+
+        <Button
+            android:id="@+id/btn_choose_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="move"
+            android:text="Choose"/>
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <Button
-        android:id="@+id/btn_choose_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose Picture of Your Food"/>
+
 
     <EditText
         android:id="@+id/et_enter_filename"
@@ -34,21 +34,21 @@
         android:text="Name of The Food" />
 
     <Button
-        android:if="@+id/btn_upload_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
-        android:text="Upload"/>
+        android:if="@+id/btn_upload_image"
+        android:text="Upload" />
 
     <ImageView
         android:id="@+id/img_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/et_enter_filename"
         android:layout_above="@id/progress_bar"
-        android:layout_marginTop="16dp"/>
+        android:layout_below="@id/et_enter_filename"
+        android:layout_marginTop="16dp" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
