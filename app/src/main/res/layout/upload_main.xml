@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
@@ -24,24 +24,86 @@
 
     <Button
         android:id="@+id/btn_choose_image"
-        android:layout_width="wrap_content"
+        android:layout_width="107dp"
         android:layout_height="wrap_content"
-        android:text="Choose From Cell Phone"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="72dp"
+        android:text="Choose From Cell Phone" />
 
     <EditText
-        android:id="@+id/et_enter_filename"
-        android:layout_width="match_parent"
+        android:id="@+id/et_foodname"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="61dp"
         android:layout_toEndOf="@+id/btn_choose_image"
         android:text="Name of The Food" />
 
+    <EditText
+        android:id="@+id/et_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="110dp"
+        android:layout_toEndOf="@+id/btn_choose_image"
+        android:text="Description" />
+
+    <EditText
+        android:id="@+id/et_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="63dp"
+        android:layout_marginEnd="50dp"
+        android:inputType="numberDecimal"
+        android:text="Price" />
+
+    <ImageView
+        android:id="@+id/img_view"
+        android:layout_width="183dp"
+        android:layout_height="156dp"
+        android:layout_above="@id/progress_bar"
+        android:layout_below="@id/et_foodname"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="62dp"
+        android:layout_marginBottom="208dp" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_upload_image"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="-5dp"
+        android:layout_marginBottom="9dp" />
+
     <Button
+        android:id="@+id/btn_upload_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
-        android:if="@+id/btn_upload_image"
         android:text="Upload" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_show_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btn_upload_image"
+        android:layout_alignBottom="@+id/btn_upload_image"
+        android:layout_marginStart="25dp"
+        android:layout_toEndOf="@+id/btn_upload_image"
+        android:gravity="center"
+        android:text="Show Uploads" />
+
+</RelativeLayout>
+

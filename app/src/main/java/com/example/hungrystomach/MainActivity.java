@@ -1,5 +1,6 @@
 package com.example.hungrystomach;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 
 import com.google.firebase.database.DatabaseReference;
@@ -34,11 +36,10 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
     String TAG = "fb_debug";
-
     FirebaseApp m_app;
     FirebaseDatabase m_database;
     FirebaseAuth m_auth;
-
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
     TextView m_displaytext;
     EditText et_email, et_password;
     Button btn_register, btn_login;
@@ -50,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Log.e(TAG,"debuging msg.");
-
         et_email = findViewById(R.id.et_email);
         et_password = findViewById(R.id.et_password);
         btn_register = findViewById(R.id.btn_register);
@@ -61,13 +60,9 @@ public class MainActivity extends AppCompatActivity {
         m_displaytext.setText("Unknown Auth State.");
 
         init_firebase();
-        //read_database_data();
-        //writeDatabaseData();
-        //readObjects();
-        //authentication();
 
         click_to_register_new_user();
-        //click_to_login();
+        click_to_login();
         click_to_logout();
     }
 
@@ -76,37 +71,6 @@ public class MainActivity extends AppCompatActivity {
         m_database = FirebaseDatabase.getInstance(m_app);
         m_auth = FirebaseAuth.getInstance();
     }
-
-    /*
-    private void read_database_data(){
-        DatabaseReference ref = m_database.getReference("chat_msg");
-
-        ValueEventListener eventListener = new ValueEventListener(){
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot){
-                Log.e(TAG,"Snapshot received" + dataSnapshot.getChildrenCount()
-                      + "key :" + dataSnapshot.getKey().toString() + "value :" + dataSnapshot.getValue().toString());
-            }
-
-            @Override
-            public void OnCancelled(DatabaseError databaseError){
-            }
-        };
-        ref.addValueEventListener(eventListener);
-    }
-    */
-
-    /*
-    private void write_object(){
-        ChatMessage msg = new CharMessage();
-        msg.sender = "Sophy";
-        msg.sentTime = "19:18:21 08-29-2019";
-        msg.CharMessage = "Now is the time";
-
-        DatabaseReference ref = m_database.getReference("chat_msg").child("Sophy 19:18:21 08-29-2019");
-        ref.setValue(msg);
-    }
-    */
 
     private void click_to_register_new_user(){
         btn_register.setOnClickListener(new View.OnClickListener() {
@@ -150,74 +114,67 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*
-    private void click_to_login(){
-        AuthStateListener = new FirebaseAuth.AuthStateListener(){
+
+
+    private void click_to_login() {
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            protected void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth){
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser m_firebase_user = m_auth.getCurrentUser();
-                if(m_firebase_user != null){
-                    Log.e(TAG,"You Are Logged in");
+                if (m_firebase_user != null) {
+                    Log.e(TAG, "You Are Logged in");
                     Intent i = new Intent(MainActivity.this, Home_Activity.class);
                     startActivity(i);
-                }
-                else{
-                    Toast.makeText(TAG,"Login First");
+                } else {
+                    Toast.makeText(MainActivity.this,"Please Login",Toast.LENGTH_SHORT).show();
                 }
             }
         };
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 String email = et_email.getText().toString();
                 String pwd = et_password.getText().toString();
-                if(email.isEmpty() && pwd.isEmpty()){
+                if (email.isEmpty() && pwd.isEmpty()) {
                     et_email.setError("Entering Email Password Is required");
                     et_email.requestFocus();
-                }
-                else if (!(email.isEmpty() && pwd.isEmpty())){
-                    m_auth.signInWithEmailAndPassword((email, pwd).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                } else {
+                    m_auth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(!task.isSuccessful()){
-                                Toast.makeText(Home_Activity.this,"Login Errror", Toast.LENGTH_SHORT).show();
-                            }
-                            else{
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(MainActivity.this, "Login Errror", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Login SUCCESS GOING TO HOME_ACTIVITY", Toast.LENGTH_SHORT).show();
                                 Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
                                 startActivity(refer_to_home);
+                            }
                         }
-                    }
-                }))
+                    });
+                }
             }
         });
     }
-    */
 
     private void click_to_logout(){
         m_auth.signOut();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    /*
+    private void account_athor(){
+        @Override
+        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
+            if( mFirebaseUser != null ){
+                Toast.makeText(LoginActivity.this,"You are logged in",Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(i);
+            }
+            else{
+                Toast.makeText(LoginActivity.this,"Please Login",Toast.LENGTH_SHORT).show();
+            }
         }
-
-        return super.onOptionsItemSelected(item);
     }
+    */
 }
