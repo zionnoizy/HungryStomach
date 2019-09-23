@@ -51,19 +51,16 @@ public class Home_Activity extends AppCompatActivity {
     public static final String Database_Path = "All_Image_Uploads_Database";
 
     FirebaseAuth m_auth;
-    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    FirebaseStorage m_storage;
+    StorageReference storageRef;
+    DatabaseReference rootRef;
     DatabaseReference imagesRef = rootRef.child("images");
+    StorageTask storageTask;
 
     Uri m_uri;
     private ImageView iv;
-
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private StorageTask mUploadTask;
-
     private RecyclerView recyclerView;
-    private FoodAdapter mAdapter;
-
-
+    private FoodAdapter foodAdapter;
     private ArrayList<Food> mUploads;
 
 
@@ -76,24 +73,32 @@ public class Home_Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         configureTabLayout();
 
-
         //////////////////////////////////////////////////////////////////////////////////
-        final FoodAdapter adapter = new FoodAdapter(mUploads,this);
+
         recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         iv = findViewById(R.id.thumbnail);
+
         mUploads = new ArrayList<>();
+        foodAdapter = new FoodAdapter(mUploads,this);
+        recyclerView.setAdapter(foodAdapter);
+
+        m_storage = FirebaseStorage.getInstance();
+        rootRef  = FirebaseDatabase.getInstance().getReference("user_upload");
 
         rootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Food> readUploads = new ArrayList<>();
+                mUploads.clear();
+
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Food upload = postSnapshot.getValue(Food.class);
-                    readUploads.add(upload);
+                    mUploads.add(upload);
                 }
-                //mAdapter.setUploads(readUploads);
+                foodAdapter.setUploads(mUploads);
+                foodAdapter.notifyDataSetChanged();
             }
 
             @Override

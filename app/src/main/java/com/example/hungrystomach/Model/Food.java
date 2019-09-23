@@ -10,7 +10,7 @@ public class Food {
         //empty
     }
 
-    public Food(String name, String description, String price) {
+    public Food(String name, String description, String price) { //v
 
         this.m_name = name;
         this.m_description = description;

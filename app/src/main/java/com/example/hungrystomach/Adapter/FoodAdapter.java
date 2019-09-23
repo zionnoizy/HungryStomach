@@ -47,13 +47,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FoodAdapter.FoodViewHolder holder, int position) {
-
         f = m_listFood.get(position);
         holder.FoodName.setText(f.get_name());
-        //holder.FoodDescription.setText(f.get_description());
-        //holder.FoodPrice.setText("USD. " + f.get_price());
-        //Glide.with(m_context).load(f.get_img()).into(holder.FoodImageView); //load(Uri.parse(f.get_img()
-        Picasso.get().load(f.get_imgurl()).into(holder.FoodImageView);
+        Picasso.get().load(f.get_imgurl()).fit().into(holder.FoodImageView);
 
     }
 
@@ -70,7 +66,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             FoodName = itemView.findViewById(R.id.foodname);
             //FoodDescription = itemView.findViewById(R.id.tv_des);
             //FoodPrice = itemView.findViewById(R.id.tv_price);
-            m_auth = FirebaseAuth.getInstance();
         }
     }
 
@@ -91,33 +86,4 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         this.m_listFood = uploads;
         this.notifyDataSetChanged();
     }
-
-    /*
-    @NonNull
-    @Override
-    public FoodAdapterHolder onCreateViewHolder(int position, @NonNull ViewGroup parent, int viewType) {
-        View v = parent;
-        Food f = m_food.get(position);
-        if(v == null) {
-            //LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            v = inflater.inflate(R.layout.list, null);
-        }
-
-        if(f != null){
-            TextView et_fname = (TextView) v.findViewById(R.id.et_fname);
-            TextView et_fdesc = (TextView) v.findViewById(R.id.et_fdesc);
-            TextView et_fprice = (TextView) v.findViewById(R.id.et_fprice);
-            if(et_fname != null)
-                et_fname.setText("Name: " + c.getId());
-            if(et_fdesc != null)
-                et_fdesc.setText("Description: " + c.getId());
-            if(et_fprice != null)
-                et_fprice.setText("Price: " + c.getId());
-         }
-         return v;
-        }
-    }
-    */
-
 }
