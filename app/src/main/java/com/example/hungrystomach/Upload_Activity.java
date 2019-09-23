@@ -1,67 +1,45 @@
 package com.example.hungrystomach;
 
 
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.example.hungrystomach.model.food_information;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.hungrystomach.Adapter.FoodAdapter;
+import com.example.hungrystomach.Model.Food;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.FirebaseApp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
-import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import static java.security.AccessController.getContext;
-
 public class Upload_Activity extends AppCompatActivity{
     private static final int PICK_IMAGE_REQUEST = 1;
 
-    private Button btn_choose_image;
-    private Button btn_upload_image;
+    private Button m_btn_choose;
+    private Button btn_upload;
 
-    private EditText et_foodname;
-    private EditText et_description;
-    private EditText et_price;
-
+    private EditText et_fname;
+    private EditText et_fdesc;
+    private EditText et_fprice;
 
     private ProgressBar progress_bar;
     private ImageView img_view;
@@ -73,14 +51,14 @@ public class Upload_Activity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.upload_main);
 
-        btn_choose_image = findViewById(R.id.btn_choose_image);
-        btn_upload_image = findViewById(R.id.btn_upload_image);
+        m_btn_choose = findViewById(R.id.btn_choose);
+        btn_upload = findViewById(R.id.btn_upload);
 
-        et_foodname = findViewById(R.id.et_foodname);
-        et_description = findViewById(R.id.et_description);
-        et_price = findViewById(R.id.et_price);
+        et_fname = findViewById(R.id.et_fname);
+        et_fdesc = findViewById(R.id.et_fdesc);
+        et_fprice = findViewById(R.id.et_fprice);
 
         progress_bar = findViewById(R.id.progress_bar);
         img_view = findViewById(R.id.img_view);
@@ -89,19 +67,23 @@ public class Upload_Activity extends AppCompatActivity{
         database_ref = FirebaseDatabase.getInstance().getReference("images");
 
 
-        btn_choose_image.setOnClickListener(new View.OnClickListener() {
+        m_btn_choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 open_file_chooser();
             }
         });
 
-        btn_upload_image.setOnClickListener(new View.OnClickListener() {
+
+
+        btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 uploading_image();
             }
         });
+
+
 
     }
 
@@ -124,18 +106,14 @@ public class Upload_Activity extends AppCompatActivity{
 
     private void uploading_image(){
         if(image_uri!=null) {
-            btn_choose_image.setVisibility(View.GONE);
+            m_btn_choose.setVisibility(View.GONE);
             progress_bar.setVisibility(View.VISIBLE);
             progress_bar.setIndeterminate(true);
 
-
-
-
-
-            storage_ref.getDownloadUrl() //getDownloadUrl
-                    .addOnSuccessListener(this, new OnSuccessListener<Uri>() {
+            storage_ref.putFile(image_uri) //getDownloadUrl
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
-                        public void onSuccess(Uri uri) {
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             //progress_bar.setProgress(0);
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
@@ -149,17 +127,10 @@ public class Upload_Activity extends AppCompatActivity{
                             }, 500);
                             Toast.makeText(Upload_Activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
 
-
-                            //final Uri downloadUri = uri;
-                            //String TempImageName = et_foodname.getText().toString().trim();
-
-                            food_information uploadFI = new food_information();
-                            et_description.getText().toString();
-                            et_foodname.getText().toString();
-                            Integer.parseInt(et_price.getText().toString());
+                            Food uploadFI = new Food(et_fname.getText().toString(),et_fdesc.getText().toString(),et_fprice.getText().toString());
 
                             String upload_id = database_ref.push().getKey();
-                            database_ref.push().setValue(upload_id);
+                            database_ref.child(upload_id).setValue(uploadFI);
 
                             progress_bar.setVisibility(View.INVISIBLE);
 
@@ -170,7 +141,6 @@ public class Upload_Activity extends AppCompatActivity{
                             Toast.makeText(Upload_Activity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
-                    /*
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
@@ -179,45 +149,30 @@ public class Upload_Activity extends AppCompatActivity{
 
                         }
                     })
-                    */
+
                     ;
 
         }else
             Toast.makeText(Upload_Activity.this, "Please Select Image or Add Image Name", Toast.LENGTH_LONG).show();
 
-    }
+        redirect_home();
 
-    private void go_home_act() {
-    Intent intent = new Intent(this,Home_Activity.class);
-    startActivity(intent);
     }
 
 
 
-
-    /*
-    private void upload_limited(){
-        Toast.makeText(Upload_Activity.this, "Your Upload Limited Is 5", Toast.LENGTH_LONG).show();
-        int total = data.getClipData().getItemCount(); //
-        int curr_counter = 0;
-        while (curr_counter < total){
-            image_uri = data.getClipData().getItemAt(curr_counter).getUri(); //data
-            FileList.add(image_uri); //FileList
-            curr_counter = curr_counter +1;
-        }
+    private void redirect_home() {
+    Intent i = new Intent(this,Home_Activity.class);
+    startActivity(i);
     }
-    */
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
             image_uri = data.getData();
             Picasso.get().load(image_uri).into(img_view);
-
-
             /*
             StorageReference storage_ref = storage_ref.child(image_uri.getLastPathSegment());
             storage_ref.putFile(image_uri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {

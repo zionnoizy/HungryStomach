@@ -40,9 +40,11 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase m_database;
     FirebaseAuth m_auth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
     TextView m_displaytext;
     EditText et_email, et_password;
     Button btn_register, btn_login;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

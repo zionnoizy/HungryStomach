@@ -1,4 +1,4 @@
-package com.example.hungrystomach;
+package com.example.hungrystomach.Fragment;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.hungrystomach.R;
 
 
 public class FoodFragment3 extends Fragment {

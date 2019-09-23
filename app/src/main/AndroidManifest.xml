@@ -26,6 +26,8 @@
 
         <activity android:name=".Home_Activity" />
         <activity android:name=".Upload_Activity" />
+        <activity android:name=".Setting_Activity" />
+
 
     </application>
 

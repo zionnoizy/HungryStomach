@@ -1,4 +1,4 @@
-package com.example.hungrystomach.Fragment;
+package com.example.hungrystomach.Adapter;
 
 import android.content.Context;
 
@@ -6,9 +6,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.hungrystomach.AllFoodFragment;
-import com.example.hungrystomach.FoodFragment2;
-import com.example.hungrystomach.FoodFragment3;
+import com.example.hungrystomach.Fragment.AllFoodFragment;
+import com.example.hungrystomach.Fragment.FoodFragment2;
+import com.example.hungrystomach.Fragment.FoodFragment3;
+import com.example.hungrystomach.Fragment.UserFragment;
 
 
 public class TabPagerAdapter extends FragmentPagerAdapter {
@@ -19,7 +20,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         this.tabCount = numberOfTabs;
         //this.mContext = context;
-        //private String tabTitiles[] = new String[]{"All Food", "American", "Chinese", "Indian", "Japanese", "Korean", "Mediterranean", "Dessert"}
+        //private String tabTitiles[] = new String[]{"All Food", "American", "Chinese", "Indian", "Japanese", "Korean", "Mediterranean", "Dessert", "Drink"}
     }
 
     // This determines the fragment for each tab
@@ -60,6 +61,18 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
             default:
                 return null;
         }
+    }
+    */
+
+    /* chatroom_v
+    public Fragment Chat_getItem(int c_position) {
+        if (c_position == 0)
+            return new ChatFragment();
+        else if(c_position == 1)
+            return new UserFragment();
+
+        else
+            return null;
     }
     */
 
