@@ -3,6 +3,7 @@ package com.example.hungrystomach.Adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -45,33 +45,39 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     }
 
 
-    @Override
-    public void onBindViewHolder(@NonNull FoodAdapter.FoodViewHolder holder, int position) {
 
-        f = m_listFood.get(position);
-        holder.FoodName.setText(f.get_name());
-        //holder.FoodDescription.setText(f.get_description());
-        //holder.FoodPrice.setText("USD. " + f.get_price());
-        //Glide.with(m_context).load(f.get_img()).into(holder.FoodImageView); //load(Uri.parse(f.get_img()
-        Picasso.get().load(f.get_imgurl()).into(holder.FoodImageView);
-
-    }
 
 
     public class FoodViewHolder extends RecyclerView.ViewHolder{
-        public ImageView FoodImageView;
+        public ImageView FoodIcon;
         public TextView FoodName;
         public TextView FoodDescription;
         public TextView FoodPrice;
 
         public FoodViewHolder (View itemView){
             super(itemView);
-            FoodImageView = itemView.findViewById(R.id.thumbnail);
+            FoodIcon = (ImageView)itemView.findViewById(R.id.thumbnail);
             FoodName = itemView.findViewById(R.id.foodname);
             //FoodDescription = itemView.findViewById(R.id.tv_des);
             //FoodPrice = itemView.findViewById(R.id.tv_price);
-            m_auth = FirebaseAuth.getInstance();
+            //m_auth = FirebaseAuth.getInstance();
         }
+
+        public void onClick(View view) {
+            Log.e("name",FoodName.toString());
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull FoodAdapter.FoodViewHolder holder, int position) {
+        f = m_listFood.get(position);
+        holder.FoodName.setText(f.get_name());
+        f.set_icon(f.get_icon());
+        Picasso .get()
+                .load(f.get_imgurl()) // Uri.parse(m_listFood.get(position).getLogo())
+                //.error(R.drawable.placeholder)
+                .fit()
+                .into(holder.FoodIcon);
     }
 
     public ArrayList<Food> getListFood() {
@@ -84,40 +90,12 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public int getItemCount() {
-        return getListFood().size();
+        return m_listFood.size();
     }
 
     public void setUploads(ArrayList<Food> uploads) {
         this.m_listFood = uploads;
         this.notifyDataSetChanged();
     }
-
-    /*
-    @NonNull
-    @Override
-    public FoodAdapterHolder onCreateViewHolder(int position, @NonNull ViewGroup parent, int viewType) {
-        View v = parent;
-        Food f = m_food.get(position);
-        if(v == null) {
-            //LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            v = inflater.inflate(R.layout.list, null);
-        }
-
-        if(f != null){
-            TextView et_fname = (TextView) v.findViewById(R.id.et_fname);
-            TextView et_fdesc = (TextView) v.findViewById(R.id.et_fdesc);
-            TextView et_fprice = (TextView) v.findViewById(R.id.et_fprice);
-            if(et_fname != null)
-                et_fname.setText("Name: " + c.getId());
-            if(et_fdesc != null)
-                et_fdesc.setText("Description: " + c.getId());
-            if(et_fprice != null)
-                et_fprice.setText("Price: " + c.getId());
-         }
-         return v;
-        }
-    }
-    */
 
 }

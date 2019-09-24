@@ -39,8 +39,10 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -51,21 +53,12 @@ public class Home_Activity extends AppCompatActivity {
     public static final String Database_Path = "All_Image_Uploads_Database";
 
     FirebaseAuth m_auth;
-    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference imagesRef = rootRef.child("images");
-
-    Uri m_uri;
-    private ImageView iv;
-
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private StorageTask mUploadTask;
+    DatabaseReference rootRef;
 
     private RecyclerView recyclerView;
-    private FoodAdapter mAdapter;
-
-
+    private FoodAdapter foodAdapter;
     private ArrayList<Food> mUploads;
-
+    ImageView mImageIv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,33 +69,19 @@ public class Home_Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         configureTabLayout();
 
-
         //////////////////////////////////////////////////////////////////////////////////
-        final FoodAdapter adapter = new FoodAdapter(mUploads,this);
-        recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setAdapter(mAdapter);
-
-        iv = findViewById(R.id.thumbnail);
         mUploads = new ArrayList<>();
 
-        rootRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Food> readUploads = new ArrayList<>();
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Food upload = postSnapshot.getValue(Food.class);
-                    readUploads.add(upload);
-                }
-                //mAdapter.setUploads(readUploads);
-            }
+        //set recycler adapter
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(foodAdapter);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(Home_Activity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        //rootRef  = FirebaseDatabase.getInstance().getReference("image");
+        mImageIv = findViewById(R.id.thumbnail);
 
-        showRecyclerViewList();
+        loadLogoImgData();
     }
 
 
@@ -193,15 +172,44 @@ public class Home_Activity extends AppCompatActivity {
     */
 
 
-    private void showRecyclerViewList() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        FoodAdapter listAdapter = new FoodAdapter(mUploads,this);
-        listAdapter.setListFood(mUploads);
-        recyclerView.setAdapter(listAdapter);
+    private void startRecyclerView() {
+        foodAdapter = new FoodAdapter(mUploads,this);
+        recyclerView.setAdapter(foodAdapter);
     }
 
 
+    private void loadLogoImgData(){
+        //mUploads.clear();
+
+        rootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mUploads.clear();
+                //Log.e("Count " ,""+dataSnapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) { //or messageSnapshot
+                    Food upload = postSnapshot.getValue(Food.class);
+                    //String name = upload.get_imgurl();
+                    //String des = upload.get_description();
+                    //String price = upload .get_price();
+                    //String url = upload.get_imgurl();
+                    //Food fire = new Food(name,des,price,url);
+
+                    mUploads.add(upload);
+//                    Log.e("Get Url", );
+//                    Log.e("Get Des", upload.get_description());
+                }
+                startRecyclerView();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(Home_Activity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void onItemClick(View view, int position) {
+        Toast.makeText(this, "You clicked " + foodAdapter.getItemId(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+    }
 
 }
-
-
