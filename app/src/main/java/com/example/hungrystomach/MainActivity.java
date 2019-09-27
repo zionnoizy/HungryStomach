@@ -13,15 +13,20 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +39,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 
 public class MainActivity extends AppCompatActivity {
     private User user;
@@ -60,15 +66,16 @@ public class MainActivity extends AppCompatActivity {
         btn_register = findViewById(R.id.btn_register);
         btn_login = findViewById(R.id.btn_login);
 
-        m_displaytext = (TextView)findViewById(R.id.tv_already_register);
         m_displaytext.setText("Unknown Auth State.");
 
         user = new User();
         init_firebase();
 
         click_to_register_new_user();
-        //click_to_login();
-        click_to_logout();
+        click_to_login();
+        reset_pwd();
+
+
     }
 
     private void init_firebase(){
@@ -78,18 +85,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void click_to_register_new_user(){
+        final String email = et_email.getText().toString().trim();
+        final String pwd = et_password.getText().toString().trim();
 
-        btn_register.setOnClickListener(new View.OnClickListener() { //ref
-
-
+        btn_register.setOnClickListener(new View.OnClickListener() {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-
+            DatabaseReference cur_usr = ref.child(m_auth.getCurrentUser().getUid());
             @Override
             public void onClick(View v) {
                 String email = et_email.getText().toString().trim();
+                String tmp = new String(email);
+                String username = tmp.split("@")[0];
+
                 String pwd = et_password.getText().toString().trim();
-                User usr = new User(pwd,email);
-                ref.child("usersss").setValue(usr);
+
+                User usr = new User(email,username,pwd);
+                cur_usr.child("username").setValue(username);
+                cur_usr.child("icon").setValue("default_icon");
 
                 if (email.isEmpty() || pwd.isEmpty()) {
                     et_email.setError("Entering Email Password Is required");
@@ -120,8 +132,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     private void click_to_login() {
@@ -164,10 +174,46 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void reset_pwd(){
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.acct_reset_pwd, null);
 
-    private void click_to_logout(){
-        m_auth.signOut();
+        String email = et_email.getText().toString().trim();
+        String tmp = new String(email);
+        String username = tmp.split("@")[0];
+        String pwd = et_password.getText().toString().trim();
+
+        dialogBuilder.setView(dialogView);
+        final EditText enter_rest_email = (EditText) dialogView.findViewById(R.id.enter_rest_email);
+        final Button btn_click_toreset = (Button) dialogView.findViewById(R.id.btn_click_toreset);
+        final ProgressBar progressBar1 = (ProgressBar) dialogView.findViewById(R.id.progressBar);
+
+
+        btn_click_toreset.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String email = enter_rest_email.getText().toString().trim();
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(getApplication(), "Enter email to reset", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                progressBar1.setVisibility(View.VISIBLE);
+                m_auth.sendPasswordResetEmail(email)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(MainActivity.this, "Reset Instruction has been sent", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Failed to reset the email, check your network!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+            }
+        });
     }
+
 
 
 }

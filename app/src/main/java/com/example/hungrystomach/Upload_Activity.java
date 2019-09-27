@@ -36,6 +36,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+
+
 public class Upload_Activity extends AppCompatActivity{
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -68,12 +70,8 @@ public class Upload_Activity extends AppCompatActivity{
         img_view = findViewById(R.id.img_view);
 
         progress_bar = findViewById(R.id.progress_bar);
-
-        FirebaseAuth m_auth;
-
         storage_ref = FirebaseStorage.getInstance().getReference("what?");
         database_ref = FirebaseDatabase.getInstance().getReference("thesting2");
-
 
         m_btn_choose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +79,6 @@ public class Upload_Activity extends AppCompatActivity{
                 open_file_chooser();
             }
         });
-
 
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
@@ -128,35 +125,21 @@ public class Upload_Activity extends AppCompatActivity{
 
             StorageReference fileReference = storage_ref.child(System.currentTimeMillis() + "." + get_extension(image_uri));
 
-            storage_ref.putFile(image_uri) //getDownloadUrl
+            storage_ref.putFile(image_uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //progress_bar.setProgress(0);
                             String tmp_name = et_fname.getText().toString().trim();
                             String tmp_desc = et_fdesc.getText().toString().trim();
                             String tmp_price = et_fprice.getText().toString().trim();
                             String tmp_uri = image_uri.toString();
 
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progress_bar.setVisibility(View.VISIBLE);
-                                    progress_bar.setIndeterminate(true);
-                                    progress_bar.setProgress(0);
-                                }
-
-                            }, 500);
                             Toast.makeText(Upload_Activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
 
                             Food uploadFI = new Food(tmp_name, tmp_desc, tmp_price, tmp_uri);
                             database_ref.child(tmp_name).setValue(uploadFI);
 
                             Log.e("DOWNLOAD_URL", image_uri.toString());
-
-                            //String upload_id = database_ref.push().getKey();
-                            //database_ref.child(upload_id).setValue(uploadFI);
                             progress_bar.setVisibility(View.INVISIBLE);
 
                         }
@@ -172,7 +155,6 @@ public class Upload_Activity extends AppCompatActivity{
                                 Toast.makeText(Upload_Activity.this, "Image is Uploading", Toast.LENGTH_SHORT).show();
                             }
                     })
-
                     ;
 
         }else

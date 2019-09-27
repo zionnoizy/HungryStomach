@@ -3,88 +3,144 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Upload_Activity"
-    android:layout_margin="20dp">
+    android:layout_margin="8dp"
+    tools:context=".Upload_Activity">
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Upload Food Info In Here"
         android:id="@+id/tv_uf"
-        android:textStyle="bold"
-        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center"
-        android:layout_marginTop="20dp"/>
+        android:text="Upload Your Cooked Food"
+        android:textColor="@color/dark_orange"
+        android:textSize="20dp"
+        android:textStyle="bold" />
 
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="200dp"
         android:id="@+id/img_view"
+        android:layout_width="208dp"
+        android:layout_height="177dp"
         android:layout_below="@+id/tv_uf"
-        android:layout_marginTop="20dp"/>
-
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="9dp" />
 
     <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/btn_choose"
+        android:layout_width="212dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/img_view"
-        android:layout_marginTop="20dp"
-        android:text="Choose Image"/>
+        android:layout_marginTop="21dp"
+        android:background="@color/little_bit_yellow"
+        android:text="Choose Image" />
 
 
     <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/et_fname"
+        android:layout_width="236dp"
+        android:layout_height="60dp"
         android:layout_below="@+id/btn_choose"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp"
-        android:hint="Enter Food Name Here"
-        android:gravity="center"/>
-
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:hint="Enter Food Name Here" />
 
     <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/et_fdesc"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
         android:layout_below="@+id/et_fname"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp"
-        android:hint="Enter Food Description Here"
-        android:gravity="center"/>
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:hint="Enter Food Description Here" />
 
 
     <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/et_fprice"
+        android:layout_width="226dp"
+        android:layout_height="62dp"
         android:layout_below="@+id/et_fdesc"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp"
-        android:hint="Enter Food Price Here"
-        android:gravity="center"/>
-
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:hint="Enter Food Price Here" />
 
     <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/btn_upload"
+        android:layout_width="255dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/et_fprice"
         android:layout_marginTop="20dp"
         android:inputType="numberDecimal"
-        android:text="Upload Image"/>
+        android:text="Upload Image"
+        android:background="@color/light_salmon" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="144dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="-2dp"
         android:layout_marginLeft="100dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="125dp"
+        android:layout_marginEnd="3dp"
+        android:layout_toEndOf="@+id/tv_uf"
         android:indeterminate="false"
         android:max="100"
         android:minWidth="200dp"
         android:minHeight="50dp"
         android:progress="0" />
+
+    <Button
+        android:id="@+id/btn_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_fprice"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="33dp"
+        android:layout_marginBottom="25dp"
+        android:text="Return"
+        android:textColor="@android:color/darker_gray"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="281dp"
+        android:layout_toStartOf="@+id/et_fname"
+        android:text="Price" />
+
+    <TextView
+        android:layout_width="84dp"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="199dp"
+        android:text="Description" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="126dp"
+        android:layout_toStartOf="@+id/et_fname"
+        android:text="Price" />
 
 </RelativeLayout>

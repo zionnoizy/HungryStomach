@@ -4,5 +4,23 @@
     <color name="colorPrimaryDark">#B22222</color>
     <color name="colorAccent">	#FA8072</color>
 
+    <color name="setting">#AD706C</color>
+    <color name="warm">#EB7A5F</color>
+    <color name="redness">#FF0700</color>
+    <color name="little_bit_yellow">#FCCD88</color>
+    <color name="pink_life">#F7ABAB</color>
+    <color name="light_pink">#FFB6C1</color>
+    <color name="dark_orange">#FF8C00</color>
+    <color name="warning">#D17C0F</color>
+
+    <color name="orange">#FFA500</color>
+    <color name="light_salmon">#FFA07A</color>
+    <color name="blanched_almond">#FFEBCD</color>
+    <color name="misty_rose">#FFE4E1</color>
+    <color name="bisque">#FFE4C4</color>
+    <color name="moccasin">#FFE4B5</color>
+
+
+
 
 </resources>

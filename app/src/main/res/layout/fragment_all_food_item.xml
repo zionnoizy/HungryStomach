@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:cardView="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/logo_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,41 +15,13 @@
     cardView:layout_collapseParallaxMultiplier="1.0">
 
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="155dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        cardView:cardBackgroundColor="@android:color/white">
-
-    <RelativeLayout
+    <!---->
+    <androidx.recyclerview.widget.RecyclerView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/recycler_view"
+        app:layoutManager="LinearLayoutManager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:orientation="vertical"
-        android:background="#ECEFF1">
-
-        <ImageView
-            android:id="@+id/thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_column="1"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_row="0"
-            android:paddingBottom="5dp"
-            android:paddingLeft="2.5dp"
-            android:paddingRight="2.5dp"
-            android:paddingTop="5dp" />
-
-        <TextView
-            android:id="@+id/foodname"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:text="[NAME]" />
-
-    </RelativeLayout>
-
-
-    </androidx.cardview.widget.CardView>
+        android:layout_height="441dp"
+        android:layout_margin="8dp" />
 
 </LinearLayout>

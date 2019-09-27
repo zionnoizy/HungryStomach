@@ -23,12 +23,25 @@
             </intent-filter>
         </activity>
 
-
         <activity android:name=".Home_Activity" />
         <activity android:name=".Upload_Activity" />
-        <activity android:name=".Setting_Activity" />
 
+        <service
+            android:name=".Home_Activity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!--firebase cloud msg-->
+        <service android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
     </application>
+
 
 </manifest>

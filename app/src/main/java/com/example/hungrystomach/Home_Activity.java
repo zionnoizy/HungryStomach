@@ -12,6 +12,8 @@ import com.example.hungrystomach.Adapter.TabPagerAdapter;
 import com.example.hungrystomach.Model.Food;
 import com.google.android.gms.actions.ItemListIntents;
 import com.google.android.gms.common.internal.Constants;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -50,15 +54,7 @@ import java.util.List;
 
 
 public class Home_Activity extends AppCompatActivity {
-    public static final String Database_Path = "All_Image_Uploads_Database";
-
     FirebaseAuth m_auth;
-    DatabaseReference rootRef;
-
-    private RecyclerView recyclerView;
-    private FoodAdapter foodAdapter;
-    private ArrayList<Food> mUploads;
-    ImageView mImageIv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +64,7 @@ public class Home_Activity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         configureTabLayout();
-
-        //////////////////////////////////////////////////////////////////////////////////
-        mUploads = new ArrayList<>();
-
-        //set recycler adapter
-        recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(foodAdapter);
-
-        //rootRef  = FirebaseDatabase.getInstance().getReference("image");
-        mImageIv = findViewById(R.id.thumbnail);
-
-        loadLogoImgData();
+        //sendNotification();
     }
 
 
@@ -109,8 +92,8 @@ public class Home_Activity extends AppCompatActivity {
                 return true;
             case R.id.it_settings:
                 Toast.makeText(this,"Redirected to Setting Section", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Home_Activity.this, Setting_Activity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(Home_Activity.this, Setting_Activity.class);
+                //startActivity(intent);
                 return true;
             case R.id.it_logout:
                 userLogout();
@@ -122,7 +105,7 @@ public class Home_Activity extends AppCompatActivity {
 
 
     private void userLogout(){
-        m_auth.signOut();
+        FirebaseAuth.getInstance().signOut();
     }
 
 
@@ -130,15 +113,16 @@ public class Home_Activity extends AppCompatActivity {
         TabLayout tab_lyout = (TabLayout) findViewById(R.id.tab_layout);
 
         tab_lyout.addTab(tab_lyout.newTab().setText("All Food"));
-        tab_lyout.addTab(tab_lyout.newTab().setText("American()"));
-        tab_lyout.addTab(tab_lyout.newTab().setText("Chinese()"));
-//        tab_lyout.addTab(tab_lyout.newTab().setText("Indian"));
-//        tab_lyout.addTab(tab_lyout.newTab().setText("Japanese"));
-//        tab_lyout.addTab(tab_lyout.newTab().setText("Korean"));
-//        tab_lyout.addTab(tab_lyout.newTab().setText("Mediterranean"));
-//        tab_lyout.addTab(tab_lyout.newTab().setText("Dessert"));
-//        tab_lyout.addTab(tab_lyout.newTab().setText("Drink"));
-
+        tab_lyout.addTab(tab_lyout.newTab().setText("--"));
+        tab_lyout.addTab(tab_lyout.newTab().setText("--"));
+        /*
+        tab_lyout.addTab(tab_lyout.newTab().setText("Indian"));
+        tab_lyout.addTab(tab_lyout.newTab().setText("Japanese"));
+        tab_lyout.addTab(tab_lyout.newTab().setText("Korean"));
+        tab_lyout.addTab(tab_lyout.newTab().setText("Mediterranean"));
+        tab_lyout.addTab(tab_lyout.newTab().setText("Dessert"));
+        tab_lyout.addTab(tab_lyout.newTab().setText("Drink"));
+        */
         final ViewPager view_pager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tab_lyout.getTabCount());
         view_pager.setAdapter(adapter);
@@ -161,55 +145,4 @@ public class Home_Activity extends AppCompatActivity {
         });
     }
     //////////////////////////////////////////////////////////////////////////////////
-
-    /*
-    private void showRecyclerViewGrid(){
-        rv.setLayoutManager(new GridLayoutManager(this,2));
-        FoodAdapter fa = new FoodAdapter(list, m_context);
-        fa.setListFood(list);
-        rv.setAdapter(fa);
-    }
-    */
-
-
-    private void startRecyclerView() {
-        foodAdapter = new FoodAdapter(mUploads,this);
-        recyclerView.setAdapter(foodAdapter);
-    }
-
-
-    private void loadLogoImgData(){
-        //mUploads.clear();
-
-        rootRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mUploads.clear();
-                //Log.e("Count " ,""+dataSnapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) { //or messageSnapshot
-                    Food upload = postSnapshot.getValue(Food.class);
-                    //String name = upload.get_imgurl();
-                    //String des = upload.get_description();
-                    //String price = upload .get_price();
-                    //String url = upload.get_imgurl();
-                    //Food fire = new Food(name,des,price,url);
-
-                    mUploads.add(upload);
-//                    Log.e("Get Url", );
-//                    Log.e("Get Des", upload.get_description());
-                }
-                startRecyclerView();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(Home_Activity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void onItemClick(View view, int position) {
-        Toast.makeText(this, "You clicked " + foodAdapter.getItemId(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
-    }
-
 }

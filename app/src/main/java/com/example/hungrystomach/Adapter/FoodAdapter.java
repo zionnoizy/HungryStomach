@@ -1,7 +1,9 @@
 package com.example.hungrystomach.Adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,27 +27,26 @@ import java.util.ArrayList;
 
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
-    private ArrayList<Food> m_listFood;
     private Context m_context;
+    private ArrayList<Food> m_listFood;
+    Food f;
 
     private ImageView image_view;
     FirebaseAuth m_auth;
-    Food f;
+
 
     public FoodAdapter(ArrayList<Food> list, Context context) {//Foodlist,this
-        this.m_listFood = list;
         this.m_context = context;
+        this.m_listFood = list;
+        m_listFood = new ArrayList<>();
     }
 
     @NonNull
     @Override
     public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_all_food_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_main, parent, false);
         return new FoodViewHolder(v);
     }
-
-
-
 
 
     public class FoodViewHolder extends RecyclerView.ViewHolder{
@@ -58,9 +59,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             super(itemView);
             FoodIcon = (ImageView)itemView.findViewById(R.id.thumbnail);
             FoodName = itemView.findViewById(R.id.foodname);
-            //FoodDescription = itemView.findViewById(R.id.tv_des);
-            //FoodPrice = itemView.findViewById(R.id.tv_price);
-            //m_auth = FirebaseAuth.getInstance();
+            FoodDescription = itemView.findViewById(R.id.fooddescription);
+            FoodPrice = itemView.findViewById(R.id.foodprice);
         }
 
         public void onClick(View view) {
@@ -72,12 +72,25 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public void onBindViewHolder(@NonNull FoodAdapter.FoodViewHolder holder, int position) {
         f = m_listFood.get(position);
         holder.FoodName.setText(f.get_name());
+        holder.FoodDescription.setText(f.get_description());
+        holder.FoodPrice.setText(f.get_price());
         f.set_icon(f.get_icon());
         Picasso .get()
                 .load(f.get_imgurl()) // Uri.parse(m_listFood.get(position).getLogo())
                 //.error(R.drawable.placeholder)
                 .fit()
                 .into(holder.FoodIcon);
+
+        /*
+        //able to detail
+        holder.button.setOnClickListener(new View.OnClickListener){
+            @Override
+            public void onCLick(View v){
+                Intent detailA = new Intent(context.Detail_Activity.this);
+                context.startActivity(detailA);
+            }
+        }
+        */
     }
 
     public ArrayList<Food> getListFood() {
@@ -97,5 +110,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         this.m_listFood = uploads;
         this.notifyDataSetChanged();
     }
+
 
 }

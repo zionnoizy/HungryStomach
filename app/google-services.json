@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "122639754198-ec8vd9747t3gh122jj6kgj17k9ea0pjv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hungrystomach",
+            "certificate_hash": "45957a56d6c1b1070c1480a68a48aca51b314a09"
+          }
+        },
+        {
           "client_id": "122639754198-1psnoct55ct30cbtrqsog3qgo3pmkoa3.apps.googleusercontent.com",
           "client_type": 3
         }

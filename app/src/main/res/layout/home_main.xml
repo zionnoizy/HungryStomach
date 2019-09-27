@@ -38,13 +38,68 @@
         >
     </androidx.viewpager.widget.ViewPager>
 
-    <!---->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        app:layoutManager="LinearLayoutManager"
-        android:layout_width="match_parent"
-        android:layout_height="441dp"
-        android:layout_margin="8dp" />
+    <androidx.cardview.widget.CardView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="155dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:orientation="vertical"
+            android:background="#ECEFF1">
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_column="1"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_row="0"
+                android:paddingBottom="5dp"
+                android:paddingLeft="2.5dp"
+                android:paddingRight="2.5dp"
+                android:paddingTop="5dp" />
+
+            <!---->
+            <TextView
+                android:id="@+id/foodname"
+                android:layout_width="75dp"
+                android:layout_height="41dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="37dp"
+                android:text="[NAME]" />
+
+            <TextView
+                android:id="@+id/fooddescription"
+                android:layout_width="75dp"
+                android:layout_height="41dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="37dp"
+                android:text="[DESCRIPTION]" />
+
+            <TextView
+                android:id="@+id/foodprice"
+                android:layout_width="75dp"
+                android:layout_height="41dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="37dp"
+                android:text="[PRICE]" />
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

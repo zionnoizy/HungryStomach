@@ -2,13 +2,16 @@ package com.example.hungrystomach.Model;
 
 public class User {
 
-    private String id;
+    private String email;
     private String username;
+    private String id;
     private String icon;
 
-    public User(String id, String username) {
-        this.id = id;
+    public User(String email, String username, String id) {
+        this.email = username;
         this.username = username;
+        this.id = id;
+
         //this.imageURl = imageURl;
     }
 
@@ -19,12 +22,12 @@ public class User {
     public User() {
     }
 
-    public String getId() {
-        return id;
+    public String getEmail() {
+        return email;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {
@@ -33,5 +36,13 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

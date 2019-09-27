@@ -16,4 +16,7 @@
         <item>Drink</item>
     </string-array>
 
+    <string name="reset_string"><u>Reset Your Password</u>.</string>
+
+
 </resources>
