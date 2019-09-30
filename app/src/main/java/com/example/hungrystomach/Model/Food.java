@@ -40,8 +40,11 @@ public class Food {
         return icon;
     }
 
-    public String get_imgurl() {
+    public String get_url() {
         return img_url;
+    }
+    public void setPrice(String price) {
+        this.price = price;
     }
     public void setImageUrl(String imageUrl) {
         img_url = imageUrl;

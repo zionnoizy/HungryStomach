@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.hungrystomach.Fragment.AllFoodFragment;
 import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,23 +31,18 @@ import java.util.ArrayList;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
     private Context m_context;
-    private ArrayList<Food> m_listFood;
-    Food f;
+    private ArrayList<Food> m_listFood  = new ArrayList<Food>();
 
-    private ImageView image_view;
-    FirebaseAuth m_auth;
-
-
-    public FoodAdapter(ArrayList<Food> list, Context context) {//Foodlist,this
+    public FoodAdapter(Context context, ArrayList<Food> food_list) {//m_context, food_list
         this.m_context = context;
-        this.m_listFood = list;
-        m_listFood = new ArrayList<>();
+        this.m_listFood = food_list;
     }
+
 
     @NonNull
     @Override
     public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_main, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_all_food, parent, false);
         return new FoodViewHolder(v);
     }
 
@@ -54,6 +52,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         public TextView FoodName;
         public TextView FoodDescription;
         public TextView FoodPrice;
+        public Button Fooddetail;
 
         public FoodViewHolder (View itemView){
             super(itemView);
@@ -61,6 +60,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             FoodName = itemView.findViewById(R.id.foodname);
             FoodDescription = itemView.findViewById(R.id.fooddescription);
             FoodPrice = itemView.findViewById(R.id.foodprice);
+            Fooddetail = itemView.findViewById(R.id.fooddetail);
         }
 
         public void onClick(View view) {
@@ -70,35 +70,17 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FoodAdapter.FoodViewHolder holder, int position) {
-        f = m_listFood.get(position);
+        Food f = m_listFood.get(position);
         holder.FoodName.setText(f.get_name());
         holder.FoodDescription.setText(f.get_description());
         holder.FoodPrice.setText(f.get_price());
-        f.set_icon(f.get_icon());
-        Picasso .get()
-                .load(f.get_imgurl()) // Uri.parse(m_listFood.get(position).getLogo())
-                //.error(R.drawable.placeholder)
-                .fit()
-                .into(holder.FoodIcon);
-
-        /*
-        //able to detail
-        holder.button.setOnClickListener(new View.OnClickListener){
-            @Override
-            public void onCLick(View v){
-                Intent detailA = new Intent(context.Detail_Activity.this);
-                context.startActivity(detailA);
-            }
-        }
-        */
+        holder.FoodPrice.setText(f.get_url());
+        //Picasso.get().load(m_listFood.get(position).get_url()).fit().into(holder.FoodIcon);
+        Glide.with(m_context).load(f.get_url()).into(holder.FoodIcon); //getListFood().get(position).get_icon()
     }
 
-    public ArrayList<Food> getListFood() {
-        return m_listFood;
-    }
-
-    public void setListFood(ArrayList<Food> listFood) {
-        this.m_listFood = listFood;
+    public void setListFood(ArrayList<Food> m_listFood){
+        this.m_listFood = m_listFood;
     }
 
     @Override
@@ -106,10 +88,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         return m_listFood.size();
     }
 
-    public void setUploads(ArrayList<Food> uploads) {
-        this.m_listFood = uploads;
-        this.notifyDataSetChanged();
+    public Context get_context() {
+        return m_context;
     }
-
 
 }

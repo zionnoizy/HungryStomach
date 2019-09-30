@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.example.hungrystomach.Adapter.FoodAdapter;
+//import com.example.hungrystomach.Adapter.FoodAdapter;
 import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.Model.User;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -53,9 +53,9 @@ public class Upload_Activity extends AppCompatActivity{
 
     private Uri image_uri;
 
-    private StorageReference storage_ref;
+    private StorageReference storage_ref ;
     private DatabaseReference database_ref;
-
+    private FirebaseAuth m_auth = FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +70,9 @@ public class Upload_Activity extends AppCompatActivity{
         img_view = findViewById(R.id.img_view);
 
         progress_bar = findViewById(R.id.progress_bar);
-        storage_ref = FirebaseStorage.getInstance().getReference("what?");
-        database_ref = FirebaseDatabase.getInstance().getReference("thesting2");
 
+
+        storage_ref = FirebaseStorage.getInstance().getReference("all_uploaded_image");
         m_btn_choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,30 +118,38 @@ public class Upload_Activity extends AppCompatActivity{
 
 
     private void uploading_image(){
+        final String usr_uid = m_auth.getCurrentUser().getUid();
+
         if(image_uri!=null) {
-            m_btn_choose.setVisibility(View.GONE);
-            progress_bar.setVisibility(View.VISIBLE);
-            progress_bar.setIndeterminate(true);
-
-            StorageReference fileReference = storage_ref.child(System.currentTimeMillis() + "." + get_extension(image_uri));
-
-            storage_ref.putFile(image_uri)
+            String image_name = et_fname.getText().toString().trim();
+            StorageReference sf = storage_ref.child(image_name);
+            //to storage
+            sf.putFile(image_uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             String tmp_name = et_fname.getText().toString().trim();
                             String tmp_desc = et_fdesc.getText().toString().trim();
                             String tmp_price = et_fprice.getText().toString().trim();
-                            String tmp_uri = image_uri.toString();
+                            String tmp_image_uri = image_uri.toString().trim();
 
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("all_uploaded_image");
+                            DatabaseReference food_name = ref.child(tmp_name);
+                            //to database
+                            food_name.child("name").setValue(tmp_name);
+                            food_name.child("description").setValue(tmp_desc);
+                            food_name.child("price").setValue(tmp_price);
+                            food_name.child("image_uri").setValue(tmp_image_uri);
+                            food_name.child("uploader_uid").setValue(m_auth.getCurrentUser().getUid());
+
+                            //to model
+                            Food fd = new Food(tmp_name, tmp_desc, tmp_price, tmp_image_uri);
+                            /*
+                            //uploadID
+                            String uploadId = food_name.push().getKey();
+                            food_name.child(uploadId).setValue(fd);
+                            */
                             Toast.makeText(Upload_Activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
-
-                            Food uploadFI = new Food(tmp_name, tmp_desc, tmp_price, tmp_uri);
-                            database_ref.child(tmp_name).setValue(uploadFI);
-
-                            Log.e("DOWNLOAD_URL", image_uri.toString());
-                            progress_bar.setVisibility(View.INVISIBLE);
-
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.hungrystomach.Fragment.AllFoodFragment;
 import com.example.hungrystomach.Fragment.FoodFragment2;
@@ -17,10 +18,8 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
 
     public TabPagerAdapter(FragmentManager fm, int numberOfTabs) {
-        super(fm);
+        super(fm, TabPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.tabCount = numberOfTabs;
-        //this.mContext = context;
-        //private String tabTitiles[] = new String[]{"All Food", "American", "Chinese", "Indian", "Japanese", "Korean", "Mediterranean", "Dessert", "Drink"}
     }
 
     // This determines the fragment for each tab
@@ -44,36 +43,5 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
 
     }
 
-    /*
-    // This determines the title for each tab
-    @Override
-    public CharSequence getPageTitle(int position) {
-        // Generate title based on item position
-        switch (position) {
-            case 0:
-                return mContext.getString(R.string.category_usefulinfo);
-            case 1:
-                return mContext.getString(R.string.category_places);
-            case 2:
-                return mContext.getString(R.string.category_food);
-            case 3:
-                return mContext.getString(R.string.category_nature);
-            default:
-                return null;
-        }
-    }
-    */
-
-    /* chatroom_v
-    public Fragment Chat_getItem(int c_position) {
-        if (c_position == 0)
-            return new ChatFragment();
-        else if(c_position == 1)
-            return new UserFragment();
-
-        else
-            return null;
-    }
-    */
 
 }

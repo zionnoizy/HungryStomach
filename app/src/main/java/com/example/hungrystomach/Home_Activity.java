@@ -97,7 +97,6 @@ public class Home_Activity extends AppCompatActivity {
                 return true;
             case R.id.it_logout:
                 userLogout();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -106,6 +105,9 @@ public class Home_Activity extends AppCompatActivity {
 
     private void userLogout(){
         FirebaseAuth.getInstance().signOut();
+        Toast.makeText(this,"Successfully Logout. Redirecting to HomePage", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(Home_Activity.this, MainActivity.class);
+        startActivity(i);
     }
 
 

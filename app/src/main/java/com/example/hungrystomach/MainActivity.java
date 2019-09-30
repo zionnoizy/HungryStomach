@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     FirebaseAuth m_auth;
 
-    TextView m_displaytext;
     EditText et_email, et_password;
     Button btn_register, btn_login;
 
@@ -66,14 +65,15 @@ public class MainActivity extends AppCompatActivity {
         btn_register = findViewById(R.id.btn_register);
         btn_login = findViewById(R.id.btn_login);
 
-        m_displaytext.setText("Unknown Auth State.");
 
-        user = new User();
+        //user = new User();
         init_firebase();
 
+
         click_to_register_new_user();
+
         click_to_login();
-        reset_pwd();
+        //reset_pwd();
 
 
     }
@@ -85,24 +85,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void click_to_register_new_user(){
-        final String email = et_email.getText().toString().trim();
-        final String pwd = et_password.getText().toString().trim();
-
         btn_register.setOnClickListener(new View.OnClickListener() {
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-            DatabaseReference cur_usr = ref.child(m_auth.getCurrentUser().getUid());
             @Override
             public void onClick(View v) {
-                String email = et_email.getText().toString().trim();
-                String tmp = new String(email);
-                String username = tmp.split("@")[0];
 
-                String pwd = et_password.getText().toString().trim();
-
-                User usr = new User(email,username,pwd);
-                cur_usr.child("username").setValue(username);
-                cur_usr.child("icon").setValue("default_icon");
-
+                final String email = et_email.getText().toString().trim();
+                final String username = email.split("@")[0];
+                final String pwd = et_password.getText().toString().trim();
                 if (email.isEmpty() || pwd.isEmpty()) {
                     et_email.setError("Entering Email Password Is required");
                     et_email.requestFocus();
@@ -114,18 +103,23 @@ public class MainActivity extends AppCompatActivity {
                 if (pwd.length() < 3) {
                     et_password.setError("Password Length Should More Than 3");
                     et_password.requestFocus();
-                    return;
                 } else {
                     m_auth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(MainActivity.this, "Registration Successed", Toast.LENGTH_SHORT).show();
-                                Log.e("user_reg", "User Registration Successful");
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+                        DatabaseReference usr_uid = ref.child(m_auth.getCurrentUser().getUid());
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "Registration Successed", Toast.LENGTH_SHORT).show();
+                            //User usr = new User(email,username,pwd);
+                            usr_uid.child("email").setValue(email);
+                            usr_uid.child("username").setValue(username);
+                            usr_uid.child("password").setValue(pwd);
+                            usr_uid.child("icon").setValue("default_icon");
 
-                            }
-                            else
-                                Log.e("user_reg_fail", "Field Empty!");
+                        }
+                        else
+                            Log.e("user_reg_fail", "Field Empty!");
                         }
                     });
                 }
@@ -174,10 +168,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
     private void reset_pwd(){
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.acct_reset_pwd, null);
+        final View dialogView = inflater.inflate(R.layout.acct_reset_pwd, null); //Error
 
         String email = et_email.getText().toString().trim();
         String tmp = new String(email);
@@ -213,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    */
 
 
 }

@@ -46,5 +46,8 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:4.3.2'
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    implementation "androidx.legacy:legacy-preference-v14:1.0.0"
+    implementation "androidx.preference:preference:1.1.0"
+
     //https://firebase.google.com/docs/android/setup#available-libraries
 }

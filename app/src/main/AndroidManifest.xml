@@ -41,6 +41,8 @@
             </intent-filter>
         </service>
 
+        android:usesCleartextTraffic="true"
+
     </application>
 
 
