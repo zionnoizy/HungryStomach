@@ -1,16 +1,11 @@
 package com.example.hungrystomach.Adapter;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,22 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.example.hungrystomach.Fragment.AllFoodFragment;
 import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.R;
-import com.google.firebase.auth.FirebaseAuth;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
     private Context m_context;
-    private ArrayList<Food> m_listFood  = new ArrayList<Food>();
+    private ArrayList<Food> m_listFood;
 
-    public FoodAdapter(Context context, ArrayList<Food> food_list) {//m_context, food_list
+    public FoodAdapter(Context context, ArrayList<Food> food_list) {
         this.m_context = context;
         this.m_listFood = food_list;
     }
@@ -64,32 +54,26 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         }
 
         public void onClick(View view) {
-            Log.e("name",FoodName.toString());
         }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FoodAdapter.FoodViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         Food f = m_listFood.get(position);
         holder.FoodName.setText(f.get_name());
         holder.FoodDescription.setText(f.get_description());
         holder.FoodPrice.setText(f.get_price());
-        holder.FoodPrice.setText(f.get_url());
         //Picasso.get().load(m_listFood.get(position).get_url()).fit().into(holder.FoodIcon);
-        Glide.with(m_context).load(f.get_url()).into(holder.FoodIcon); //getListFood().get(position).get_icon()
+        Glide.with(m_context).load(f.get_uri()).into(holder.FoodIcon);
     }
 
-    public void setListFood(ArrayList<Food> m_listFood){
-        this.m_listFood = m_listFood;
-    }
 
-    @Override
     public int getItemCount() {
         return m_listFood.size();
     }
 
-    public Context get_context() {
-        return m_context;
-    }
 
+    public void setListFood(ArrayList<Food> m_listFood){
+        this.m_listFood = m_listFood;
+    }
 }

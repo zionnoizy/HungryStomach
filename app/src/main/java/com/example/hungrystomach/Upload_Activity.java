@@ -1,6 +1,7 @@
 package com.example.hungrystomach;
 
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,14 +9,12 @@ import android.os.Bundle;
 
 //import com.example.hungrystomach.Adapter.FoodAdapter;
 import com.example.hungrystomach.Model.Food;
-import com.example.hungrystomach.Model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -26,16 +25,15 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 
 
 public class Upload_Activity extends AppCompatActivity{
@@ -52,9 +50,12 @@ public class Upload_Activity extends AppCompatActivity{
     private ImageView img_view;
 
     private Uri image_uri;
-
     private StorageReference storage_ref ;
+    StorageReference sf;
     private DatabaseReference database_ref;
+
+    private ArrayList<Food> entries;
+
     private FirebaseAuth m_auth = FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +69,13 @@ public class Upload_Activity extends AppCompatActivity{
         et_fdesc = findViewById(R.id.et_fdesc);
         et_fprice = findViewById(R.id.et_fprice);
         img_view = findViewById(R.id.img_view);
-
         progress_bar = findViewById(R.id.progress_bar);
 
+        database_ref = FirebaseDatabase.getInstance().getReference().child("all_uploaded_image");
+        storage_ref = FirebaseStorage.getInstance().getReference().child("all_uploaded_image");
 
-        storage_ref = FirebaseStorage.getInstance().getReference("all_uploaded_image");
+
+
         m_btn_choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,55 +121,42 @@ public class Upload_Activity extends AppCompatActivity{
 
 
     private void uploading_image(){
-        final String usr_uid = m_auth.getCurrentUser().getUid();
-
-        if(image_uri!=null) {
-            String image_name = et_fname.getText().toString().trim();
-            StorageReference sf = storage_ref.child(image_name);
-            //to storage
+        String image_name = et_fname.getText().toString().trim();
+        sf = storage_ref.child(image_name + "." + get_extension(image_uri));
+        if (image_uri != null) {
             sf.putFile(image_uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            String tmp_name = et_fname.getText().toString().trim();
-                            String tmp_desc = et_fdesc.getText().toString().trim();
-                            String tmp_price = et_fprice.getText().toString().trim();
-                            String tmp_image_uri = image_uri.toString().trim();
+                            sf.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String url = uri.toString();
+                                    Food fd = new Food(et_fname.getText().toString().trim(),
+                                            et_fdesc.getText().toString().trim(),
+                                            et_fprice.getText().toString().trim(),
+                                            url);
+                                    String uploadId = database_ref.push().getKey();
+                                    database_ref.child(uploadId).setValue(fd);
+                                    Toast.makeText(Upload_Activity.this, "Upload successfully", Toast.LENGTH_LONG).show();
+                                }
+                            });
 
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("all_uploaded_image");
-                            DatabaseReference food_name = ref.child(tmp_name);
-                            //to database
-                            food_name.child("name").setValue(tmp_name);
-                            food_name.child("description").setValue(tmp_desc);
-                            food_name.child("price").setValue(tmp_price);
-                            food_name.child("image_uri").setValue(tmp_image_uri);
-                            food_name.child("uploader_uid").setValue(m_auth.getCurrentUser().getUid());
-
-                            //to model
-                            Food fd = new Food(tmp_name, tmp_desc, tmp_price, tmp_image_uri);
-                            /*
-                            //uploadID
-                            String uploadId = food_name.push().getKey();
-                            food_name.child(uploadId).setValue(fd);
-                            */
-                            Toast.makeText(Upload_Activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
-                         public void onFailure(@NonNull Exception e) {
+                        public void onFailure(@NonNull Exception e) {
                             Toast.makeText(Upload_Activity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(Upload_Activity.this, "Image is Uploading", Toast.LENGTH_SHORT).show();
-                            }
-                    })
-                    ;
-
-        }else
-            Toast.makeText(Upload_Activity.this, "Please Select Image or Add Image Name", Toast.LENGTH_LONG).show();
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        }
+                    });
+        } else {
+            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+        }
         redirect_home();
 
     }

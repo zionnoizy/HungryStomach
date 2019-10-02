@@ -4,22 +4,17 @@ public class Food {
     public String name;
     public String description;
     public String price;
-    public String img_url;
-    public String icon;
+    public String img_uri;
 
     public Food() {
         //empty
     }
 
-
-    public Food(String name, String description, String price, String imageUrl) {
-        if (name.trim().equals("")) {
-            name = "No Name";
-        }
+    public Food(String name, String description, String price, String img_uri) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.img_url = imageUrl;
+        this.img_uri = img_uri;
     }
 
 
@@ -36,24 +31,11 @@ public class Food {
     public String get_price() {
         return price;
     }
-    public String get_icon() {
-        return icon;
-    }
 
-    public String get_url() {
-        return img_url;
-    }
-    public void setPrice(String price) {
-        this.price = price;
-    }
-    public void setImageUrl(String imageUrl) {
-        img_url = imageUrl;
-    }
 
-    public void set_icon(String icon) {
-        this.icon = icon;
+    public String get_uri() {
+        return img_uri;
     }
-
 
 
 }

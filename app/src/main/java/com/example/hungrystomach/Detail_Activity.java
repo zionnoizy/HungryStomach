@@ -7,8 +7,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hungrystomach.Model.Food;
-
 public class Detail_Activity extends AppCompatActivity {
     public static final String EXTRA_FOOD = "extra_food";
 
