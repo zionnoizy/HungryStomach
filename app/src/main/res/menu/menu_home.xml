@@ -3,26 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.hungrystomach.Home_Activity">
 
-    <item
-        android:id="@+id/it_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+
 
     <item
         android:id="@+id/it_upload"
         android:title="Upload"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/it_logout"
-        android:title="Logout"
-        app:showAsAction="never" />
+
 
 
     <item
         android:id="@+id/it_chat"
-        android:title="ShoppingCart"
+        android:title="CartRoom"
         android:icon="@drawable/ic_chat"
         app:showAsAction="ifRoom" />
 
@@ -37,18 +30,26 @@
 
 
     <item
-        android:id="@+id/item3"
-        android:title="Item 3"
+        android:id="@+id/sorting"
+        android:title="Sort"
         app:showAsAction="never">
         <menu>
             <item
-                android:id="@+id/subitem1"
-                android:title="Sub Item 1" />
+                android:id="@+id/sort_oldest"
+                android:title="Oldest" />
             <item
-                android:id="@+id/subitem2"
-                android:title="Sub Item 2" />
+                android:id="@+id/sort_newest"
+                android:title="Newest" />
         </menu>
     </item>
 
+    <item
+        android:id="@+id/it_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/it_logout"
+        android:title="Logout"
+        app:showAsAction="never" />
 
 </menu>

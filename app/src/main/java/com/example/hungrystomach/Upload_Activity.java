@@ -1,7 +1,6 @@
 package com.example.hungrystomach;
 
 
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,7 +14,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -39,8 +37,7 @@ import java.util.ArrayList;
 public class Upload_Activity extends AppCompatActivity{
     private static final int PICK_IMAGE_REQUEST = 1;
 
-    private Button m_btn_choose;
-    private Button btn_upload;
+    private Button m_btn_choose, btn_upload, btn_return;
 
     private EditText et_fname;
     private EditText et_fdesc;
@@ -60,10 +57,11 @@ public class Upload_Activity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.upload_main);
+        setContentView(R.layout.upload_);
 
         m_btn_choose = findViewById(R.id.btn_choose);
         btn_upload = findViewById(R.id.btn_upload);
+        btn_return = findViewById(R.id.btn_return);
 
         et_fname = findViewById(R.id.et_fname);
         et_fdesc = findViewById(R.id.et_fdesc);
@@ -88,6 +86,13 @@ public class Upload_Activity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 uploading_image();
+            }
+        });
+
+        btn_return.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                redirect_home();
             }
         });
     }
@@ -158,6 +163,7 @@ public class Upload_Activity extends AppCompatActivity{
             Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
         }
         redirect_home();
+        finish();
 
     }
 

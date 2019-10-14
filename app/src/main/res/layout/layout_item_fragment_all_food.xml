@@ -61,7 +61,9 @@
                 android:paddingRight="15dp"
                 android:text="Detail"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#FFFEFE"
+                />
 
             <TextView
                 android:id="@+id/fooddescription"

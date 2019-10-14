@@ -1,26 +1,36 @@
 package com.example.hungrystomach;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.hungrystomach.Adapter.TabPagerAdapter;
+import com.example.hungrystomach.Fragment.AllFoodFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 
 public class Home_Activity extends AppCompatActivity {
     FirebaseAuth m_auth;
+
+    AllFoodFragment fragment;
+    NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +56,22 @@ public class Home_Activity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.it_upload:
-                Toast.makeText(this,"Redirected to Upload Photos Section", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"Upload Your Food Here", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(Home_Activity.this, Upload_Activity.class);
                 startActivity(i);
                 return true;
             case R.id.it_shoppingcart:
-                Toast.makeText(this,"Shopping Cart Coming Soon..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"ShoppingCart Coming Soon..", Toast.LENGTH_SHORT).show();
+                //Intent intent = new Intent(Home_Activity.this, Cart_Activity.class);
+                //startActivity(intent);
                 return true;
             case R.id.it_chat:
-                Toast.makeText(this,"Shopping Cart Coming Soon..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"ChatRoom Coming Soon..", Toast.LENGTH_SHORT).show();
+                //Intent intent = new Intent(Home_Activity.this, Chat_Activity.class);
+                //startActivity(intent);
+                return true;
+            case R.id.sort_oldest:
+                fragment.oldest(); //fixed?
                 return true;
             case R.id.it_settings:
                 Toast.makeText(this,"Redirected to Setting Section", Toast.LENGTH_SHORT).show();
@@ -113,4 +130,6 @@ public class Home_Activity extends AppCompatActivity {
         });
     }
     //////////////////////////////////////////////////////////////////////////////////
+    public void sendNotification(View v){
+    }
 }

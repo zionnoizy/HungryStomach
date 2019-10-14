@@ -1,6 +1,7 @@
 package com.example.hungrystomach.Fragment;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -33,13 +35,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-//implements View.OnClickListener
-public class AllFoodFragment extends Fragment{
+//implements FoodAdapter.OnItemClickListener
+public class AllFoodFragment extends Fragment {
     private ArrayList<Food> entries;
     private DatabaseReference ref;
     private FirebaseDatabase dbr;
     FoodAdapter adapter;
     public Button btn_detail;
+
 
     public AllFoodFragment() {
         //empty
@@ -81,7 +84,9 @@ public class AllFoodFragment extends Fragment{
                 Toast.makeText(getContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        //btn_detail = (Button) contactsView.findViewById(R.id.fooddetail);
+        //click detail
+
+
         return contactsView;
     }
 
@@ -90,21 +95,14 @@ public class AllFoodFragment extends Fragment{
         super.onActivityCreated(savedInstanceState);
     }
 
-    /*
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        super.onViewCreated(view, savedInstanceState);
-        this.contactsView = view;
-    }
-    */
 
-    /*
-    private void populateList() {
-        RecyclerView recycler_view = (RecyclerView) contactsView.findViewById(R.id.recycler_view);
-        FoodAdapter<Food> saveAdapter;
-        saveAdapter = new SaveListAdapter();
-        recycler_view.setAdapter(saveAdapter);
+    public void oldest() {
+        LinearLayoutManager lm = new LinearLayoutManager(getContext());
+        lm.setReverseLayout(true); //really oldest?
+        lm.setStackFromEnd(true);
+        adapter.notifyDataSetChanged();
     }
-    */
+
 
 
 }

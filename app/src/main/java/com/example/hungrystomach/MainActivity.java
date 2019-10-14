@@ -42,15 +42,16 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
-    private User user;
+    //private User user;
 
     FirebaseApp m_app;
     FirebaseDatabase m_database;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     FirebaseAuth m_auth;
 
-    EditText et_email, et_password;
+    EditText et_email, et_password ;
     Button btn_register, btn_login;
+    TextView forget_password;
 
 
     @Override
@@ -64,14 +65,12 @@ public class MainActivity extends AppCompatActivity {
         et_password = findViewById(R.id.et_password);
         btn_register = findViewById(R.id.btn_register);
         btn_login = findViewById(R.id.btn_login);
+        forget_password = findViewById(R.id.forgetpassword);
 
-
-        //user = new User();
         init_firebase();
 
 
         click_to_register_new_user();
-
         click_to_login();
         //reset_pwd();
 
@@ -116,7 +115,9 @@ public class MainActivity extends AppCompatActivity {
                             usr_uid.child("username").setValue(username);
                             usr_uid.child("password").setValue(pwd);
                             usr_uid.child("icon").setValue("default_icon");
-
+                            Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
+                            startActivity(refer_to_home);
+                            finish();
                         }
                         else
                             Log.e("user_reg_fail", "Field Empty!");
@@ -155,11 +156,12 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
-                                Toast.makeText(MainActivity.this, "Login Errror", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Check Your Network Connection", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(MainActivity.this, "Login SUCCESS GOING TO HOME_ACTIVITY", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(MainActivity.this, "Welcome " + m_auth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
                                 Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
                                 startActivity(refer_to_home);
+                                finish();
                             }
                         }
                     });
@@ -170,45 +172,43 @@ public class MainActivity extends AppCompatActivity {
 
     /*
     private void reset_pwd(){
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.acct_reset_pwd, null); //Error
-
-        String email = et_email.getText().toString().trim();
-        String tmp = new String(email);
-        String username = tmp.split("@")[0];
-        String pwd = et_password.getText().toString().trim();
-
-        dialogBuilder.setView(dialogView);
-        final EditText enter_rest_email = (EditText) dialogView.findViewById(R.id.enter_rest_email);
-        final Button btn_click_toreset = (Button) dialogView.findViewById(R.id.btn_click_toreset);
-        final ProgressBar progressBar1 = (ProgressBar) dialogView.findViewById(R.id.progressBar);
-
-
-        btn_click_toreset.setOnClickListener(new View.OnClickListener() {
+        forget_password.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String email = enter_rest_email.getText().toString().trim();
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplication(), "Enter email to reset", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                progressBar1.setVisibility(View.VISIBLE);
-                m_auth.sendPasswordResetEmail(email)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(MainActivity.this, "Reset Instruction has been sent", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(MainActivity.this, "Failed to reset the email, check your network!", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Reset Password");
+                View mView = getLayoutInflater().inflate(R.layout.acct_reset_pwd, null); //error: no TextInputLayout
 
+                final EditText enter_rest_email = (EditText) mView.findViewById(R.id.enter_rest_email);
+                Button btn_click_toreset = (Button) mView.findViewById(R.id.btn_click_toreset);
+                ProgressBar progressBar1 = (ProgressBar) mView.findViewById(R.id.progressBar);
+
+                mBuilder.setNegativeButton("Cancel", null);
+
+                btn_click_toreset.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        String email = enter_rest_email.getText().toString();
+                        if(!email.isEmpty()){
+                            Toast.makeText(MainActivity.this, "Enter Your Email", Toast.LENGTH_SHORT).show();
+                        }else {
+                            m_auth.sendPasswordResetEmail(email)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(MainActivity.this, "Reset Instruction Has Been Sent to Your Email", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(MainActivity.this, "Check Your Network Setting", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                });
+                progressBar1.setVisibility(View.VISIBLE);
+                mBuilder.setView(mView);
             }
         });
     }
     */
-
-
 }
