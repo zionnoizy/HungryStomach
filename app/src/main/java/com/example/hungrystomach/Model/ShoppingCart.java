@@ -6,7 +6,7 @@ public class ShoppingCart {
     private String product_name, description, productID;
     private String product_price;
     private int quantity;
-    public String img_url; //need uri?
+    public String img_url;
 
     public ShoppingCart() {
         //empty
