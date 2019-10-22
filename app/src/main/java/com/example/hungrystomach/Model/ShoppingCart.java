@@ -3,39 +3,49 @@ package com.example.hungrystomach.Model;
 import java.text.NumberFormat;
 
 public class ShoppingCart {
-    private String name, description, productID;
-    private int price, quantity;
+    private String product_name, description, productID;
+    private String product_price;
+    private int quantity;
+    public String img_url; //need uri?
 
-    public ShoppingCart(String productId, int price, String name, String description, int quantity){
-        this.productID = productId;
-        this.name = name;
-        this.price = price;
-        this.description = description;
+    public ShoppingCart() {
+        //empty
+    }
+
+    public ShoppingCart(String product_name, String product_price, int quantity , String img_url){
+        //this.productID = productId_position;
+        this.product_name = product_name;
+        this.product_price = product_price;
         this.quantity = quantity;
+        this.img_url = img_url;
+
     }
 
-    public void setQuantity(int quantity){
-        this.quantity = quantity;
+    public String getProduct_name() {
+        return product_name;
     }
 
-    public String getProductID() {
-        return productID;
-    }
-
-    public String getTitle() {
-        return name;
-    }
-
-
-    public String getDescription() {
-        return description;
+    public String getProduct_price() {
+        return product_price; //NumberFormat.getCurrencyInstance().format(price)
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public String getPrice() {
-        return NumberFormat.getCurrencyInstance().format(price);
+    public String getDescription() {
+        return description;
+    }
+
+    public String getImg_url() {
+        return img_url;
+    }
+
+    public String getProductID() {
+        return productID;
+    }
+
+    public int setQuantity(){
+        return quantity;
     }
 }

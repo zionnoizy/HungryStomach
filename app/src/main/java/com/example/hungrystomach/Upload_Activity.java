@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -23,8 +24,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -141,6 +146,23 @@ public class Upload_Activity extends AppCompatActivity{
                                             et_fdesc.getText().toString().trim(),
                                             et_fprice.getText().toString().trim(),
                                             url);
+
+                                    //new: get username
+                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+                                    Query query = ref.child(m_auth.getCurrentUser().getUid()); //.orderByChild("username");
+                                    query.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            String username = dataSnapshot.child("username").getValue().toString();
+                                            Log.d("check_uploader", username);
+                                            database_ref.child("uploader").setValue(username); //add username in uplaod food
+                                        }
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            throw databaseError.toException();
+                                        }
+                                    });
+
                                     String uploadId = database_ref.push().getKey();
                                     database_ref.child(uploadId).setValue(fd);
                                     Toast.makeText(Upload_Activity.this, "Upload successfully", Toast.LENGTH_LONG).show();

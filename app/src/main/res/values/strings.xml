@@ -18,5 +18,15 @@
 
     <string name="reset_string"><u>Reset Your Password</u>.</string>
 
+    <string name="description"> Homemade EggTart. It contains 6 piece with container provided. You can microware or bake it for 15 sec to heat. Crispy!  </string>
+
+    <string name="success"><u>Transcation Successful!. Your cooker receive your order and prearing now. To check you status, go to \"Recent Transacttion\".</u></string>
+
+    <string name="cooker_receive_order"><u>You receive an order request . Please Look at your order that \"Recent Transacttion\"  </u></string>
+
+    <string name="cooker_finish_order"><u>If you finish your order, please press Successful. Your profit is credit on "Profit" already. Thank you for using HungryStomach  </u></string>
+
+    <string name="buyer_notice"> <u>Don\'t forget to review your food\! Please go to \"History\" to review your pass transaction. Thank you for using HungryStomach </u></string>
+
 
 </resources>

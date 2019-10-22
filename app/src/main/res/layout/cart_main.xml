@@ -14,10 +14,20 @@
         android:layout_alignParentTop="true">
 
         <TextView
+            android:id="@+id/total_price_label"
+            android:layout_width="171dp"
+            android:layout_height="wrap_content"
+            android:text="Total Price ="
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
+
+
+        <TextView
             android:id="@+id/total_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Total Price ="
+            android:text="0"
             android:textColor="@android:color/white"
             android:textAlignment="center"
             android:textSize="20dp" />

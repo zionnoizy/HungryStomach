@@ -5,6 +5,7 @@ public class Food {
     public String description;
     public String price;
     public String img_uri;
+    public String uploader;
 
     public Food() {
         //empty

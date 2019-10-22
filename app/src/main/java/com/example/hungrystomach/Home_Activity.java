@@ -61,9 +61,8 @@ public class Home_Activity extends AppCompatActivity {
                 startActivity(i);
                 return true;
             case R.id.it_shoppingcart:
-                Toast.makeText(this,"ShoppingCart Coming Soon..", Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(Home_Activity.this, Cart_Activity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(Home_Activity.this, Cart_Activity.class);
+                startActivity(intent);
                 return true;
             case R.id.it_chat:
                 Toast.makeText(this,"ChatRoom Coming Soon..", Toast.LENGTH_SHORT).show();
@@ -74,9 +73,9 @@ public class Home_Activity extends AppCompatActivity {
                 fragment.oldest(); //fixed?
                 return true;
             case R.id.it_settings:
-                Toast.makeText(this,"Redirected to Setting Section", Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(Home_Activity.this, Setting_Activity.class);
-                //startActivity(intent);
+                //Toast.makeText(this,"Redirected to Setting Section", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(Home_Activity.this, Setting_Activity.class);
+                startActivity(intent2);
                 return true;
             case R.id.it_logout:
                 userLogout();
@@ -91,6 +90,7 @@ public class Home_Activity extends AppCompatActivity {
         Toast.makeText(this,"Successfully Logout. Redirecting to HomePage", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(Home_Activity.this, MainActivity.class);
         startActivity(i);
+        finish();
     }
 
 
@@ -98,16 +98,9 @@ public class Home_Activity extends AppCompatActivity {
         TabLayout tab_lyout = (TabLayout) findViewById(R.id.tab_layout);
 
         tab_lyout.addTab(tab_lyout.newTab().setText("All Food"));
-        tab_lyout.addTab(tab_lyout.newTab().setText("--"));
-        tab_lyout.addTab(tab_lyout.newTab().setText("--"));
-        /*
-        tab_lyout.addTab(tab_lyout.newTab().setText("Indian"));
-        tab_lyout.addTab(tab_lyout.newTab().setText("Japanese"));
-        tab_lyout.addTab(tab_lyout.newTab().setText("Korean"));
-        tab_lyout.addTab(tab_lyout.newTab().setText("Mediterranean"));
-        tab_lyout.addTab(tab_lyout.newTab().setText("Dessert"));
-        tab_lyout.addTab(tab_lyout.newTab().setText("Drink"));
-        */
+        tab_lyout.addTab(tab_lyout.newTab().setText("From Newest"));
+        tab_lyout.addTab(tab_lyout.newTab().setText("Search"));
+
         final ViewPager view_pager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tab_lyout.getTabCount());
         view_pager.setAdapter(adapter);

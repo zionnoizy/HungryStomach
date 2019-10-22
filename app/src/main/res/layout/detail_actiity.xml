@@ -17,16 +17,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
-    <TextView
-        android:id="@+id/text_detail_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Price"
-        app:layout_constraintBottom_toTopOf="@+id/text_detail_des_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_detail_name" />
+
+
+
 
     <TextView
         android:id="@+id/text_detail_name"
@@ -35,22 +28,35 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:scaleType="fitXY"
-        android:text="FOod Name"
+        android:text="Food Name"
         android:textSize="35dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_detail" />
 
-    <TextView
-        android:id="@+id/text_detail_des_title"
+
+    <RatingBar
+        android:id="@+id/rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="36dp"
-        android:text="Description"
+        android:layout_below="@+id/text_detail_name"
+        android:layout_marginEnd="168dp"
+        app:layout_constraintBottom_toTopOf="@+id/text_detail_price"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.475"
+        app:layout_constraintTop_toBottomOf="@+id/text_detail_name"
+        app:layout_constraintVertical_bias="0.454"
+        android:numStars="5" />
+
+
+    <TextView
+        android:id="@+id/text_detail_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="336dp"
+        android:layout_marginTop="96dp"
+        android:text="Price"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_detail_name" />
+        app:layout_constraintTop_toBottomOf="@+id/text_detail_name"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/text_detail_des"
@@ -59,12 +65,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:text="Description_detail"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/text_detail_price"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintTop_toBottomOf="@+id/text_detail_des_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/text_detail_price"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/detail_atc"
@@ -85,4 +92,23 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="205dp" />
 
+    <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+        android:id="@+id/quantitiy"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="420dp"
+        app:backGroundColor="@color/colorAccent"
+        app:finalNumber="20"
+        app:initialNumber="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:textSize="8sp" />
+
+
+    app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="565dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

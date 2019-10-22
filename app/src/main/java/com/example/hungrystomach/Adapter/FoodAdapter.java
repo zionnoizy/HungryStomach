@@ -28,22 +28,11 @@ import java.util.ArrayList;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
     private Context m_context;
     private ArrayList<Food> m_listFood;
-    //private OnItemClickListener mListener;
 
-    /*
-    public interface OnItemClickListener{
-        void onItemClick(int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener){
-        mListener = listener;
-    }
-    */
     public FoodAdapter(Context context, ArrayList<Food> food_list) {
         this.m_context = context;
         this.m_listFood = food_list;
     }
-
 
     @NonNull
     @Override

@@ -26,6 +26,29 @@
         app:showAsAction="ifRoom" />
 
 
+    <item
+        android:id="@+id/transaction"
+        android:title="Transaction"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/invoice"
+                android:title="Recent Invoice" />
+            <item
+                android:id="@+id/history"
+                android:title="History" />
+
+            <item
+                android:id="@+id/profit"
+                android:title="Profit" />
+
+            <item
+                android:id="@+id/rating"
+                android:title="Rating Food" />
+        </menu>
+    </item>
+
+
 
 
 
@@ -36,12 +59,14 @@
         <menu>
             <item
                 android:id="@+id/sort_oldest"
-                android:title="Oldest" />
+                android:title="Grid" />
             <item
                 android:id="@+id/sort_newest"
-                android:title="Newest" />
+                android:title="List" />
         </menu>
     </item>
+
+
 
     <item
         android:id="@+id/it_settings"

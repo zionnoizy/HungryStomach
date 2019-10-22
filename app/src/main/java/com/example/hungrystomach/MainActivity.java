@@ -30,9 +30,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 
 import com.google.firebase.database.DatabaseReference;
@@ -42,7 +44,6 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
-    //private User user;
 
     FirebaseApp m_app;
     FirebaseDatabase m_database;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 final String email = et_email.getText().toString().trim();
                 final String username = email.split("@")[0];
                 final String pwd = et_password.getText().toString().trim();
+                final String id;
                 if (email.isEmpty() || pwd.isEmpty()) {
                     et_email.setError("Entering Email Password Is required");
                     et_email.requestFocus();
@@ -106,22 +108,50 @@ public class MainActivity extends AppCompatActivity {
                     m_auth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-                        DatabaseReference usr_uid = ref.child(m_auth.getCurrentUser().getUid());
-                        if (task.isSuccessful()) {
-                            Toast.makeText(MainActivity.this, "Registration Successed", Toast.LENGTH_SHORT).show();
-                            //User usr = new User(email,username,pwd);
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+                            DatabaseReference usr_uid = ref.child(m_auth.getCurrentUser().getUid());
+
+                            //set getDisplayName
+                            FirebaseUser user = m_auth.getCurrentUser();
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+                            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(MainActivity.this, "Registration successed, redirect to home", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                            });
+
+                            User usr = new User(email,username);
+
                             usr_uid.child("email").setValue(email);
                             usr_uid.child("username").setValue(username);
                             usr_uid.child("password").setValue(pwd);
                             usr_uid.child("icon").setValue("default_icon");
+                            //usr_uid.child("id").setValue(String.valueOf(usr_id)); //not increment
+                            usr_uid.child("phone").setValue("blank");
+                            usr_uid.child("address").setValue("blank");
+                            usr_uid.child("state").setValue("blank");
+                            usr_uid.child("city").setValue("blank");
+                            usr_uid.child("zip").setValue("blank");
+
+                            usr.setEmail(email);
+                            usr.setUsername(username);
+                            usr.setIcon("default_icon");
+                            usr.setPhone("blank");
+                            usr.setAddress("blank");
+                            usr.setState("blank");
+                            usr.setCity("blank");
+                            usr.setZip("blank"); //8
+
                             Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
                             startActivity(refer_to_home);
                             finish();
                         }
-                        else
-                            Log.e("user_reg_fail", "Field Empty!");
-                        }
+                        //else
+                            //Toast.makeText(MainActivity.this,"Field Empty!",Toast.LENGTH_SHORT).show();
                     });
                 }
             }

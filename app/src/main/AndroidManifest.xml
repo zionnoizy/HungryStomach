@@ -27,6 +27,10 @@
         <activity android:name=".Upload_Activity" />
         <activity android:name=".Cart_Activity" />
         <activity android:name=".Detail_Activity" />
+        <activity android:name=".Setting_Activity" />
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
     </application>
 
 
