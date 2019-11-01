@@ -54,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
     Button btn_register, btn_login;
     TextView forget_password;
 
+    //default info to register usr
+    String defaultIcon =  "default_icon";
+    String defaultPhone = "blank";
+    String defaultAddress = "blank";
+    String defaultState = "blank";
+    String defaultCity = "blank";
+    String defaultZip = "blank";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 final String email = et_email.getText().toString().trim();
                 final String username = email.split("@")[0];
                 final String pwd = et_password.getText().toString().trim();
-                final String id;
                 if (email.isEmpty() || pwd.isEmpty()) {
                     et_email.setError("Entering Email Password Is required");
                     et_email.requestFocus();
@@ -108,9 +114,6 @@ public class MainActivity extends AppCompatActivity {
                     m_auth.createUserWithEmailAndPassword(email, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-                            DatabaseReference usr_uid = ref.child(m_auth.getCurrentUser().getUid());
-
                             //set getDisplayName
                             FirebaseUser user = m_auth.getCurrentUser();
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
@@ -119,32 +122,16 @@ public class MainActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(MainActivity.this, "Registration successed, redirect to home", Toast.LENGTH_SHORT).show();
+                                        String uid = m_auth.getCurrentUser().getUid();
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+                                        DatabaseReference id = ref.child(m_auth.getCurrentUser().getUid());
 
+                                        User usr = new User(email,username, defaultIcon, defaultPhone, defaultAddress, defaultState, defaultCity, defaultZip, uid);
+                                        id.setValue(usr);
                                     }
                                 }
                             });
 
-                            User usr = new User(email,username);
-
-                            usr_uid.child("email").setValue(email);
-                            usr_uid.child("username").setValue(username);
-                            usr_uid.child("password").setValue(pwd);
-                            usr_uid.child("icon").setValue("default_icon");
-                            //usr_uid.child("id").setValue(String.valueOf(usr_id)); //not increment
-                            usr_uid.child("phone").setValue("blank");
-                            usr_uid.child("address").setValue("blank");
-                            usr_uid.child("state").setValue("blank");
-                            usr_uid.child("city").setValue("blank");
-                            usr_uid.child("zip").setValue("blank");
-
-                            usr.setEmail(email);
-                            usr.setUsername(username);
-                            usr.setIcon("default_icon");
-                            usr.setPhone("blank");
-                            usr.setAddress("blank");
-                            usr.setState("blank");
-                            usr.setCity("blank");
-                            usr.setZip("blank"); //8
 
                             Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
                             startActivity(refer_to_home);
@@ -221,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                         if(!email.isEmpty()){
                             Toast.makeText(MainActivity.this, "Enter Your Email", Toast.LENGTH_SHORT).show();
                         }else {
-                            m_auth.sendPasswordResetEmail(email)
+                            m_auth.sendPasswordResetEmail(email) //here
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {

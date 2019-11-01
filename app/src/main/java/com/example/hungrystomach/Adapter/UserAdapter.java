@@ -1,68 +1,77 @@
 package com.example.hungrystomach.Adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.hungrystomach.Model.User;
 import com.example.hungrystomach.R;
-import com.google.firebase.database.core.Context;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
 //CardViewHolder
-/*
-public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder>
-public class UserAdapter extends RecyclerView.ListAdapter {
+
+
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
+    private Context m_context;
     private List<User> all_users;
-    private ImageView m_profile_image;
-    //public static final int LOADING_ITEM = 0;
+    double total_amounts;
 
-    public UserAdapter(ImageView m_profile_image){
-        all_users = new ArrayList();
-        this.m_profile_image = mProfileImage;
+    public UserAdapter(Context context, ArrayList<User> all_users) {
+        this.m_context = context;
+        this.all_users = all_users;
     }
 
-    public void addUsers(List<User> all_users){
-        int user_pos = all_users.size();
-        this.all_users.addAll(products);
-        notifyItemRangeInserted(user_pos, all_users.size());
-    }
-
-
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        //if(viewType == LOADING_ITEM){
-        //    View row = inflater.inflate(R.layout.custom_row_loading, parent, false);
-        //    return new LoadingHolder(row);
-        //}
-
+    public UserAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(m_context);
+        View itemv = inflater.inflate(R.layout.layout_item_cart, parent, false);
+        return new UserViewHolder(itemv);
     }
 
-    //Hold View Of Users
-    private class User_Holder extends RecyclerView.ViewHolder{
-        ImageView iv_user_thumb;
-        TextView tv_username,
 
-        public User_Holder(View itemView){
+    public class UserViewHolder extends RecyclerView.ViewHolder{
+        public ImageView UserIcon;
+        public TextView Username;
+
+        public UserViewHolder (View itemView){
             super(itemView);
-            tv_username = itemView.findViewById(R.id.tv_username);
-            iv_user_thumb = itemView.findViewById(R.id.profile_image);
+            UserIcon = (ImageView)itemView.findViewById(R.id.cart_thumbnail);
+            Username = (TextView)itemView.findViewById(R.id.tv_username);
         }
     }
 
-    private class LoadingHolder extends RecyclerView.ViewHolder{
-        public LoadingHolder(View itemView){
-            super(itemView);
+
+    public void onBindViewHolder(@NonNull UserAdapter.UserViewHolder holder, int position) {
+        User usr = all_users.get(position);
+        holder.Username.setText(usr.getUsername());
+        if(usr.getIcon().equals("default_icon")){
+            holder.UserIcon.setImageResource(R.mipmap.ic_launcher);
+        }
+        else{
+            Glide.with(m_context).load(usr.getIcon()).into(holder.UserIcon);
         }
     }
+
+
+    public int getItemCount() {
+        return all_users.size();
+    }
+
+
+    public void setListCart(ArrayList<User> m_listCart){
+        this.all_users = m_listCart;
+    }
+
 }
-*/

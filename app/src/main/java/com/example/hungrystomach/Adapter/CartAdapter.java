@@ -36,7 +36,7 @@ import static android.content.ContentValues.TAG;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
     private Context m_context;
     private ArrayList<ShoppingCart> m_listCart;
-    double total_amounts;
+    double grandT=0;
 
     public CartAdapter(Context context, ArrayList<ShoppingCart> cart_list) {
         this.m_context = context;
@@ -61,7 +61,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         public TextView CartFoodName;
         public TextView CartFoodPrice;
         public TextView CartFoodQuantity;
-        public TextView total_amount;
+        public TextView CartTTL;
         public TextView sub_total;
         public Button delete_item;
         FirebaseAuth m_auth = FirebaseAuth.getInstance();
@@ -74,7 +74,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             CartFoodName = itemView.findViewById(R.id.cart_foodname);
             CartFoodPrice = itemView.findViewById(R.id.cart_foodprice);
             CartFoodQuantity = itemView.findViewById(R.id.quantity);
-            total_amount = itemView.findViewById(R.id.total_price);
+            CartTTL = (TextView)itemView.findViewById(R.id.total_price);
             sub_total = itemView.findViewById(R.id.sub_total);
             delete_item = itemView.findViewById(R.id.delete_item);
             /*
@@ -116,23 +116,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @Override
     public void onBindViewHolder(@NonNull CartAdapter.CartViewHolder holder, int position) {
         ShoppingCart sc = m_listCart.get((holder.getAdapterPosition()));
-        //m_listCart.get(0).img_url
-
-        holder.CartFoodName.setText(sc.getProduct_name()); //v
-        holder.CartFoodPrice.setText(sc.getProduct_price()); //null
+        holder.CartFoodName.setText(sc.getProduct_name());
+        holder.CartFoodPrice.setText(sc.getProduct_price());
         holder.CartFoodQuantity.setText(String.valueOf(sc.getQuantity()));
 
         double getPrice= Double.parseDouble(m_listCart.get(position).getProduct_price());
-
-        //int getQ = m_listCart.get(position).getQuantity();
-
-
-        double sub_t = getPrice * m_listCart.get(position).getQuantity(); //Integer.parseInt(
-        total_amounts = total_amounts + sub_t;
-        Log.e("TAG", total_amounts + "price?");
+        int getQ = m_listCart.get(position).getQuantity();
+        double sub_t = getPrice * getQ; //but cannot get total amount
+        grandT += sub_t;
 
         holder.sub_total.setText(String.valueOf(sub_t));
-        //holder.total_amount.setText(String.valueOf(total_amounts));
 
         Glide.with(m_context).load(sc.getImg_url()).into(holder.CartFoodIcon);
     }
@@ -145,6 +138,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     public void setListCart(ArrayList<ShoppingCart> m_listCart){
         this.m_listCart = m_listCart;
+    }
+
+    public double grandTotal(){
+        double ttl = 0;
+        for (int i=0; i<m_listCart.size(); ++i){
+            double p = Double.parseDouble(m_listCart.get(i).getProduct_price());
+            double q = m_listCart.get(i).getQuantity();
+            double subT = p*q;
+            ttl += subT;
+        }
+        return ttl;
     }
 
 }

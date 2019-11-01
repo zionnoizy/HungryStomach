@@ -1,6 +1,8 @@
 package com.example.hungrystomach;
 
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,9 +20,11 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +40,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 
 public class Upload_Activity extends AppCompatActivity{
@@ -57,8 +64,13 @@ public class Upload_Activity extends AppCompatActivity{
     private DatabaseReference database_ref;
 
     private ArrayList<Food> entries;
-
     private FirebaseAuth m_auth = FirebaseAuth.getInstance();
+
+    //time
+    private SimpleDateFormat mSimpleDataFormat;
+    private Calendar mCalender;
+    private Button btnDateTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +88,6 @@ public class Upload_Activity extends AppCompatActivity{
 
         database_ref = FirebaseDatabase.getInstance().getReference().child("all_uploaded_image");
         storage_ref = FirebaseStorage.getInstance().getReference().child("all_uploaded_image");
-
 
 
         m_btn_choose.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +111,12 @@ public class Upload_Activity extends AppCompatActivity{
                 redirect_home();
             }
         });
+
+        //time
+        btnDateTime = findViewById(R.id.choose_time);
+        btnDateTime.setOnClickListener(textListener);
+        mSimpleDataFormat = new SimpleDateFormat("MM/dd/yyy hh:mm a", Locale.getDefault());
+
     }
 
 
@@ -129,9 +146,9 @@ public class Upload_Activity extends AppCompatActivity{
     }
 
 
-
     private void uploading_image(){
         String image_name = et_fname.getText().toString().trim();
+
         sf = storage_ref.child(image_name + "." + get_extension(image_uri));
         if (image_uri != null) {
             sf.putFile(image_uri)
@@ -142,14 +159,16 @@ public class Upload_Activity extends AppCompatActivity{
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String url = uri.toString();
+                                    String DateTime = mSimpleDataFormat.format(mCalender.getTime());
                                     Food fd = new Food(et_fname.getText().toString().trim(),
                                             et_fdesc.getText().toString().trim(),
                                             et_fprice.getText().toString().trim(),
-                                            url);
+                                            url, DateTime);
 
-                                    //new: get username
+                                    //this is the error?? waht if I comment it out?
+                                    /*
                                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-                                    Query query = ref.child(m_auth.getCurrentUser().getUid()); //.orderByChild("username");
+                                    Query query = ref.child(m_auth.getCurrentUser().getUid());
                                     query.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -162,7 +181,7 @@ public class Upload_Activity extends AppCompatActivity{
                                             throw databaseError.toException();
                                         }
                                     });
-
+                                    */
                                     String uploadId = database_ref.push().getKey();
                                     database_ref.child(uploadId).setValue(fd);
                                     Toast.makeText(Upload_Activity.this, "Upload successfully", Toast.LENGTH_LONG).show();
@@ -193,5 +212,32 @@ public class Upload_Activity extends AppCompatActivity{
     Intent i = new Intent(this,Home_Activity.class);
     startActivity(i);
     }
+    /////////////////////////////////////////////////////////////////////////////
+    private final View.OnClickListener textListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v){
+            mCalender = Calendar.getInstance();
+            new DatePickerDialog(Upload_Activity.this, mDataDataSet, mCalender.get(Calendar.YEAR),
+                    mCalender.get(Calendar.MONTH), mCalender.get(Calendar.DAY_OF_MONTH)).show();
+        }
+    };
 
+    private final DatePickerDialog.OnDateSetListener mDataDataSet = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int y, int m, int d) {
+            mCalender.set(Calendar.YEAR, y);
+            mCalender.set(Calendar.MONTH, m);
+            mCalender.set(Calendar.DAY_OF_MONTH, d);
+            new TimePickerDialog(Upload_Activity.this, mTimeDataSet, mCalender.get(Calendar.HOUR_OF_DAY), mCalender.get(Calendar.MINUTE), false).show();
+
+        }
+    };
+
+    private final TimePickerDialog.OnTimeSetListener mTimeDataSet = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker timePicker, int h, int m) {
+            mCalender.set(Calendar.HOUR_OF_DAY, h);
+            mCalender.set(Calendar.MINUTE, m);
+        }
+    };
 }

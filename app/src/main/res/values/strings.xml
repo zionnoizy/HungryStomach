@@ -18,7 +18,7 @@
 
     <string name="reset_string"><u>Reset Your Password</u>.</string>
 
-    <string name="description"> Homemade EggTart. It contains 6 piece with container provided. You can microware or bake it for 15 sec to heat. Crispy!  </string>
+    <string name="description">Homemade EggTart. It contains 6 piece with container provided. You can microware or bake it for 15 sec to heat. Crispy!  </string>
 
     <string name="success"><u>Transcation Successful!. Your cooker receive your order and prearing now. To check you status, go to \"Recent Transacttion\".</u></string>
 
@@ -28,5 +28,8 @@
 
     <string name="buyer_notice"> <u>Don\'t forget to review your food\! Please go to \"History\" to review your pass transaction. Thank you for using HungryStomach </u></string>
 
+    <!--create channel id-->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
 </resources>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.example.hungrystomach.Adapter.TabPagerAdapter;
 import com.example.hungrystomach.Fragment.AllFoodFragment;
+import com.example.hungrystomach.Fragment.FoodFragment2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +30,7 @@ import android.widget.Toast;
 public class Home_Activity extends AppCompatActivity {
     FirebaseAuth m_auth;
 
-    AllFoodFragment fragment;
+    FoodFragment2 fragment;
     NotificationManagerCompat notificationManager;
 
     @Override
@@ -65,12 +66,11 @@ public class Home_Activity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.it_chat:
-                Toast.makeText(this,"ChatRoom Coming Soon..", Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(Home_Activity.this, Chat_Activity.class);
-                //startActivity(intent);
+                Intent go_chat = new Intent(Home_Activity.this, RoomUser_Activity.class);
+                startActivity(go_chat);
                 return true;
             case R.id.sort_oldest:
-                fragment.oldest(); //fixed?
+                fragment.sort_name(); //fixed?
                 return true;
             case R.id.it_settings:
                 //Toast.makeText(this,"Redirected to Setting Section", Toast.LENGTH_SHORT).show();

@@ -75,10 +75,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                         Food clcikedItem = m_listFood.get(position);
                         Intent to_detail = new Intent(m_context, Detail_Activity.class);
 
-                        to_detail.putExtra(EXTRA_URL, clcikedItem.get_uri());
-                        to_detail.putExtra(EXTRA_NAME, clcikedItem.get_name());
-                        to_detail.putExtra(EXTRA_PRICE, clcikedItem.get_price());
-                        to_detail.putExtra(EXTRA_DES, clcikedItem.get_description());
+                        to_detail.putExtra(EXTRA_URL, clcikedItem.getUri());
+                        to_detail.putExtra(EXTRA_NAME, clcikedItem.getName());
+                        to_detail.putExtra(EXTRA_PRICE, clcikedItem.getPrice());
+                        to_detail.putExtra(EXTRA_DES, clcikedItem.getDescription());
 
                         m_context.startActivity(to_detail);
                     }
@@ -94,11 +94,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         Food f = m_listFood.get(position);
-        holder.FoodName.setText(f.get_name());
-        holder.FoodDescription.setText(f.get_description());
-        holder.FoodPrice.setText(f.get_price());
+        holder.FoodName.setText(f.getName());
+        holder.FoodDescription.setText(f.getDescription());
+        holder.FoodPrice.setText(f.getPrice());
         //Picasso.get().load(m_listFood.get(position).get_url()).fit().into(holder.FoodIcon);
-        Glide.with(m_context).load(f.get_uri()).into(holder.FoodIcon);
+        Glide.with(m_context).load(f.getUri()).into(holder.FoodIcon);
     }
 
 
@@ -110,4 +110,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public void setListFood(ArrayList<Food> m_listFood){
         this.m_listFood = m_listFood;
     }
+
+
+
 }

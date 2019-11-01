@@ -95,14 +95,4 @@ public class AllFoodFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-
-    public void oldest() {
-        LinearLayoutManager lm = new LinearLayoutManager(getContext());
-        lm.setReverseLayout(true); //really oldest?
-        lm.setStackFromEnd(true);
-        adapter.notifyDataSetChanged();
-    }
-
-
-
 }

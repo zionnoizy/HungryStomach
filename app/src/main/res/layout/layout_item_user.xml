@@ -4,10 +4,21 @@
     android:padding="10dp"
     android:layout_height="match_parent">
 
+<!--    <TextView-->
+<!--        android:id="@+id/label"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:layout_marginLeft="13dp"-->
+<!--        android:layout_toEndOf="@+id/usr_icon"-->
+<!--        android:layout_toRightOf="@+id/usr_icon"-->
+<!--        android:text="Choose the user to chat with"-->
+<!--        android:textSize="18sp" />-->
+
     <ImageView
+        android:id="@+id/usr_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/profile_image"
         android:src="@mipmap/ic_launcher" />
 
     <TextView
@@ -16,8 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="13dp"
-        android:layout_toEndOf="@+id/profile_image"
-        android:layout_toRightOf="@+id/profile_image"
+        android:layout_toEndOf="@+id/usr_icon"
+        android:layout_toRightOf="@+id/usr_icon"
         android:text="username"
         android:textSize="18sp" />
 

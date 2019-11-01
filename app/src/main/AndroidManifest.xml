@@ -3,8 +3,18 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.example.hungrystomach">
 
+    <!--Payment-->
     <dist:module dist:instant="true" />
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--WritePDF-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!--permission to access network HTTP request-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -28,9 +38,42 @@
         <activity android:name=".Cart_Activity" />
         <activity android:name=".Detail_Activity" />
         <activity android:name=".Setting_Activity" />
+        <activity android:name=".Checkout1_Activity" />
+
+        <!--braintree-->
+        <activity
+            android:name=".Checkout2_Activity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="${applicationId}.braintree" />
+            </intent-filter>
+        </activity>
+        <!--googlepay-->
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
+
+        <!--receive firebase notification-->
+        <service android:name=".MyFirebaseMessagingService"
+            android:stopWithTask="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+
+        <!--set default icon-->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_shopping_cart" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
     </application>
 
 

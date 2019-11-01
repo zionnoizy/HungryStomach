@@ -4,30 +4,26 @@ public class User {
 
     private String email;
     private String username;
-    private static int incrementor = 0;
-    private long usr_id=0;
     private String icon;
     private String phone;
     private String address;
     private String state;
     private String city;
     private String zip;
+    private String uid;
+    //private String id;
 
-    public User(String email, String username) { //, long usr_id, String icon, String phone, String address, String state, String city, String zip
+    public User(String email, String username, String icon, String phone, String address, String state, String city, String zip, String uid){
         this.email = email;
         this.username = username;
-        this.usr_id = incrementor++;
-        /*
-        this.icon = "default_icon";
-        this.phone = "blank";
-        this.address = "blank";
-        this.state = "blank";
-        this.city = "blank";
-        this.zip = "blank";
-        */
+        this.icon = icon;
+        this.phone = phone;
+        this.address = address;
+        this.state = state;
+        this.city = city;
+        this.zip = zip;
+        this.uid = uid;
     }
-
-
 
     public User() {
     }
@@ -48,20 +44,24 @@ public class User {
         this.username = username;
     }
 
-    public long getId() {
-        return usr_id;
+    public String getUId() {
+        return uid;
     }
 
-    public void setId(int id) {
-        this.usr_id = id;
+    public void setUId(String uid) {
+        this.uid = uid;
     }
 
     public void setIcon(String icon) {
         this.icon = icon;
     }
 
-    public void setPhone(String icon) {
-        this.phone = icon;
+    public String getIcon () {
+        return icon;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getPhone() {
@@ -99,5 +99,11 @@ public class User {
     public String getZip() {
         return zip;
     }
+
+    //public String getUid() { return uid; }
+
+
+
+
 
 }
