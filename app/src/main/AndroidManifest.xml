@@ -39,11 +39,11 @@
         <activity android:name=".Detail_Activity" />
         <activity android:name=".Setting_Activity" />
         <activity android:name=".Checkout1_Activity" />
+        <activity android:name=".Checkout3_Activity" />
 
         <!--braintree-->
         <activity
-            android:name=".Checkout2_Activity"
-            android:launchMode="singleTask">
+            android:name=".Checkout2_Activity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -53,6 +53,7 @@
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
+
         <!--googlepay-->
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
@@ -74,7 +75,23 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+
+
+        <!--paypal-->
+        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="${applicationId}.braintree" />
+            </intent-filter>
+        </activity>
+
+        <!--GooglePay-->
+        <meta-data android:name="com.google.android.gms.wallet.api.enabled" android:value="true"/>
     </application>
+
 
 
 </manifest>

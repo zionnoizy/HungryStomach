@@ -1,28 +1,19 @@
 package com.example.hungrystomach.Fragment;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
 
-import com.example.hungrystomach.Adapter.FoodAdapter;
-import com.example.hungrystomach.Detail_Activity;
+import com.example.hungrystomach.Adapter.DetailAdapter;
 import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.R;
 import com.google.firebase.database.ChildEventListener;
@@ -30,17 +21,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 
-//implements FoodAdapter.OnItemClickListener
+//implements DetailAdapter.OnItemClickListener
 public class AllFoodFragment extends Fragment {
     private ArrayList<Food> entries;
     private DatabaseReference ref;
     private FirebaseDatabase dbr;
-    FoodAdapter adapter;
+    DetailAdapter adapter;
     public Button btn_detail;
 
 
@@ -58,7 +48,7 @@ public class AllFoodFragment extends Fragment {
         recycler_view.setLayoutManager(lm);
 
         entries = new ArrayList<Food>();
-        adapter = new FoodAdapter(getActivity(), entries);
+        adapter = new DetailAdapter(getActivity(), entries);
 
         recycler_view.setAdapter(adapter);
 
@@ -84,9 +74,6 @@ public class AllFoodFragment extends Fragment {
                 Toast.makeText(getContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        //click detail
-
-
         return contactsView;
     }
 

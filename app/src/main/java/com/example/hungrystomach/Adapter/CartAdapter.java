@@ -107,10 +107,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             });
             */
         }
-
-
-
-
     }
 
     @Override
@@ -122,8 +118,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
         double getPrice= Double.parseDouble(m_listCart.get(position).getProduct_price());
         int getQ = m_listCart.get(position).getQuantity();
-        double sub_t = getPrice * getQ; //but cannot get total amount
-        grandT += sub_t;
+        double sub_t = getPrice * getQ;
 
         holder.sub_total.setText(String.valueOf(sub_t));
 
@@ -140,15 +135,5 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         this.m_listCart = m_listCart;
     }
 
-    public double grandTotal(){
-        double ttl = 0;
-        for (int i=0; i<m_listCart.size(); ++i){
-            double p = Double.parseDouble(m_listCart.get(i).getProduct_price());
-            double q = m_listCart.get(i).getQuantity();
-            double subT = p*q;
-            ttl += subT;
-        }
-        return ttl;
-    }
 
 }

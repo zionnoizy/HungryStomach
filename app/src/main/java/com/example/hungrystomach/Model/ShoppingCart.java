@@ -1,23 +1,27 @@
 package com.example.hungrystomach.Model;
 
-import java.text.NumberFormat;
 
 public class ShoppingCart {
-    private String product_name, description, productID;
+    private String product_name;
     private String product_price;
     private int quantity;
     public String img_url;
+    private String modify_date;
+    private double subtotal;
+    private String usr_uid;
 
     public ShoppingCart() {
         //empty
     }
 
-    public ShoppingCart(String product_name, String product_price, int quantity , String img_url){
-        //this.productID = productId_position;
+    public ShoppingCart(String product_name, String product_price, int quantity , String img_url, String modify_date, double subtotal, String usr_uid){
         this.product_name = product_name;
         this.product_price = product_price;
         this.quantity = quantity;
         this.img_url = img_url;
+        this.modify_date = modify_date;
+        this.subtotal = subtotal;
+        this.usr_uid = usr_uid;
 
     }
 
@@ -26,26 +30,28 @@ public class ShoppingCart {
     }
 
     public String getProduct_price() {
-        return product_price; //NumberFormat.getCurrencyInstance().format(price)
+        return product_price;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public String getImg_url() {
         return img_url;
     }
 
-    public String getProductID() {
-        return productID;
+    public String getModify_date() {
+        return modify_date;
     }
 
-    public int setQuantity(){
-        return quantity;
+    public double getSubtotal() {
+        return subtotal;
     }
+
+
+    public String getUsr_uid(){
+        return usr_uid;
+    }
+
 }

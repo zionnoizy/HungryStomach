@@ -1,15 +1,12 @@
 package com.example.hungrystomach;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import com.example.hungrystomach.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
 
 import androidx.annotation.NonNull;
@@ -17,30 +14,22 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     EditText et_email, et_password ;
     Button btn_register, btn_login;
     TextView forget_password;
+    EditText enter_rest_email;
 
     //default info to register usr
     String defaultIcon =  "default_icon";
@@ -61,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     String defaultState = "blank";
     String defaultCity = "blank";
     String defaultZip = "blank";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +67,16 @@ public class MainActivity extends AppCompatActivity {
         forget_password = findViewById(R.id.forgetpassword);
 
         init_firebase();
-
-
         click_to_register_new_user();
         click_to_login();
-        //reset_pwd();
+
+
+        forget_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reset_pwd();
+            }
+        });
 
 
     }
@@ -153,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser m_firebase_user = m_auth.getCurrentUser();
                 if (m_firebase_user != null) {
                     Intent i = new Intent(MainActivity.this, Home_Activity.class);
+                    getMyToken();
                     startActivity(i);
                 } else {
                     Toast.makeText(MainActivity.this,"Please Login",Toast.LENGTH_SHORT).show();
@@ -187,45 +184,60 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*
+
     private void reset_pwd(){
-        forget_password.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Reset Password");
-                View mView = getLayoutInflater().inflate(R.layout.acct_reset_pwd, null); //error: no TextInputLayout
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+        View v = getLayoutInflater().inflate(R.layout.alert_reset_pwd, null);
+        enter_rest_email = (EditText) v.findViewById(R.id.enter_rest_email);
 
-                final EditText enter_rest_email = (EditText) mView.findViewById(R.id.enter_rest_email);
-                Button btn_click_toreset = (Button) mView.findViewById(R.id.btn_click_toreset);
-                ProgressBar progressBar1 = (ProgressBar) mView.findViewById(R.id.progressBar);
-
-                mBuilder.setNegativeButton("Cancel", null);
-
-                btn_click_toreset.setOnClickListener(new View.OnClickListener(){
+        mBuilder.setMessage("Reset Password")
+                .setView(v)
+                .setPositiveButton("Reset", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(View v){
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         String email = enter_rest_email.getText().toString();
-                        if(!email.isEmpty()){
-                            Toast.makeText(MainActivity.this, "Enter Your Email", Toast.LENGTH_SHORT).show();
-                        }else {
-                            m_auth.sendPasswordResetEmail(email) //here
+                        if (email.isEmpty()) {
+                            enter_rest_email.setError("Entering Email Password Is required");
+                            enter_rest_email.requestFocus();
+                        } else {
+
+                            m_auth.sendPasswordResetEmail(email)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
+                                            if (task.isSuccessful())
                                                 Toast.makeText(MainActivity.this, "Reset Instruction Has Been Sent to Your Email", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(MainActivity.this, "Check Your Network Setting", Toast.LENGTH_SHORT).show();
-                                            }
+                                            else
+                                                Toast.makeText(MainActivity.this, "Your account is not associated with the system", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }
                     }
-                });
-                progressBar1.setVisibility(View.VISIBLE);
-                mBuilder.setView(mView);
-            }
-        });
+                })
+                .setNegativeButton("Cancel", null)
+                .setCancelable(false);
+        AlertDialog alert = mBuilder.create();
+        alert.show();
     }
-    */
+
+    public void getMyToken(){
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                        if (task.isSuccessful()) {
+                            String idToken = task.getResult().getToken();
+                            String uid = m_auth.getCurrentUser().getUid();
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+                            DatabaseReference id = ref.child(m_auth.getCurrentUser().getUid());
+                            id.child("token").setValue(idToken);
+                            // Send token to your backend via HTTPS
+                            // ...
+                        } else {
+                            Log.e("Main_Err", "token" , task.getException());
+                            // Handle error -> task.getException();
+                        }
+                    }
+                });
+    }
 }

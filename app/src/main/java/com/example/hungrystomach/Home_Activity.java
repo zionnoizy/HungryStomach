@@ -9,10 +9,15 @@ import android.os.Bundle;
 import com.example.hungrystomach.Adapter.TabPagerAdapter;
 import com.example.hungrystomach.Fragment.AllFoodFragment;
 import com.example.hungrystomach.Fragment.FoodFragment2;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
@@ -20,6 +25,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +34,7 @@ import android.widget.Toast;
 
 
 public class Home_Activity extends AppCompatActivity {
+
     FirebaseAuth m_auth;
 
     FoodFragment2 fragment;
@@ -42,6 +49,24 @@ public class Home_Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         configureTabLayout();
         //sendNotification();
+
+
+        //get InstanceID
+        /*
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("tokenErr", "getInstanceId failed", task.getException());
+                            return;
+                        }
+                        String token = task.getResult().getToken();
+                        String msg = getString(R.string.msg_token_fmt, token);
+                        Log.d("GenTok", msg);
+                    }
+                });
+        */
     }
 
 

@@ -1,25 +1,18 @@
 package com.example.hungrystomach.Fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.example.hungrystomach.Adapter.FoodAdapter;
+import com.example.hungrystomach.Adapter.DetailAdapter;
 import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.R;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -33,7 +26,7 @@ public class FoodFragment2 extends Fragment {
     private ArrayList<Food> entries;
     private DatabaseReference ref;
     private FirebaseDatabase dbr;
-    FoodAdapter adapter;
+    DetailAdapter adapter;
     public Button btn_detail;
 
 
@@ -52,7 +45,7 @@ public class FoodFragment2 extends Fragment {
         recycler_view.setLayoutManager(lm);
 
         entries = new ArrayList<Food>();
-        adapter = new FoodAdapter(getActivity(), entries);
+        adapter = new DetailAdapter(getActivity(), entries);
 
         recycler_view.setAdapter(adapter);
 

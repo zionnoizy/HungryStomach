@@ -32,7 +32,7 @@ public class Cart_Activity extends AppCompatActivity {
     RecyclerView.LayoutManager lm;
     private ArrayList<ShoppingCart> m_listCart;
     TextView total_amount, sub_total;
-    Button btn_co, btn_delete;
+    Button btn_chceckout, btn_delete;
     CartAdapter adapter;
 
     private DatabaseReference ref2;
@@ -54,12 +54,11 @@ public class Cart_Activity extends AppCompatActivity {
         adapter = new CartAdapter(this, m_listCart);
         recycler_view.setAdapter(adapter);
 
-        btn_co = findViewById(R.id.btn_co);
+        btn_chceckout = findViewById(R.id.btn_co);
         btn_delete = findViewById(R.id.delete_item);
         sub_total = findViewById(R.id.sub_total);
         total_amount = findViewById(R.id.total_price);
 
-        //print all items
         ref2 = FirebaseDatabase.getInstance().getReference().child("shopping_cart");
         get_uid = ref2.child(m_auth.getCurrentUser().getUid());
         get_uid.addChildEventListener(new ChildEventListener(){
@@ -86,15 +85,12 @@ public class Cart_Activity extends AppCompatActivity {
             }
         });
 
-
-        //grandTotal
-        grandT = adapter.getItemCount();
         //checkout
-        btn_co.setOnClickListener(new View.OnClickListener() {
+        btn_chceckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Cart_Activity.this, Checkout1_Activity.class);
-                intent.putExtra(PASS_TOTAL_AMT, String.valueOf(grandT)); //is string=totalamount empty?
+                intent.putExtra(PASS_TOTAL_AMT, String.valueOf(grandT));
                 startActivity(intent);
             }
         });

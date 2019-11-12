@@ -119,7 +119,7 @@ public class Setting_Activity extends AppCompatActivity {
             }
         });
 
-        //click "update"
+        //https://firebase.google.com/docs/auth/android/manage-users#update_a_users_profile
         clickupdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View viewIn) {

@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
@@ -33,10 +34,11 @@ public class Checkout1_Activity extends AppCompatActivity {
     EditText edit_name, edit_email, edit_phone, edit_address, edit_state, edit_city, edit_zip ;
     Button but_next;
 
-    //get user info
+
     FirebaseAuth m_auth = FirebaseAuth.getInstance();
-    DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("users");
-    DatabaseReference usr_uid = cartListRef.child(m_auth.getCurrentUser().getUid());
+    String UID = m_auth.getUid();
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+    DatabaseReference uid = ref.child(UID);
 
     //assign string to pass to checkout2
     public static final String PASS_NAME = "NoName";
@@ -54,14 +56,14 @@ public class Checkout1_Activity extends AppCompatActivity {
     String Cstate;
     String Ccity;
     String Czip;
-
-    //String AMOUNT = getIntent().getStringExtra(PASS_TOTAL_AMT);
+    String grandT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkout_info);
 
+        grandT = getIntent().getStringExtra(PASS_TOTAL_AMT);
         edit_name = findViewById(R.id.edit_name);
         edit_email = findViewById(R.id.edit_email);
         edit_phone = findViewById(R.id.edit_phone);
@@ -71,26 +73,17 @@ public class Checkout1_Activity extends AppCompatActivity {
         edit_zip = findViewById(R.id.edit_zip);
         but_next = findViewById(R.id.but_next);
 
-        //find default info
-        usr_uid.addChildEventListener(new ChildEventListener(){
+        Query q = ref.child(UID);
+        q.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                User data = dataSnapshot.getValue(User.class);
-                edit_name.setText(data.getUsername());
-                edit_email.setText(data.getEmail());
-                edit_phone.setText(data.getPhone());
-                edit_address.setText(data.getAddress());
-                edit_state.setText(data.getState());
-                edit_city.setText(data.getCity());
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User u = dataSnapshot.getValue(User.class);
+                edit_name.setText(u.getUsername());
+                edit_email.setText(u.getEmail());
+                edit_phone.setText(u.getPhone());
+                edit_address.setText(u.getAddress());
+                edit_state.setText(u.getState());
+                edit_city.setText(u.getCity());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -99,28 +92,26 @@ public class Checkout1_Activity extends AppCompatActivity {
 
 
 
-        but_next.setOnClickListener(new View.OnClickListener() { //button null
+        but_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //changed information
-                usr_uid.addListenerForSingleValueEvent((new ValueEventListener() {
+                Toast.makeText(Checkout1_Activity.this,"Moving to Payment Method..", Toast.LENGTH_SHORT).show();
+                uid.addListenerForSingleValueEvent((new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         try {
                             Cphone = edit_phone.getText().toString();
-                            usr_uid.child("phone").setValue(Cphone);
+                            uid.child("phone").setValue(Cphone);
                             Caddress = edit_address.getText().toString();
-                            usr_uid.child("address").setValue(Caddress);
+                            uid.child("address").setValue(Caddress);
                             Cstate = edit_state.getText().toString();
-                            usr_uid.child("state").setValue(Cstate);
+                            uid.child("state").setValue(Cstate);
                             Ccity = edit_city.getText().toString();
-                            usr_uid.child("city").setValue(Ccity);
+                            uid.child("city").setValue(Ccity);
                             Czip = edit_zip.getText().toString();
-                            usr_uid.child("zip").setValue(Czip);
-                            //usr_uid.child("fullName").setValue(c_fullname);
+                            uid.child("zip").setValue(Czip);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            //Log.e("setting: ","Please Check your Network "+ e.getMessage());
                         }
 
                     }
@@ -128,7 +119,6 @@ public class Checkout1_Activity extends AppCompatActivity {
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
                 }));
-                //pass all the tmp usr info to checkout2 activity
                 Intent intent = new Intent(Checkout1_Activity.this, Checkout2_Activity.class);
                 intent.putExtra(PASS_NAME, Cname);
                 intent.putExtra(PASS_EMAIL, Cemail);
@@ -136,7 +126,7 @@ public class Checkout1_Activity extends AppCompatActivity {
                 intent.putExtra(PASS_ADDRESS, Caddress);
                 intent.putExtra(PASS_STATE, Cstate);
                 intent.putExtra(PASS_CITY, Ccity);
-                //intent.putExtra(PASS_TOTAL_AMT, AMOUNT);
+                intent.putExtra(PASS_TOTAL_AMT, grandT);
                 startActivity(intent);
             }
         });

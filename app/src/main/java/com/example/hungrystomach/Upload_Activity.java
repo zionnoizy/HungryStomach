@@ -1,14 +1,16 @@
 package com.example.hungrystomach;
 
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-//import com.example.hungrystomach.Adapter.FoodAdapter;
+//import com.example.hungrystomach.Adapter.DetailAdapter;
 import com.example.hungrystomach.Model.Food;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -148,63 +150,69 @@ public class Upload_Activity extends AppCompatActivity{
 
     private void uploading_image(){
         String image_name = et_fname.getText().toString().trim();
-
-        sf = storage_ref.child(image_name + "." + get_extension(image_uri));
-        if (image_uri != null) {
-            sf.putFile(image_uri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        if(image_name.length()==0){
+            et_fname.setError("Food name cannot be empty");
+            et_fname.requestFocus();
+        }
+        else if (!image_name.matches("[a-zA-Z0-9()=`!@%^&*+\"\' ]*")){
+            et_fname.setError("food name cannot contain symbol(s).");
+            et_fname.requestFocus();
+        } else if (img_view.getDrawable() == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(Upload_Activity.this);
+            builder.setTitle("Upload Your Image")
+                    .setMessage("Food Image should not be empty.")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            sf.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    String url = uri.toString();
-                                    String DateTime = mSimpleDataFormat.format(mCalender.getTime());
-                                    Food fd = new Food(et_fname.getText().toString().trim(),
-                                            et_fdesc.getText().toString().trim(),
-                                            et_fprice.getText().toString().trim(),
-                                            url, DateTime);
-
-                                    //this is the error?? waht if I comment it out?
-                                    /*
-                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-                                    Query query = ref.child(m_auth.getCurrentUser().getUid());
-                                    query.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            String username = dataSnapshot.child("username").getValue().toString();
-                                            Log.d("check_uploader", username);
-                                            database_ref.child("uploader").setValue(username); //add username in uplaod food
-                                        }
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-                                            throw databaseError.toException();
-                                        }
-                                    });
-                                    */
-                                    String uploadId = database_ref.push().getKey();
-                                    database_ref.child(uploadId).setValue(fd);
-                                    Toast.makeText(Upload_Activity.this, "Upload successfully", Toast.LENGTH_LONG).show();
-                                }
-                            });
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(Upload_Activity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                        public void onClick(DialogInterface dialogInterface, int i) {
                         }
                     });
-        } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            AlertDialog alert = builder.create();
+            alert.show();
         }
-        redirect_home();
-        finish();
+        else {
+            sf = storage_ref.child(image_name + "." + get_extension(image_uri));
+            if (image_uri != null) {
+                sf.putFile(image_uri)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                sf.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String url = uri.toString();
+                                        String uuid = m_auth.getCurrentUser().getUid();
+                                        String uploader = m_auth.getCurrentUser().getDisplayName();
+                                        String DateTime = mSimpleDataFormat.format(mCalender.getTime());
+
+                                        String key = database_ref.push().getKey();
+                                        Food fd = new Food(et_fname.getText().toString().trim(),
+                                                et_fdesc.getText().toString().trim(),
+                                                et_fprice.getText().toString().trim(),
+                                                url, DateTime, uuid, key, uploader);
+                                        database_ref.child(key).setValue(fd);
+
+                                        Toast.makeText(Upload_Activity.this, "Upload successfully", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Upload_Activity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                    }
+                });
+            } else {
+                Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            }
+            redirect_home();
+            finish();
+        }
 
     }
 

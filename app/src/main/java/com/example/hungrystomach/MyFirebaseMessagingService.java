@@ -21,10 +21,13 @@ import androidx.core.app.NotificationCompat;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -33,34 +36,13 @@ import java.util.Random;
 
 //ver 20.0.0
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-
-
-
-	//Token
+	private static final String TAG = "MyFirebaseIIDService";
+	//https://stackoverflow.com/questions/37787373/firebase-fcm-how-to-get-token
 	@Override
-	public void onNewToken(@NonNull String refeshedToken){
-		super.onNewToken(refeshedToken);
-		Log.d("NEW_TOEKN:", refeshedToken);
-		//DatabaseReference signin = FirebaseDatabase.getInstance().getReference().child("users");
-		//https://firebase.google.com/docs/auth/admin/verify-id-tokens
-		//signin.child(I.getName()).child("token").setValue(refreshedToken); //could insert one while regiter
-
-		FirebaseInstanceId.getInstance().getInstanceId()
-				.addOnCompleteListener( new OnCompleteListener<InstanceIdResult>() {
-			@Override
-			public void onComplete(@NonNull Task<InstanceIdResult> task) {
-				if(!task.isSuccessful()){
-					Log.w("TAG", "getInstance_failed", task.getException());
-					return;
-				}
-				String token = task.getResult().getToken();
-
-				String msg = getString(R.string.msg_token_fmt, token);
-				Log.d("TAG", msg);
-				//Toast.makeText(Home_Activity.this, msg, Toast.LENGTH_SHORT).show(); //only can shown in Activity
-
-			}
-		});
+	public void onNewToken(@NonNull String Token){
+		super.onNewToken(Token);
+		String token = FirebaseInstanceId.getInstance().getToken();
+		Log.d(TAG, "refreshed token:" + Token + token);
 	}
 
 	//Receive
@@ -69,10 +51,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 		super.onMessageReceived(remoteMessage);
         Log.d("From_", "From: " + remoteMessage.getFrom());
         Log.d("Title_", "Notification Msg Body: " + remoteMessage.getNotification().getBody());
+        //ArrayList<String> notificationData = new ArrayList<String>(remoteMessage.getData().values());
+        //String fortuneID = notificationData.get(0);
 
-        ArrayList<String> notificationData = new ArrayList<String>(remoteMessage.getData().values());
-        String fortuneID = notificationData.get(0);
         if (remoteMessage.getData().size() > 0) {
+			Log.d("F3", "Message data payload: " + remoteMessage.getData());
 			sendNotification(remoteMessage.getData().get("name"),remoteMessage.getNotification().getBody()); //getTitle()
         }
     }
@@ -96,7 +79,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 			NotificationChannel nChannel = new NotificationChannel(getString(R.string.default_notification_channel_id), "notifications", NotificationManager.IMPORTANCE_DEFAULT);
 			Log.e("NC_", "send_Notification: "+ nChannel );
 
-
 			//if (mChannel == null)
 			nChannel.setDescription("Your Invoice");
 			nChannel.enableLights(true);
@@ -115,7 +97,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 		nm.notify(1000, nBuilder.build()); //new Random().nextInt()
 	}
-
 
 
 

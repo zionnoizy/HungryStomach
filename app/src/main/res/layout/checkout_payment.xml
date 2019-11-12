@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -7,11 +7,28 @@
     xmlns:stripe="http://schemas.android.com/apk/res-auto"
     tools:context=".Checkout2_Activity">
 
-    <com.craftman.cardform.CardForm
+    <TextView
+        android:id="@+id/tvMessage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/card_form"/>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Ready for transaction"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_above="@+id/TTprice"/>
 
+
+    <TextView
+        android:id="@+id/TTprice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
 
     <Button
         android:id="@+id/btnBuy"
@@ -24,7 +41,6 @@
         android:layout_marginTop="10dp"
         android:background="@color/colorAccent"
         android:text="Purhcase"
-        android:textColor="@android:color/white"
-        android:onClick="onBraintreeSubmit"/>
+        android:textColor="@android:color/white" />
 
-</LinearLayout>
+</RelativeLayout>

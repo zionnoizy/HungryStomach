@@ -30,6 +30,7 @@ repositories {
             password '220cc9476025679c4e5c843666c27d97cfb0f951'
         }
     }
+    mavenCentral()
     google()
 }
 
@@ -42,7 +43,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    implementation 'com.google.firebase:firebase-analytics:17.2.1'
     implementation 'com.google.firebase:firebase-auth:19.0.0'
     implementation 'com.google.firebase:firebase-database:19.0.0'
     implementation 'com.google.gms:google-services:4.3.2'
@@ -67,7 +68,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:24.1.1'
     implementation "com.google.firebase:firebase-core:17.2.1"
     implementation "com.google.firebase:firebase-messaging:20.0.0"
-    implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation "com.google.android.gms:play-services-base:17.0.0"
 
     implementation 'com.braintreepayments.api:drop-in:4.4.1'
     implementation 'net.schmizz:sshj:0.10.0'
@@ -88,5 +89,7 @@ dependencies {
         }
     }
     implementation 'com.braintreepayments.api:braintree:3.7.0'
+    implementation 'com.braintreepayments.api:google-payment:3.2.0'
+    implementation 'com.loopj.android:android-async-http:1.4.10'
 
 }
