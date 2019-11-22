@@ -32,4 +32,16 @@
         android:text="username"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/lastMessageTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="The last message"
+        android:layout_marginStart="4dp"
+        android:maxLines="2"
+        android:layout_marginTop="3dp"
+        android:layout_toRightOf="@id/usr_icon"
+        android:layout_below="@id/tv_username"
+        android:layout_marginLeft="13dp" />
+
 </RelativeLayout>

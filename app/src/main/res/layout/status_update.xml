@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Update Your Progress Here"
+            android:inputType="textCapSentences"
+            android:ems="10"
+            android:id="@+id/et_task_description"
+            android:paddingLeft="3dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="6dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+        <RadioGroup
+            android:id="@+id/rg_due_date"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:weightSum="3"
+            app:layout_constraintTop_toBottomOf="@+id/et_task_description"
+            tools:layout_editor_absoluteX="112dp">
+
+            <RadioButton
+                android:id="@+id/cb_1_receive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Recieve Order"
+                android:theme="@style/RadioButton"
+                app:layout_constraintTop_toBottomOf="@+id/et_task_description" />
+
+            <RadioButton
+                android:id="@+id/cb_2_preparing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Preparing Food"
+                app:layout_constraintTop_toBottomOf="@+id/cb_1_receive" />
+
+            <RadioButton
+                android:id="@+id/cb_3_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Completed"
+                app:layout_constraintTop_toBottomOf="@+id/cb_2_preparing" />
+
+        </RadioGroup>
+
+        <Button
+            android:text="Back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_add_or_update_task"
+            android:background="@color/colorAccent"
+            android:textColor="@android:color/white"
+            android:onClick="addOrUpdateTask"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

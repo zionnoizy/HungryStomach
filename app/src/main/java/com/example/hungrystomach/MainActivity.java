@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.hungrystomach.Model.FCMToken;
 import com.example.hungrystomach.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,8 +29,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     String defaultState = "blank";
     String defaultCity = "blank";
     String defaultZip = "blank";
+    String defaultFullName = "blank";
 
 
     @Override
@@ -122,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
                                         DatabaseReference id = ref.child(m_auth.getCurrentUser().getUid());
 
-                                        User usr = new User(email,username, defaultIcon, defaultPhone, defaultAddress, defaultState, defaultCity, defaultZip, uid);
+                                        User usr = new User(email,username, defaultIcon, defaultPhone, defaultAddress, defaultState, defaultCity, defaultZip, uid, defaultFullName, 0);
                                         id.setValue(usr);
                                     }
                                 }
@@ -130,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                             Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
+                            GenerateToken();
                             startActivity(refer_to_home);
                             finish();
                         }
@@ -149,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser m_firebase_user = m_auth.getCurrentUser();
                 if (m_firebase_user != null) {
                     Intent i = new Intent(MainActivity.this, Home_Activity.class);
-                    getMyToken();
                     startActivity(i);
                 } else {
                     Toast.makeText(MainActivity.this,"Please Login",Toast.LENGTH_SHORT).show();
@@ -174,6 +180,8 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 //Toast.makeText(MainActivity.this, "Welcome " + m_auth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
                                 Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
+                                GenerateToken();
+                                fix_null_info();
                                 startActivity(refer_to_home);
                                 finish();
                             }
@@ -220,24 +228,49 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
-    public void getMyToken(){
+    public void GenerateToken(){
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = m_auth.getCurrentUser().getUid();
+
         mUser.getIdToken(true)
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if (task.isSuccessful()) {
                             String idToken = task.getResult().getToken();
+                            String fcm_token = FirebaseInstanceId.getInstance().getToken();
                             String uid = m_auth.getCurrentUser().getUid();
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-                            DatabaseReference id = ref.child(m_auth.getCurrentUser().getUid());
-                            id.child("token").setValue(idToken);
-                            // Send token to your backend via HTTPS
-                            // ...
+
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("FCMToken");
+                            DatabaseReference id = ref.child(uid);
+
+                            FCMToken FCMToken = new FCMToken(fcm_token);
+                            id.setValue(FCMToken);
+
                         } else {
                             Log.e("Main_Err", "token" , task.getException());
-                            // Handle error -> task.getException();
                         }
                     }
                 });
+    }
+
+    public void fix_null_info(){
+        String id = m_auth.getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users").child(id);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User u = dataSnapshot.getValue(User.class);
+                if(u.getFull_name() == null) {
+                    u.setFull_name("empty");
+                    String id = m_auth.getCurrentUser().getUid();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users").child(id);
+                    ref.child("full_name").setValue("empty");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
     }
 }

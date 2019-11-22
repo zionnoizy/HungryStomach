@@ -1,6 +1,8 @@
 package com.example.hungrystomach;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,44 +25,48 @@ import java.util.List;
 public class RoomUser_Activity extends AppCompatActivity {
     private RecyclerView rv;
     private UserAdapter usrAdapter;
-    private List<User> mUsrs;
+    private ArrayList<User> mUsrsList;
+
+    public RoomUser_Activity(){
+        //empty
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.cart_main);
+        setContentView(R.layout.fragment_user);
 
-        rv = (RecyclerView) findViewById(R.id.list_usrRV);
-        rv.setHasFixedSize((true));
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv = (RecyclerView) findViewById(R.id.usr_recyclerview);
+        rv.setHasFixedSize(true);
+        LinearLayoutManager lm = new LinearLayoutManager(this);
+        rv.setLayoutManager(lm);
 
-        mUsrs = new ArrayList<>();
-        //readUsrs();
+        mUsrsList = new ArrayList<>();
+
+        readUsrs();
     }
 
-    /*
     private void readUsrs(){
-        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.addValueEventListener(new ValueEventListener() {
+        final FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mUsrs.clear();
+                mUsrsList.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    User usr = snapshot.getValue(User.class);
-
-                    assert usr != null;
-                    assert firebaseUser != null;
-                    if (!usr.getId().equals(firebaseUser.getUid())){ //getID .equals?
-                        mUsrs.add(usr);
+                    User all_usr = snapshot.getValue(User.class);
+                    if (!all_usr.getUId().equals(me.getUid())) {
+                        mUsrsList.add(all_usr);
+                        break;
                     }
                 }
+                usrAdapter = new UserAdapter(getApplicationContext(), mUsrsList);
+                rv.setAdapter(usrAdapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        })
+        });
     }
-    */
 }

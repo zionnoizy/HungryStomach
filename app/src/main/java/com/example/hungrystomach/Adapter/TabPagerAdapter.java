@@ -5,12 +5,10 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.hungrystomach.Fragment.AllFoodFragment;
-import com.example.hungrystomach.Fragment.FoodFragment2;
+import com.example.hungrystomach.Fragment.FromNewFragment;
 import com.example.hungrystomach.Fragment.FoodFragment3;
-import com.example.hungrystomach.Fragment.UserFragment;
 
 
 public class TabPagerAdapter extends FragmentPagerAdapter {
@@ -28,7 +26,7 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
         if (position == 0)
             return new AllFoodFragment();
         else if(position == 1)
-            return new FoodFragment2();
+            return new FromNewFragment();
          else if (position == 2)
             return new FoodFragment3();
 

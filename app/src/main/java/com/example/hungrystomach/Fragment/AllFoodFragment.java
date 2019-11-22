@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
-import com.example.hungrystomach.Adapter.DetailAdapter;
+import com.example.hungrystomach.Adapter.FoodAdapter;
 import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.R;
 import com.google.firebase.database.ChildEventListener;
@@ -25,12 +25,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 
-//implements DetailAdapter.OnItemClickListener
+//implements FoodAdapter.OnItemClickListener
 public class AllFoodFragment extends Fragment {
     private ArrayList<Food> entries;
     private DatabaseReference ref;
     private FirebaseDatabase dbr;
-    DetailAdapter adapter;
+    FoodAdapter adapter;
     public Button btn_detail;
 
 
@@ -48,7 +48,7 @@ public class AllFoodFragment extends Fragment {
         recycler_view.setLayoutManager(lm);
 
         entries = new ArrayList<Food>();
-        adapter = new DetailAdapter(getActivity(), entries);
+        adapter = new FoodAdapter(getActivity(), entries);
 
         recycler_view.setAdapter(adapter);
 

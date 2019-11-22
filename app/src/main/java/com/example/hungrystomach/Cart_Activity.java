@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,10 +22,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Cart_Activity extends AppCompatActivity {
 
@@ -40,7 +44,10 @@ public class Cart_Activity extends AppCompatActivity {
     FirebaseAuth m_auth = FirebaseAuth.getInstance();
     private double grandT = 0.0;
 
+    String FIND_UPLOADER_UID;
     public static final String PASS_TOTAL_AMT = "NoPrice";
+    public static final String PASS_UPLAODER_UID = "NoUploaderUid";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,12 +77,15 @@ public class Cart_Activity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 grandT += Double.parseDouble(data.getProduct_price())*data.getQuantity();
                 total_amount.setText(new DecimalFormat("#.##").format(grandT));
+                FIND_UPLOADER_UID = data.getUploader_uid();
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //change quantity
             }
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //deleted item
             }
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
@@ -85,12 +95,12 @@ public class Cart_Activity extends AppCompatActivity {
             }
         });
 
-        //checkout
         btn_chceckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Cart_Activity.this, Checkout1_Activity.class);
                 intent.putExtra(PASS_TOTAL_AMT, String.valueOf(grandT));
+                intent.putExtra(PASS_UPLAODER_UID, FIND_UPLOADER_UID);
                 startActivity(intent);
             }
         });

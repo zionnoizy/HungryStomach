@@ -39,29 +39,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_detail_name"
-        android:layout_marginEnd="168dp"
+        android:layout_marginEnd="88dp"
+        android:numStars="5"
         app:layout_constraintBottom_toTopOf="@+id/text_detail_price"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_detail_name"
-        app:layout_constraintVertical_bias="0.454"
-        android:numStars="5" />
-
+        app:layout_constraintVertical_bias="0.509" />
 
     <TextView
         android:id="@+id/text_detail_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="336dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginStart="320dp"
+        android:layout_marginTop="112dp"
         android:text="Price"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_detail_name"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/text_detail_name" />
 
     <TextView
         android:id="@+id/text_detail_des"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="271dp"
+        android:layout_height="38dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:text="Description_detail"
@@ -108,7 +106,54 @@
         app:textSize="8sp" />
 
 
-    app:layout_constraintEnd_toEndOf="parent"
+    <TextView
+        android:id="@+id/uploader_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Uploader:"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="565dp" />
+        app:layout_constraintTop_toBottomOf="@+id/text_detail_des"
+        app:layout_constraintVertical_bias="0.033" />
+
+    <TextView
+        android:id="@+id/uploader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="60dp"
+        android:text="uploader_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/uploader_display"
+        app:layout_constraintTop_toBottomOf="@+id/text_detail_des"
+        app:layout_constraintVertical_bias="0.042" />
+
+
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="204dp"-->
+<!--        android:drawablePadding="5dp"-->
+<!--        android:padding="2dp"-->
+<!--        android:text="comments_display"-->
+<!--        android:textColor="@color/colorBlack"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/comment_recyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"/>-->
+
 </androidx.constraintlayout.widget.ConstraintLayout>

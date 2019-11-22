@@ -36,7 +36,6 @@ import static android.content.ContentValues.TAG;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
     private Context m_context;
     private ArrayList<ShoppingCart> m_listCart;
-    double grandT=0;
 
     public CartAdapter(Context context, ArrayList<ShoppingCart> cart_list) {
         this.m_context = context;
@@ -57,12 +56,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
 
     public class CartViewHolder extends RecyclerView.ViewHolder{
-        public ImageView CartFoodIcon;
-        public TextView CartFoodName;
-        public TextView CartFoodPrice;
-        public TextView CartFoodQuantity;
+        private ImageView CartFoodIcon;
+        private TextView CartFoodName;
+        private TextView CartFoodPrice;
+        private TextView CartFoodQuantity;
         public TextView CartTTL;
-        public TextView sub_total;
+        private TextView sub_total;
         public Button delete_item;
         FirebaseAuth m_auth = FirebaseAuth.getInstance();
         DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("shopping_cart");

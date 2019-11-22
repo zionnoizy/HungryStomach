@@ -91,5 +91,7 @@ dependencies {
     implementation 'com.braintreepayments.api:braintree:3.7.0'
     implementation 'com.braintreepayments.api:google-payment:3.2.0'
     implementation 'com.loopj.android:android-async-http:1.4.10'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
 
 }

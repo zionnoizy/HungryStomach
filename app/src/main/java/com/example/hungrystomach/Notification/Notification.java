@@ -1,4 +1,4 @@
-package com.example.hungrystomach.Model;
+package com.example.hungrystomach.Notification;
 
 
 import java.util.Date;
@@ -6,12 +6,12 @@ import java.util.Date;
 public class Notification{
     private String title;
     private String body;
-    private long msgTime;
+    //private long msgTime;
  
     public Notification(String title, String body) {
         this.title = title;
         this.body = body;
-        msgTime = new Date().getTime();
+        //msgTime = new Date().getTime();
     }
  
     public String getBody() {

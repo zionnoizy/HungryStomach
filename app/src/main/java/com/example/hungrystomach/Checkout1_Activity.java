@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -25,10 +26,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.example.hungrystomach.Cart_Activity.PASS_TOTAL_AMT;
+import static com.example.hungrystomach.Cart_Activity.PASS_UPLAODER_UID;
 
 public class Checkout1_Activity extends AppCompatActivity {
     EditText edit_name, edit_email, edit_phone, edit_address, edit_state, edit_city, edit_zip ;
@@ -48,6 +52,7 @@ public class Checkout1_Activity extends AppCompatActivity {
     public static final String PASS_STATE = "NoState";
     public static final String PASS_CITY = "NoCity";
 
+
     //changed info
     String Cname;
     String Cemail;
@@ -57,6 +62,8 @@ public class Checkout1_Activity extends AppCompatActivity {
     String Ccity;
     String Czip;
     String grandT;
+    String uploader_uid;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,7 @@ public class Checkout1_Activity extends AppCompatActivity {
         setContentView(R.layout.checkout_info);
 
         grandT = getIntent().getStringExtra(PASS_TOTAL_AMT);
+        uploader_uid = getIntent().getStringExtra(PASS_UPLAODER_UID);
         edit_name = findViewById(R.id.edit_name);
         edit_email = findViewById(R.id.edit_email);
         edit_phone = findViewById(R.id.edit_phone);
@@ -127,6 +135,8 @@ public class Checkout1_Activity extends AppCompatActivity {
                 intent.putExtra(PASS_STATE, Cstate);
                 intent.putExtra(PASS_CITY, Ccity);
                 intent.putExtra(PASS_TOTAL_AMT, grandT);
+                intent.putExtra(PASS_UPLAODER_UID, uploader_uid);
+
                 startActivity(intent);
             }
         });

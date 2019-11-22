@@ -1,31 +1,20 @@
 package com.example.hungrystomach;
 
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.hungrystomach.Adapter.TabPagerAdapter;
-import com.example.hungrystomach.Fragment.AllFoodFragment;
-import com.example.hungrystomach.Fragment.FoodFragment2;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.hungrystomach.Fragment.FromNewFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,7 +26,7 @@ public class Home_Activity extends AppCompatActivity {
 
     FirebaseAuth m_auth;
 
-    FoodFragment2 fragment;
+    FromNewFragment fragment;
     NotificationManagerCompat notificationManager;
 
     @Override
@@ -48,7 +37,7 @@ public class Home_Activity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         configureTabLayout();
-        //sendNotification();
+        //CreateChannel();
 
 
         //get InstanceID
@@ -94,8 +83,9 @@ public class Home_Activity extends AppCompatActivity {
                 Intent go_chat = new Intent(Home_Activity.this, RoomUser_Activity.class);
                 startActivity(go_chat);
                 return true;
-            case R.id.sort_oldest:
-                fragment.sort_name(); //fixed?
+            case R.id.status_update:
+                Intent go_status = new Intent(Home_Activity.this, Status_Update_Activity.class);
+                startActivity(go_status);
                 return true;
             case R.id.it_settings:
                 //Toast.makeText(this,"Redirected to Setting Section", Toast.LENGTH_SHORT).show();

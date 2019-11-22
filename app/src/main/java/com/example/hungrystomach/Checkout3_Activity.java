@@ -29,5 +29,8 @@ public class Checkout3_Activity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkout_success);
+
+
+        //show Google Map if available
     }
 }

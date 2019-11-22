@@ -135,7 +135,7 @@
         android:layout_below="@+id/et_fprice"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@id/price_label"
-        android:hint="chooseTimeToEnd" />
+        android:hint="chooseTimeToEndTheSale" />
 
     <Button
         android:id="@+id/btn_upload"

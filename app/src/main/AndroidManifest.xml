@@ -40,16 +40,16 @@
         <activity android:name=".Setting_Activity" />
         <activity android:name=".Checkout1_Activity" />
         <activity android:name=".Checkout3_Activity" />
+        <activity android:name=".Status_Update_Activity" />
+        <activity android:name=".RoomUser_Activity" />
 
         <!--braintree-->
         <activity
             android:name=".Checkout2_Activity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
@@ -60,7 +60,7 @@
             android:value="true" />
 
         <!--receive firebase notification-->
-        <service android:name=".MyFirebaseMessagingService"
+        <service android:name=".Notification.FCM_Service"
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

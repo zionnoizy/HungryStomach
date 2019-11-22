@@ -4,35 +4,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Invoice {
-    String buyer;
-    String billdate;
-    double grand_total;
-    int invoice_num;
-    int discount;
+    private String buyer;
+    private String billDate;
+    private double grand_total;
+    private int discount;
+    private String uuid;
     //List<Food> foodList = new ArrayList<>();
 
 
-    public Invoice(String buyer, String billdate, double grand_total, int discount) { //String typeOfPymt, int tax, List<Food> foodList, boolean isPickup, , int total
+    public Invoice(String buyer, String billDate, double grand_total, int discount, String uuid) { //String typeOfPymt, int tax, List<Food> foodList, boolean isPickup, , int total
         this.buyer = buyer;
-        this.billdate = billdate;
+        this.billDate = billDate;
         this.grand_total = grand_total;
         this.discount = discount;
+        this.uuid = uuid;
     }
 
     public String getBuyer() {
         return buyer;
     }
 
+    public void setBuyer(String buyer) {
+        this.buyer = buyer;
+    }
+
     public String getBillDate() {
-        return billdate;
+        return billDate;
     }
 
 
-    public double getDiscount() {
+    public void setBillDate(String billdate) {
+        this.billDate = billdate;
+    }
+
+    public double getGrand_total() {
+        return grand_total;
+    }
+
+    public void setGrand_total(double grand_total) {
+        this.grand_total = grand_total;
+    }
+
+    public int getDiscount() {
         return discount;
     }
 
-    public double getGrandTotal() {
-        return grand_total;
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

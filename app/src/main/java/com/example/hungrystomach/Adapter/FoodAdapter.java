@@ -21,11 +21,11 @@ import com.example.hungrystomach.R;
 import java.util.ArrayList;
 
 
-public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FoodViewHolder> {
+public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
     private Context m_context;
     private ArrayList<Food> m_listFood;
 
-    public DetailAdapter(Context context, ArrayList<Food> food_list) {
+    public FoodAdapter(Context context, ArrayList<Food> food_list) {
         this.m_context = context;
         this.m_listFood = food_list;
     }
@@ -44,13 +44,14 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FoodViewHo
         public TextView FoodDescription;
         public TextView FoodPrice;
         public Button Fooddetail;
-        public TextView FoodUploader;
+        //public TextView FoodUploader;
 
         public static final String EXTRA_URL = "NoImage";
         public static final String EXTRA_NAME = "NoName";
         public static final String EXTRA_DES = "NoDes";
         public static final String EXTRA_PRICE = "NoPrice";
         public static final String EXTRA_UUID = "NoUID";
+        public static final String EXTRA_KEY = "NoKey";
 
         public FoodViewHolder (View itemView){
             super(itemView);
@@ -74,6 +75,8 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FoodViewHo
                         to_detail.putExtra(EXTRA_PRICE, clcikedItem.getPrice());
                         to_detail.putExtra(EXTRA_DES, clcikedItem.getDescription());
                         to_detail.putExtra(EXTRA_UUID, clcikedItem.getUploader_uid());
+                        to_detail.putExtra(EXTRA_KEY, clcikedItem.getKey());
+
 
                         m_context.startActivity(to_detail);
                     }
@@ -92,6 +95,7 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.FoodViewHo
         holder.FoodName.setText(f.getName());
         holder.FoodDescription.setText(f.getDescription());
         holder.FoodPrice.setText(f.getPrice());
+        //holder.FoodUploader.setText(f.getUploader());
         //Picasso.get().load(m_listFood.get(position).get_url()).fit().into(holder.FoodIcon);
         Glide.with(m_context).load(f.getUri()).into(holder.FoodIcon);
     }

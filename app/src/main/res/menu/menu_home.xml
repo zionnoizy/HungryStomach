@@ -32,8 +32,8 @@
         app:showAsAction="never">
         <menu>
             <item
-                android:id="@+id/invoice"
-                android:title="Recent Invoice" />
+                android:id="@+id/status_update"
+                android:title="Status Update" />
             <item
                 android:id="@+id/history"
                 android:title="History" />

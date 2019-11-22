@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -32,14 +28,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="0dp"
                     android:layout_marginBottom="13dp"
                     android:text="Close"
                     android:textColor="@android:color/white"
                     android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:layout_alignParentEnd="true"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/update_info"
@@ -49,12 +45,12 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginEnd="7dp"
                     android:layout_marginBottom="13dp"
+                    android:clickable="true"
+                    android:onClick="onClick"
                     android:text="Update Info"
                     android:textColor="@android:color/white"
                     android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:onClick="onClick"
-                    android:clickable="true"/>
+                    android:textStyle="bold" />
 
 
             </com.google.android.material.circularreveal.CircularRevealRelativeLayout>
@@ -62,204 +58,208 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <RelativeLayout
-        android:id="@+id/rl"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:fitsSystemWindows="true"
-        android:gravity="bottom"
-        android:paddingLeft="30dp"
-        android:scaleType="centerCrop">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/setting_icon"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:src="@drawable/abc_vector_test"
-            android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:id="@+id/setting_id_"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/setting_icon"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="4dp"
-            android:layout_marginRight="10dp"
-            android:text="USER ID: "
-            android:textSize="17dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/id_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/setting_icon"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/setting_id_"
-            android:text="id_num"
-            android:textSize="17dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/label_2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/id_num"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="-9dp"
-            android:paddingLeft="15dp"
-            android:paddingTop="15dp"
-            android:paddingRight="15dp"
-            android:text="*You cannot change the information below"
-            android:textSize="12sp" />
-
-
-        <EditText
-            android:id="@+id/display_username"
-            android:inputType="none"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:layout_below="@+id/label_2"/>
-
-        <EditText
-            android:id="@+id/display_email"
-            android:inputType="none"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            android:layout_below="@+id/display_username"/>
-
-        <!---->
-        <TextView
-            android:id="@+id/label"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/display_email"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="-9dp"
-            android:paddingLeft="15dp"
-            android:paddingTop="15dp"
-            android:paddingRight="15dp"
-            android:text="*Your Info in below will share to cooker as you order food"
-            android:textSize="12sp" />
-
-        <EditText
-            android:id="@+id/phone_num"
+        <RelativeLayout
+            android:id="@+id/rl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/label"
-            android:hint="Phone Number..."
-            android:layout_margin="15dp" />
-
-        <EditText
-            android:id="@+id/full_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/phone_num"
-            android:hint="Full Name.."
-            android:layout_margin="15dp" />
-        <!---->
-
-        <TextView
-            android:id="@+id/label_address"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="15dp"
-            android:text="Address:"
-            android:textSize="17sp"
-            android:layout_below="@+id/full_name"/>
-
-        <EditText
-            android:id="@+id/edit_address"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
-            android:padding="5dp"
-            android:textSize="17sp"
-            android:layout_below="@+id/label_address"/>
-
-        <TextView
-            android:id="@+id/label_state"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="15dp"
-            android:text="State:"
-            android:textSize="17sp"
-            android:layout_below="@+id/edit_address"/>
-
-        <EditText
-            android:id="@+id/edit_state"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
-            android:padding="5dp"
-            android:textSize="17sp"
-            android:layout_below="@+id/label_state"/>
-
-        <TextView
-            android:id="@+id/label_city"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="15dp"
-            android:text="City:"
-            android:textSize="17sp"
-            android:layout_below="@+id/edit_state"/>
-
-        <EditText
-            android:id="@+id/edit_city"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
-            android:padding="5dp"
-            android:textSize="17sp"
-            android:layout_below="@+id/label_city"/>
-
-        <TextView
-            android:id="@+id/label_zip"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="15dp"
-            android:text="Zip"
-            android:textSize="17sp"
-            android:layout_below="@+id/edit_city" />
-
-        <EditText
-            android:id="@+id/edit_zip"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp"
-            android:padding="5dp"
-            android:textSize="17sp"
-            android:layout_below="@+id/label_zip"/>
-
-    </RelativeLayout>
+            android:layout_marginTop="?attr/actionBarSize"
+            android:fitsSystemWindows="true"
+            android:gravity="bottom"
+            android:paddingLeft="30dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
+            <TextView
+                android:id="@+id/setting_id_"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/setting_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:text="your user id: "
+                android:textSize="17dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/id_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/setting_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/setting_id_"
+                android:gravity="center"
+                android:text="id_num"
+                android:textSize="17dp"
+                android:textStyle="bold" />
 
 
+            <ImageView
+                android:id="@+id/setting_icon"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="140dp" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/label_2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/id_num"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="-9dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:text="*You cannot change the information below"
+                android:textSize="12sp" />
+
+
+            <EditText
+                android:id="@+id/display_username"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label_2"
+                android:inputType="none"
+                android:text="Username"
+                android:textColor="@color/lightGrey" />
+
+            <EditText
+                android:id="@+id/display_email"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_username"
+                android:inputType="none"
+                android:text="Email"
+                android:textColor="@color/lightGrey" />
+
+            <!---->
+            <TextView
+                android:id="@+id/label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_email"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="-9dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:text="*Your Info in below will share to cooker as you order food"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/phone_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label"
+                android:layout_margin="15dp"
+                android:hint="Phone Number..." />
+
+            <EditText
+                android:id="@+id/full_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/phone_num"
+                android:layout_margin="15dp"
+                android:hint="Full Name.." />
+            <!---->
+
+            <TextView
+                android:id="@+id/label_address"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/full_name"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:text="Address:"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/edit_address"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label_address"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:padding="5dp"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/label_state"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_address"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:text="State:"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/edit_state"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label_state"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:padding="5dp"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/label_city"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_state"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:text="City:"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/edit_city"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label_city"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:padding="5dp"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/label_zip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_city"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:text="Zip"
+                android:textSize="17sp" />
+
+            <EditText
+                android:id="@+id/edit_zip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label_zip"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:padding="5dp"
+                android:textSize="17sp" />
+        </RelativeLayout>
+</ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

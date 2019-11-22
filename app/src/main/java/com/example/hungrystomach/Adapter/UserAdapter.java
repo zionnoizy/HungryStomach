@@ -1,11 +1,13 @@
 package com.example.hungrystomach.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
@@ -14,18 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.hungrystomach.Model.User;
 import com.example.hungrystomach.R;
+import com.example.hungrystomach.RoomChat_Activity;
+import com.example.hungrystomach.RoomUser_Activity;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
-//CardViewHolder
+
 
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private Context m_context;
-    private List<User> all_users;
-    double total_amounts;
+    private ArrayList<User> all_users;
 
     public UserAdapter(Context context, ArrayList<User> all_users) {
         this.m_context = context;
@@ -36,7 +38,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public UserAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(m_context);
-        View itemv = inflater.inflate(R.layout.layout_item_cart, parent, false);
+        View itemv = inflater.inflate(R.layout.layout_item_user, parent, false);
         return new UserViewHolder(itemv);
     }
 
@@ -47,7 +49,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
         public UserViewHolder (View itemView){
             super(itemView);
-            UserIcon = (ImageView)itemView.findViewById(R.id.cart_thumbnail);
+            UserIcon = (ImageView)itemView.findViewById(R.id.usr_icon);
             Username = (TextView)itemView.findViewById(R.id.tv_username);
         }
     }
@@ -55,13 +57,25 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     public void onBindViewHolder(@NonNull UserAdapter.UserViewHolder holder, int position) {
         User usr = all_users.get(position);
+        //final String hisUID = usr.getUId();
         holder.Username.setText(usr.getUsername());
         if(usr.getIcon().equals("default_icon")){
-            holder.UserIcon.setImageResource(R.mipmap.ic_launcher);
+            holder.UserIcon.setImageResource(R.drawable.default_icon);
         }
         else{
             Glide.with(m_context).load(usr.getIcon()).into(holder.UserIcon);
         }
+
+        //click user
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Toast.makeText(m_context, "click to chat", Toast.LENGTH_LONG).show();
+                Intent chatroom = new Intent(m_context, RoomChat_Activity.class);
+                //chatroom.putExtra("HIS_UID", hisUID);
+                m_context.startActivity(chatroom);
+            }
+        });
     }
 
 

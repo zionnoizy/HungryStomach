@@ -10,8 +10,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-//import com.example.hungrystomach.Adapter.DetailAdapter;
+//import com.example.hungrystomach.Adapter.FoodAdapter;
 import com.example.hungrystomach.Model.Food;
+import com.example.hungrystomach.Model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -45,6 +46,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -150,6 +152,10 @@ public class Upload_Activity extends AppCompatActivity{
 
     private void uploading_image(){
         String image_name = et_fname.getText().toString().trim();
+
+
+
+
         if(image_name.length()==0){
             et_fname.setError("Food name cannot be empty");
             et_fname.requestFocus();
@@ -224,9 +230,35 @@ public class Upload_Activity extends AppCompatActivity{
     private final View.OnClickListener textListener = new View.OnClickListener() {
         @Override
         public void onClick(View v){
-            mCalender = Calendar.getInstance();
-            new DatePickerDialog(Upload_Activity.this, mDataDataSet, mCalender.get(Calendar.YEAR),
-                    mCalender.get(Calendar.MONTH), mCalender.get(Calendar.DAY_OF_MONTH)).show();
+            //check donut pt
+            String myuid = m_auth.getInstance().getCurrentUser().getUid();
+            Query query = FirebaseDatabase.getInstance().getReference().child("users").child(myuid);
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User u = dataSnapshot.getValue(User.class);
+                    int point = u.getDonut();//if empty
+                    if(point <= 500){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Upload_Activity.this);
+                        builder.setTitle("Donut Point Not Enough")
+                        .setMessage("You do not have 500 donut, so you cannot use this function.")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                    else {
+                        mCalender = Calendar.getInstance();
+                        new DatePickerDialog(Upload_Activity.this, mDataDataSet, mCalender.get(Calendar.YEAR),
+                                mCalender.get(Calendar.MONTH), mCalender.get(Calendar.DAY_OF_MONTH)).show();
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
         }
     };
 
@@ -237,7 +269,6 @@ public class Upload_Activity extends AppCompatActivity{
             mCalender.set(Calendar.MONTH, m);
             mCalender.set(Calendar.DAY_OF_MONTH, d);
             new TimePickerDialog(Upload_Activity.this, mTimeDataSet, mCalender.get(Calendar.HOUR_OF_DAY), mCalender.get(Calendar.MINUTE), false).show();
-
         }
     };
 

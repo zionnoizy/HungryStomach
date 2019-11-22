@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class Setting_Activity extends AppCompatActivity {
     EditText display_email;
     TextView uid;
     TextView close;
+    ImageView image_icon;
 
     String c_phone;
     String c_fullname;
@@ -72,9 +74,12 @@ public class Setting_Activity extends AppCompatActivity {
             et_zip  = findViewById(R.id.edit_zip);
             uid  = findViewById(R.id.id_num);
             close  = findViewById(R.id.close);
+            image_icon  = findViewById(R.id.setting_icon);
 
             display_usrname.setText(name);
             display_email.setText(email);
+            display_usrname.setKeyListener(null);
+            display_email.setKeyListener(null);
             uid.setText(myuid);
         }
 
@@ -86,31 +91,39 @@ public class Setting_Activity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User u = dataSnapshot.getValue(User.class);
-                String usr_phone = u.getPhone();
+                String icon = u.getIcon();
+                if(icon.equals("default_icon"))
+                    image_icon.setImageResource(R.drawable.default_icon);
+
                 if(!u.getPhone().isEmpty())
-                    et_phone.setText(usr_phone);
+                    et_phone.setText(u.getPhone());
                 else
-                    et_phone.setText("not_provide,pls_state_bf_checkout");
+                    et_phone.setText("blank");
+
+                if(!u.getFull_name().isEmpty())
+                    et_fullname.setText(u.getFull_name());
+                else
+                    et_fullname.setText("blank");
 
                 if(!u.getAddress().isEmpty())
                     et_address.setText(u.getAddress());
                 else
-                    et_address.setText("not_provide,pls_state_bf_checkout");
+                    et_address.setText("blank");
 
                 if(!u.getState().isEmpty())
                     et_state.setText(u.getState());
                 else
-                    et_state.setText("not_provide,pls_state_bf_checkout");
+                    et_state.setText("blank");
 
                 if(!u.getCity().isEmpty())
                     et_city.setText(u.getCity());
                 else
-                    et_city.setText("not_provide,pls_state_bf_checkout");
+                    et_city.setText("blank");
 
                 if(!u.getZip().isEmpty())
                     et_zip.setText(u.getZip());
                 else
-                    et_zip.setText("not_provide,pls_state_bf_checkout");
+                    et_zip.setText("blank");
 
             }
             @Override
