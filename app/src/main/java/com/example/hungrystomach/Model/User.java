@@ -50,67 +50,69 @@ public class User {
         this.username = username;
     }
 
-    public String getUId() {
-        return uid;
-    }
-
-    public void setUId(String uid) {
-        this.uid = uid;
+    public String getIcon() {
+        return icon;
     }
 
     public void setIcon(String icon) {
         this.icon = icon;
     }
 
-    public String getIcon () {
-        return icon;
+    public String getPhone() {
+        return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setAddress(String icon) {
-        this.address = icon;
-    }
-
     public String getAddress() {
         return address;
     }
 
-    public void setState(String icon) {
-        this.state = icon;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getState() {
         return state;
     }
 
-    public void setCity(String icon) {
-        this.city = icon;
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getCity() {
         return city;
     }
 
-    public void setZip(String icon) {
-        this.zip = icon;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getZip() {
         return zip;
     }
 
-    public void setFull_name(String full_name) {
-            this.full_name = full_name;
+    public void setZip(String zip) {
+        this.zip = zip;
     }
-    public String getFull_name() { return full_name; }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getFull_name() {
+        return full_name;
+    }
+
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
+    }
 
     public int getDonut() {
         return donut;
@@ -119,6 +121,4 @@ public class User {
     public void setDonut(int donut) {
         this.donut = donut;
     }
-
-
 }

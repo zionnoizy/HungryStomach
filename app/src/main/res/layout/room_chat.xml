@@ -30,7 +30,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/nameTv"
+                android:id="@+id/room_receiver"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Receiver Name"
@@ -38,12 +38,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/receiver_status_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Offline"
-                android:textColor="@color/colorWhite" />
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
@@ -66,15 +60,9 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/attach_image_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:src="@drawable/bt_ic_camera"/>
 
         <EditText
-            android:id="@+id/input_message"
+            android:id="@+id/room_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -84,7 +72,7 @@
             android:padding="15dp" />
 
         <ImageButton
-            android:id="@+id/sendBtn"
+            android:id="@+id/room_send"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@null"

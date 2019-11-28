@@ -1,10 +1,17 @@
 package com.example.hungrystomach;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
@@ -12,10 +19,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.hungrystomach.Adapter.ChatAdapter;
+import com.example.hungrystomach.Model.Chat;
 import com.example.hungrystomach.Model.FCMToken;
 import com.example.hungrystomach.Notification.Data;
 import com.example.hungrystomach.Model.User;
 import com.example.hungrystomach.Notification.Sender;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,108 +37,98 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.example.hungrystomach.Adapter.UserAdapter.EXTRA_HISUID;
 
 public class RoomChat_Activity extends AppCompatActivity {
 
     String my_uid;
     String his_uid;
     Boolean notify = true;
+    ImageButton send_btn;
+    EditText input_message;
     private RequestQueue requestQueue;
-    //create new database chat_room with sender(myuid) and receiver uid(hisuid)
 
-    //create notification to receiver
+    String whattype = "ChatNotif";
+    List<Chat> chat_list;
 
-
-    //send_msg()
-    //attach hash in firebase
-
-
-    //show_prev_msg()
-
+    ChatAdapter adapter;
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.room_chat);
+
+        send_btn = findViewById(R.id.room_send);
+        input_message = findViewById(R.id.room_message);
+
+        his_uid = getIntent().getStringExtra(EXTRA_HISUID);
+        my_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+        recyclerView = (RecyclerView) findViewById(R.id.chatroom_recyclerView);
+
+        read_msg();
+        send_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String input_msg = input_message.getText().toString().trim();
+                if (TextUtils.isEmpty(input_msg)) {
+                    Toast.makeText(RoomChat_Activity.this, "Your message is empty", Toast.LENGTH_SHORT).show();
+                } else {
+                    send_message(input_msg);
+                }
+                input_message.setText("");
+
+            }
+        });
     }
 
-    private void send_message(final String message) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        String timestamp = String.valueOf(System.currentTimeMillis());
+    private void send_message(final String input_msg) {
+        DatabaseReference create_chat = FirebaseDatabase.getInstance().getReference().child("chat_list");
+        long yourmilliseconds = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+        Date resultdate = new Date(yourmilliseconds);
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", my_uid);
         hashMap.put("receiver", his_uid);
-        hashMap.put("message", message);
-        hashMap.put("timestamp", timestamp);
-        //hashMap.put("isSeen", false);
-        hashMap.put("type", "text");
-        databaseReference.child("chats").push().setValue(hashMap);
+        hashMap.put("message", input_msg);
+        hashMap.put("timestamp", sdf.format(resultdate));
+        create_chat.child(my_uid).child(his_uid).push().setValue(hashMap);
+        create_chat.child(his_uid).child(my_uid).push().setValue(hashMap);
 
-        final DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users").child(my_uid);
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference("users").child(my_uid);
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-
-                if (notify) {
-                    sendNotify(his_uid, user.getUsername(), message);
-                }
+                if (notify)
+                    sendNotify(his_uid, user.getUsername(), input_msg);
                 notify = false;
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-        //save sender/receiver
-        final DatabaseReference mychatRef = FirebaseDatabase.getInstance().getReference("chat_list")
-                .child(my_uid)
-                .child(his_uid);
-        mychatRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    mychatRef.child("aite").setValue(his_uid);
-                }
-            }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-        final DatabaseReference hischatRef = FirebaseDatabase.getInstance().getReference("chat_list")
-                .child(his_uid)
-                .child(my_uid);
-        hischatRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    hischatRef.child("aite").setValue(my_uid);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
+
     }
 
-
     private void sendNotify(final String his_uid, final String name, final String message){
-        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        Query query = allTokens.orderByKey().equalTo(his_uid);
+        DatabaseReference fcm_tokens = FirebaseDatabase.getInstance().getReference("FCMToken");
+        Query query = fcm_tokens.orderByKey().equalTo(his_uid);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     FCMToken token = ds.getValue(FCMToken.class);
-                    Data data = new Data("New Message from HungryStomach", name + ": " + message,  my_uid, his_uid, "ChatNotif");
-
+                    Data data = new Data("New Message from HungryStomach", name + ": " + message,  my_uid, his_uid, whattype);
                     Sender sender = new Sender(data, token.getFcm_token());
-
-                    //fcm json object request
                     try {
                         JSONObject senderJsonObj = new JSONObject(new Gson().toJson(sender));
                         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest("https://fcm.googleapis.com/fcm/send", senderJsonObj,
@@ -136,7 +136,6 @@ public class RoomChat_Activity extends AppCompatActivity {
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         Log.d("JSON_RESPONSE", "onResponse: "+response.toString());
-
                                     }
                                 }, new Response.ErrorListener() {
                             @Override
@@ -146,11 +145,9 @@ public class RoomChat_Activity extends AppCompatActivity {
                         }){
                             @Override
                             public Map<String, String> getHeaders() throws AuthFailureError {
-                                //put params
                                 Map<String, String> headers = new HashMap<>();
                                 headers.put("Content-Type", "application/json");
                                 headers.put("Authorization", "key=AAAAHI3mI9Y:APA91bGnuTKUcP5s_BQwwsLgim1xnmVIjPRpJwdvwXTSBQaIV3PsfHBuJPC1ZVknrk4tJbjWpizLUZY3dBuaKGScElnjRPfJ-qYoLuK84IxAFdw4Ennpl3wupYxkMKLVKFgujJj5Eiub");
-
                                 return headers;
                             }
                         };
@@ -165,4 +162,27 @@ public class RoomChat_Activity extends AppCompatActivity {
         });
     }
 
+    public void read_msg(){
+        chat_list = new ArrayList<>();
+        DatabaseReference red_chat = FirebaseDatabase.getInstance().getReference("chat_list");
+        red_chat.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                chat_list.clear();
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    Chat chat = ds.getValue(Chat.class);
+                    if(chat.getReceiver().equals(my_uid) && chat.getSender().equals(his_uid) ||
+                       chat.getReceiver().equals(his_uid) && chat.getSender().equals(my_uid)){
+                        chat_list.add(chat);
+                    }
+                }
+                adapter = new ChatAdapter(RoomChat_Activity.this, chat_list);
+                adapter.notifyDataSetChanged();
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
 }

@@ -2,6 +2,7 @@ package com.example.hungrystomach;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,10 +23,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA_URL;
+
 public class RoomUser_Activity extends AppCompatActivity {
-    private RecyclerView rv;
-    private UserAdapter usrAdapter;
-    private ArrayList<User> mUsrsList;
+    RecyclerView rv;
+    UserAdapter usrAdapter;
+    ArrayList<User> mUsrsList;
 
     public RoomUser_Activity(){
         //empty
@@ -37,36 +40,35 @@ public class RoomUser_Activity extends AppCompatActivity {
         setContentView(R.layout.fragment_user);
 
         rv = (RecyclerView) findViewById(R.id.usr_recyclerview);
-        rv.setHasFixedSize(true);
-        LinearLayoutManager lm = new LinearLayoutManager(this);
-        rv.setLayoutManager(lm);
-
-        mUsrsList = new ArrayList<>();
 
         readUsrs();
     }
 
     private void readUsrs(){
+        LinearLayoutManager LayoutManager = new LinearLayoutManager(this);
+        rv.setLayoutManager(LayoutManager);
+        mUsrsList = new ArrayList<>();
+
         final FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUsrsList.clear();
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    User all_usr = snapshot.getValue(User.class);
-                    if (!all_usr.getUId().equals(me.getUid())) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                    User all_usr = ds.getValue(User.class);
+                    //Log.d("ra_debug", all_usr.getUid() +" "+ me.getUid());
+                    if (!all_usr.getUid().equals(me.getUid())) {
                         mUsrsList.add(all_usr);
-                        break;
                     }
+                    usrAdapter = new UserAdapter(RoomUser_Activity.this, mUsrsList);
+                    rv.setAdapter(usrAdapter);
+                    usrAdapter.notifyDataSetChanged();
                 }
-                usrAdapter = new UserAdapter(getApplicationContext(), mUsrsList);
-                rv.setAdapter(usrAdapter);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 }

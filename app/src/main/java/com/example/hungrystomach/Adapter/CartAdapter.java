@@ -1,6 +1,7 @@
 package com.example.hungrystomach.Adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -76,35 +78,39 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             CartTTL = (TextView)itemView.findViewById(R.id.total_price);
             sub_total = itemView.findViewById(R.id.sub_total);
             delete_item = itemView.findViewById(R.id.delete_item);
-            /*
             //delete item
             delete_item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    ShoppingCart get_deleting_item = m_listCart.get(position);
-
-                    DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("shopping_cart");
-                    String user_uid = m_auth.getCurrentUser().getUid();
-                    String deleting_food_name = get_deleting_item.getTitle();
-
-                    Query deleting_food_query = cartListRef.child(user_uid).orderByChild("title").equalTo(deleting_food_name); //might +id
-
-                    deleting_food_query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
+                    builder.setTitle("Delete");
+                    builder.setMessage("Are you sure to delete this item?");
+                    builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-                                appleSnapshot.getRef().removeValue(); //
-                            }
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.e(TAG, "Please Check Your Network Setting", databaseError.toException());
+                        public void onClick(DialogInterface dialog, int which) {
+                            //delete comment
+                            int position = getAdapterPosition();
+                            ShoppingCart get_deleting_item = m_listCart.get(position);
+                            final String user_uid = m_auth.getCurrentUser().getUid();
+                            final DatabaseReference delete_item_Ref = FirebaseDatabase.getInstance().getReference("shopping_cart").child(user_uid);
+
+                            final String deleting_food_name = get_deleting_item.getProduct_name();
+
+                            delete_item_Ref.child(deleting_food_name).removeValue();
+                            notifyDataSetChanged();
+
                         }
                     });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
                 }
             });
-            */
+
         }
     }
 
@@ -124,7 +130,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         Glide.with(m_context).load(sc.getImg_url()).into(holder.CartFoodIcon);
     }
 
-
+    @Override
     public int getItemCount() {
         return m_listCart.size();
     }

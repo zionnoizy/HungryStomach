@@ -32,15 +32,15 @@
         app:showAsAction="never">
         <menu>
             <item
-                android:id="@+id/status_update"
-                android:title="Status Update" />
+                android:id="@+id/request"
+                android:title="Request" />
             <item
-                android:id="@+id/history"
-                android:title="History" />
+                android:id="@+id/receipt"
+                android:title="Receipt" />
 
             <item
-                android:id="@+id/profit"
-                android:title="Profit" />
+                android:id="@+id/wallet"
+                android:title="Wallet" />
 
             <item
                 android:id="@+id/rating"

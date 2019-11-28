@@ -42,6 +42,11 @@
         <activity android:name=".Checkout3_Activity" />
         <activity android:name=".Status_Update_Activity" />
         <activity android:name=".RoomUser_Activity" />
+        <activity android:name=".Receipt_Activity" />
+        <activity android:name=".Request_Activity" />
+        <activity android:name=".RoomChat_Activity" />
+        <activity android:name=".Track_Order_Activity" />
+
 
         <!--braintree-->
         <activity

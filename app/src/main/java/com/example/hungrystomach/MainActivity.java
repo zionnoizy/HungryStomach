@@ -133,12 +133,13 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-
-
-                            Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
-                            GenerateToken();
-                            startActivity(refer_to_home);
-                            finish();
+                            FirebaseUser getuser = FirebaseAuth.getInstance().getCurrentUser();
+                            if(getuser != null) {
+                                Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
+                                GenerateToken();
+                                startActivity(refer_to_home);
+                                finish();
+                            }
                         }
                         //else
                             //Toast.makeText(MainActivity.this,"Field Empty!",Toast.LENGTH_SHORT).show();
@@ -178,12 +179,15 @@ public class MainActivity extends AppCompatActivity {
                             if (!task.isSuccessful()) {
                                 Toast.makeText(MainActivity.this, "Check Your Network Connection", Toast.LENGTH_SHORT).show();
                             } else {
-                                //Toast.makeText(MainActivity.this, "Welcome " + m_auth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
-                                Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
-                                GenerateToken();
-                                fix_null_info();
-                                startActivity(refer_to_home);
-                                finish();
+                                FirebaseUser getuser = FirebaseAuth.getInstance().getCurrentUser();
+                                if(getuser != null) {
+                                    //Toast.makeText(MainActivity.this, "Welcome " + m_auth.getInstance().getCurrentUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+                                    Intent refer_to_home = new Intent(MainActivity.this, Home_Activity.class);
+                                    GenerateToken();
+                                    fix_null_info();
+                                    startActivity(refer_to_home);
+                                    finish();
+                                }
                             }
                         }
                     });

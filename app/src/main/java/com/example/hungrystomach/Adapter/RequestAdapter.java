@@ -1,11 +1,13 @@
 package com.example.hungrystomach.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,15 +16,18 @@ import com.bumptech.glide.Glide;
 import com.example.hungrystomach.Model.Request;
 import com.example.hungrystomach.Model.ShoppingCart;
 import com.example.hungrystomach.R;
+import com.example.hungrystomach.Status_Update_Activity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder> {
     private Context m_context;
-    private ArrayList<Request> m_listRequest;
-
-    public RequestAdapter(Context context, ArrayList<Request> request_list) {
+    private List<Request> m_listRequest;
+    public static final String EXTRA_POSITION = "NoImage";
+    public static final String EXTRA_RANDOM_KEY = "NoRandomKey";
+    public RequestAdapter(Context context, List<Request> request_list) {
         this.m_context = context;
         this.m_listRequest = request_list;
     }
@@ -30,35 +35,47 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     @NonNull
     @Override
     public RequestAdapter.RequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(m_context);
-        View itemv = inflater.inflate(R.layout.layout_item_request, parent, false);
-        return new RequestViewHolder(itemv);
+        View v = LayoutInflater.from(m_context).inflate(R.layout.layout_item_request, parent, false);
+        return new RequestViewHolder(v);
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(int position);
+
+    public class RequestViewHolder extends RecyclerView.ViewHolder{
+        private TextView RequestDate;
+        private TextView RequestPrice;
+        private ImageView RequestItemImage;
+        private List<ShoppingCart> RequestItem;
+        private TextView RequestNum;
+
+        public RequestViewHolder (View itemView){
+            super(itemView);
+            RequestPrice = itemView.findViewById(R.id.request_price);
+            RequestDate = itemView.findViewById(R.id.request_date);
+            RequestNum = itemView.findViewById(R.id.display_request);
+
+            RequestItemImage = (ImageView)itemView.findViewById(R.id.cart_thumbnail);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RequestAdapter.RequestViewHolder holder, int position) {
-        Request sc = m_listRequest.get((holder.getAdapterPosition()));
-        //holder.RequestItem.setText(sc.getProduct_price());
-        //holder.RequestDate.setText(String.valueOf(sc.getRequestDate()));
+        Request request = m_listRequest.get((holder.getAdapterPosition()));
+        holder.RequestDate.setText(request.getRequestDate());
+        holder.RequestPrice.setText(String.valueOf(request.getGrand_total()));
+        holder.RequestNum.setText("Request#" + String.valueOf(request.getRequest_entry_no()));
+        final String num = String.valueOf(request.getRequest_entry_no());
+        final String random_key = String.valueOf(request.getRandomkey());
 
-        //Glide.with(m_context).load(sc.getImg_url()).into(holder.RequestItemImage);
-    }
-
-    public class RequestViewHolder extends RecyclerView.ViewHolder{
-        private ImageView RequestItemImage;
-        private List<ShoppingCart> RequestItem;
-        private TextView RequestDate;
-
-        public RequestViewHolder (View itemView){
-            super(itemView);
-            RequestItemImage = (ImageView)itemView.findViewById(R.id.cart_thumbnail);
-            RequestItem = itemView.findViewById(R.id.cart_foodname);
-            RequestDate = itemView.findViewById(R.id.cart_foodprice);
-        }
+        //click status_update.xml
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent detailreq = new Intent(m_context, Status_Update_Activity.class);
+                detailreq.putExtra(EXTRA_POSITION, num);
+                detailreq.putExtra(EXTRA_RANDOM_KEY, random_key);
+                m_context.startActivity(detailreq);
+            }
+        });
     }
 
 
@@ -67,7 +84,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
 
-    public void setListCart(ArrayList<Request> request_list){
+    public void setListRequest(ArrayList<Request> request_list){
         this.m_listRequest = request_list;
     }
 

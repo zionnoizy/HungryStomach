@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="120dp"
+    android:layout_width="180dp"
     android:layout_height="190dp"
     android:layout_margin="5dp">
 
@@ -11,14 +11,14 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/display_request"
+            android:id="@+id/display_receipt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="19sp"
-            android:text="Request#000" />
+            android:textSize="23sp"
+            android:text="Invoice#" />
 
         <TextView
-            android:id="@+id/request_date"
+            android:id="@+id/receipt_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -28,19 +28,28 @@
 
 
         <TextView
-            android:id="@+id/request_price"
+            android:id="@+id/receipt_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Grand Total"
             android:textSize="23sp" />
 
         <TextView
-            android:id="@+id/request_from"
+            android:id="@+id/receipt_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="Requester"
+            android:text="Name"
             android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/receipt_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="His Status"
+            android:textSize="18sp"
+            android:textStyle="italic"/>
 
     </LinearLayout>
 

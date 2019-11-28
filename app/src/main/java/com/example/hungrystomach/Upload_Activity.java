@@ -194,7 +194,7 @@ public class Upload_Activity extends AppCompatActivity{
                                         Food fd = new Food(et_fname.getText().toString().trim(),
                                                 et_fdesc.getText().toString().trim(),
                                                 et_fprice.getText().toString().trim(),
-                                                url, DateTime, uuid, key, uploader);
+                                                url, DateTime, uuid, key, uploader, 0);
                                         database_ref.child(key).setValue(fd);
 
                                         Toast.makeText(Upload_Activity.this, "Upload successfully", Toast.LENGTH_LONG).show();
@@ -238,6 +238,7 @@ public class Upload_Activity extends AppCompatActivity{
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User u = dataSnapshot.getValue(User.class);
                     int point = u.getDonut();//if empty
+                    /*
                     if(point <= 500){
                         AlertDialog.Builder builder = new AlertDialog.Builder(Upload_Activity.this);
                         builder.setTitle("Donut Point Not Enough")
@@ -250,10 +251,11 @@ public class Upload_Activity extends AppCompatActivity{
                         alert.show();
                     }
                     else {
+                    */
                         mCalender = Calendar.getInstance();
                         new DatePickerDialog(Upload_Activity.this, mDataDataSet, mCalender.get(Calendar.YEAR),
                                 mCalender.get(Calendar.MONTH), mCalender.get(Calendar.DAY_OF_MONTH)).show();
-                    }
+                    //}
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {

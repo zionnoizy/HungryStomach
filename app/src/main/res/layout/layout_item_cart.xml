@@ -31,12 +31,11 @@
                     android:layout_height="120dp"
                     android:padding="4dp" />
 
-
                 <TextView
                     android:id="@+id/cart_foodname"
                     android:layout_width="72dp"
                     android:layout_height="36dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="4dp"
                     android:layout_marginTop="20dp"
                     android:layout_toRightOf="@id/cart_thumbnail"
                     android:layout_weight="9"
@@ -98,15 +97,16 @@
 
                 <Button
                     android:id="@+id/delete_item"
-                    android:layout_width="35dp"
+                    android:layout_width="65dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="12dp"
                     android:layout_marginEnd="5dp"
                     android:drawableLeft="@drawable/ic_close"
-                    android:padding="3dp" />
+                    android:padding="3dp"
+                    app:backgroundTint="#ffaa00" />
 
             </RelativeLayout>
 

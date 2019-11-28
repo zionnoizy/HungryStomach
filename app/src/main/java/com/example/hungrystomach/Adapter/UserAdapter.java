@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.Model.User;
 import com.example.hungrystomach.R;
 import com.example.hungrystomach.RoomChat_Activity;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private Context m_context;
     private ArrayList<User> all_users;
-
+    public static final String EXTRA_HISUID = "NoHisUID";
     public UserAdapter(Context context, ArrayList<User> all_users) {
         this.m_context = context;
         this.all_users = all_users;
@@ -57,7 +58,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     public void onBindViewHolder(@NonNull UserAdapter.UserViewHolder holder, int position) {
         User usr = all_users.get(position);
-        //final String hisUID = usr.getUId();
+        final String hisUID = usr.getUid();
         holder.Username.setText(usr.getUsername());
         if(usr.getIcon().equals("default_icon")){
             holder.UserIcon.setImageResource(R.drawable.default_icon);
@@ -70,22 +71,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Toast.makeText(m_context, "click to chat", Toast.LENGTH_LONG).show();
+                Toast.makeText(m_context, "welcome to chat room", Toast.LENGTH_LONG).show();
                 Intent chatroom = new Intent(m_context, RoomChat_Activity.class);
-                //chatroom.putExtra("HIS_UID", hisUID);
+                chatroom.putExtra(EXTRA_HISUID, hisUID);
                 m_context.startActivity(chatroom);
             }
         });
     }
 
-
     public int getItemCount() {
         return all_users.size();
     }
-
-
-    public void setListCart(ArrayList<User> m_listCart){
-        this.all_users = m_listCart;
-    }
-
 }

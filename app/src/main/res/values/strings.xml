@@ -34,7 +34,9 @@
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
     <string name="fcm_FCM_token">FCM Token: %s</string>
 
-    <string name="invoice_format"> Hello, %1$s! Here is your invoice, please check your info below, \n Total Price: %2$s \n Transaction Date: %3$s \n </string>
+    <string name="invoice_text"> Hello, %1$s! Your order has been placed. \n Total Price: %2$s \n Transaction Date: %3$s \n </string>
 
     <string name="reset_title"> <u>Enter Your email below</u> </string>
+
+    <string name="transaction_address"> %1$s, %2$s, %3$s %4$s </string>
 </resources>

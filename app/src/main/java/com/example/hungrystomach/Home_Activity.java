@@ -37,25 +37,7 @@ public class Home_Activity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         configureTabLayout();
-        //CreateChannel();
 
-
-        //get InstanceID
-        /*
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("tokenErr", "getInstanceId failed", task.getException());
-                            return;
-                        }
-                        String token = task.getResult().getToken();
-                        String msg = getString(R.string.msg_token_fmt, token);
-                        Log.d("GenTok", msg);
-                    }
-                });
-        */
     }
 
 
@@ -83,12 +65,19 @@ public class Home_Activity extends AppCompatActivity {
                 Intent go_chat = new Intent(Home_Activity.this, RoomUser_Activity.class);
                 startActivity(go_chat);
                 return true;
-            case R.id.status_update:
-                Intent go_status = new Intent(Home_Activity.this, Status_Update_Activity.class);
+            case R.id.request:
+                Intent go_status = new Intent(Home_Activity.this, Request_Activity.class);
                 startActivity(go_status);
                 return true;
+            case R.id.receipt:
+                Intent go_receipt = new Intent(Home_Activity.this, Receipt_Activity.class);
+                startActivity(go_receipt);
+                return true;
+            case R.id.rating:
+                //Intent go_rating = new Intent(Home_Activity.this, Rating_Activity.class);
+                //startActivity(go_rating);
+                return true;
             case R.id.it_settings:
-                //Toast.makeText(this,"Redirected to Setting Section", Toast.LENGTH_SHORT).show();
                 Intent intent2 = new Intent(Home_Activity.this, Setting_Activity.class);
                 startActivity(intent2);
                 return true;

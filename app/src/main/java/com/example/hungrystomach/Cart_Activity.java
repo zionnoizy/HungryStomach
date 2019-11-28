@@ -1,5 +1,7 @@
 package com.example.hungrystomach;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -98,10 +100,23 @@ public class Cart_Activity extends AppCompatActivity {
         btn_chceckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Cart_Activity.this, Checkout1_Activity.class);
-                intent.putExtra(PASS_TOTAL_AMT, String.valueOf(grandT));
-                intent.putExtra(PASS_UPLAODER_UID, FIND_UPLOADER_UID);
-                startActivity(intent);
+                if(grandT == 0.0){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Cart_Activity.this);
+                    builder.setTitle("Shopping Cart")
+                            .setMessage("You cart is empty!")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }else {
+                    Intent intent = new Intent(Cart_Activity.this, Checkout1_Activity.class);
+                    intent.putExtra(PASS_TOTAL_AMT, String.valueOf(grandT));
+                    intent.putExtra(PASS_UPLAODER_UID, FIND_UPLOADER_UID);
+                    startActivity(intent);
+                }
             }
         });
     }

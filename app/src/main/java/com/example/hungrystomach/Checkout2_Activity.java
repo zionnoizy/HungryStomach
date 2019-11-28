@@ -23,7 +23,8 @@ import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
 import com.example.hungrystomach.Model.FCMToken;
-import com.example.hungrystomach.Model.Invoice;
+import com.example.hungrystomach.Model.Food;
+import com.example.hungrystomach.Model.Receipt;
 import com.example.hungrystomach.Model.Request;
 import com.example.hungrystomach.Model.ShoppingCart;
 import com.example.hungrystomach.Notification.APIService;
@@ -79,7 +80,8 @@ public class Checkout2_Activity extends AppCompatActivity {
     String format_gT;
     String uploader_uid;
 
-    long invoice_entry_no;
+    int invoice_entry_no;
+    long request_entry_no=0;
     String invoice_notif;
     String my_uid = FirebaseAuth.getInstance().getUid();
 
@@ -89,8 +91,13 @@ public class Checkout2_Activity extends AppCompatActivity {
     private RequestQueue mRequestQue;
     boolean notify = false;
 
+    public static final String EXTRA_UPLOADERUID = "NoUploaderUid";
+    public static final String EXTRA_AMOUNT_TO_PAY = "NoTotalAmount";
+    String random_key;
+    String first_status = "not response";
     APIService api_service;
     List<ShoppingCart> save_food_list = new ArrayList<>();
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,13 +106,18 @@ public class Checkout2_Activity extends AppCompatActivity {
         buy_button = findViewById(R.id.btnBuy);
         total_amount = findViewById(R.id.TTprice);
 
+        get_foodlist();
         grandT = getIntent().getStringExtra(PASS_TOTAL_AMT);
         DecimalFormat df = new DecimalFormat("#.##");
         format_gT = df.format(Double.parseDouble(grandT));
         total_amount.setText("Your total is: $" + format_gT);
         uploader_uid = getIntent().getStringExtra(PASS_UPLAODER_UID);
 
+        /*
         //choose utnesil and pick up choose
+        choose_utensil = findViewById(R.id.choose_utensil);
+        choose_pickup = findViewById(R.id.choose_pickup);
+        */
 
         buy_button.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -148,7 +160,6 @@ public class Checkout2_Activity extends AppCompatActivity {
         startActivityForResult(dropInRequest.getIntent(this), BRAINTREE_REQUEST_CODE);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -175,16 +186,18 @@ public class Checkout2_Activity extends AppCompatActivity {
         RequestParams params = new RequestParams();
         params.put("amount", format_gT);
         params.put("nonce", paymentMethodNonce);
-        //Log.d(TAG, "Params.. " + params);
 
         client.post(API_CHECKOUT, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 //Log.e(TAG, "Payment Made Successuffly= " + statusCode + "headers" + headers + "response body" + responseBody);
-                createInvoiceDatabase();
-                sendNotification();
-                add_to_cooker_invoice_page();
+                createReceiptDatabase();
+                //sendNotification();
+                cooker_request();
                 Intent finish = new Intent(Checkout2_Activity.this, Checkout3_Activity.class);
+                finish.putExtra(EXTRA_UPLOADERUID, uploader_uid);
+                finish.putExtra(EXTRA_AMOUNT_TO_PAY, format_gT);
+
                 startActivity(finish);
                 finish();
             }
@@ -196,26 +209,28 @@ public class Checkout2_Activity extends AppCompatActivity {
 
     }
     ///////////////////////////////////////////////////////////////////////////////////////////
-    void createInvoiceDatabase(){
+
+
+    void createReceiptDatabase(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
         String currentDateandTime = sdf.format(new Date());
         String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("invoice");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("receipt").child(my_uid);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                    invoice_entry_no=(dataSnapshot.getChildrenCount());
+                invoice_entry_no = (int) dataSnapshot.getChildrenCount();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-        Invoice one_invoice = new Invoice (username, currentDateandTime, Double.parseDouble(grandT), 0, uploader_uid); //seller
-        ref.child(String.valueOf(invoice_entry_no+1)).setValue(one_invoice);
-        invoice_notif = getString(R.string.invoice_format, username, grandT, currentDateandTime);
+        random_key = ref.push().getKey();
+        Receipt one_receipt = new Receipt (my_uid, username, uploader_uid, Double.parseDouble(grandT), currentDateandTime, 0, save_food_list, first_status, invoice_entry_no+1, random_key);
+        ref.child(random_key).setValue(one_receipt);
+        invoice_notif = getString(R.string.invoice_text, username, grandT, currentDateandTime);
     }
-
+    /*
     //send notification
     void sendNotification(){
         createChannel();
@@ -224,6 +239,7 @@ public class Checkout2_Activity extends AppCompatActivity {
         builder.setSmallIcon(R.drawable.bt_ic_sms_code);
         builder.setContentTitle("Invoie Notificaiton");
         builder.setContentText(invoice_notif);
+
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
@@ -291,34 +307,47 @@ public class Checkout2_Activity extends AppCompatActivity {
         ref.child("fcm_token").setValue(new_token);
         Log.d(TAG, "renew uploader uid: " + uploader_uid + " to " + new_token);
     }
-
+    */
     //https://stackoverflow.com/questions/47854504/how-to-add-and-retrieve-data-into-firebase-using-lists-arraylists
-    public void add_to_cooker_invoice_page(){
-
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("shopping_cart").child(my_uid);
-        DatabaseReference new_request_db = FirebaseDatabase.getInstance().getReference("request");
-        ValueEventListener add_foodList_eventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                ShoppingCart data = dataSnapshot.getValue(ShoppingCart.class);
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    save_food_list.add(data);
-                }
-                Log.d("TAG", "d++" + save_food_list);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        };
-        rootRef.addListenerForSingleValueEvent(add_foodList_eventListener);
-
+    public void cooker_request(){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date date = new Date();
         String dateTime = dateFormat.format(date);
 
-        Request rq = new Request (save_food_list, uploader_uid, dateTime); //image_url
-        new_request_db.child(uploader_uid).setValue(rq);
+        DatabaseReference new_request_db = FirebaseDatabase.getInstance().getReference("request").child(uploader_uid);
+        new_request_db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                    request_entry_no=(dataSnapshot.getChildrenCount());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+
+        Request rq = new Request (save_food_list, my_uid, dateTime, Double.parseDouble(grandT), first_status, uploader_uid, request_entry_no+1, random_key); //image_url
+        new_request_db.child(random_key).setValue(rq);
     }
+
+
+
+    public void get_foodlist(){
+        Query q1 = FirebaseDatabase.getInstance().getReference("shopping_cart").child(my_uid);
+        q1.addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                 for (DataSnapshot d : dataSnapshot.getChildren()){
+                     ShoppingCart data = d.getValue(ShoppingCart.class);
+                    String name = data.getProduct_name();
+                    String sub_ = data.getProduct_price();
+                    save_food_list.add(data);
+                    Log.d("generate_foodList", "z" + save_food_list);
+                }
+             }
+             @Override
+             public void onCancelled(@NonNull DatabaseError databaseError) { }
+         });
+    }
+
 
 }
