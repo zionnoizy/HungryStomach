@@ -10,13 +10,14 @@ public class ShoppingCart {
     private double subtotal;
     private String usr_uid;
     private String uploader_uid;
+    private String product_key;
 
 
     public ShoppingCart() {
         //empty
     }
 
-    public ShoppingCart(String product_name, String product_price, int quantity , String img_url, String modify_date, double subtotal, String usr_uid, String uploader_uid){
+    public ShoppingCart(String product_name, String product_price, int quantity , String img_url, String modify_date, double subtotal, String usr_uid, String uploader_uid, String product_key){
         this.product_name = product_name;
         this.product_price = product_price;
         this.quantity = quantity;
@@ -25,6 +26,7 @@ public class ShoppingCart {
         this.subtotal = subtotal;
         this.usr_uid = usr_uid;
         this.uploader_uid = uploader_uid;
+        this.product_key = product_key;
     }
 
 
@@ -92,6 +94,11 @@ public class ShoppingCart {
         this.uploader_uid = uploader_uid;
     }
 
+    public String getProduct_key() {
+        return product_key;
+    }
 
-
+    public void setProduct_key(String product_key) {
+        this.product_key = product_key;
+    }
 }

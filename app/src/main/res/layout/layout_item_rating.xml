@@ -37,7 +37,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="84dp"
                 android:layout_marginBottom="51dp"
-                android:text="rating Scale" />
+                android:text="unRating Scale" />
 
             <ImageView
                 android:id="@+id/review_thumbnail"

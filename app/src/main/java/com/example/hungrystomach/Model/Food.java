@@ -17,12 +17,12 @@ public class Food {
         //empty
     }
 
-    public Food(String name, String description, String price, String uri, String dateTime, String uploader_uid, String key, String uploader, float rating) {
+    public Food(String name, String description, String price, String uri, String uploader_uid, String key, String uploader, float rating) { //, String dateTime
         this.name = name;
         this.description = description;
         this.price = price;
         this.uri = uri;
-        this.dateTime = dateTime;
+        //this.dateTime = dateTime;
         this.uploader_uid = uploader_uid;
         this.key =key;
         this.uploader = uploader;

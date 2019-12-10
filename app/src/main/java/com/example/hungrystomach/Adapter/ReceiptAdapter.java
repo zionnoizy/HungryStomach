@@ -13,8 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hungrystomach.Model.Receipt;
+import com.example.hungrystomach.Model.User;
 import com.example.hungrystomach.R;
 import com.example.hungrystomach.Track_Order_Activity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -28,6 +34,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.GridView
     public static final String EXTRA_STATUS = "NoStatus";
     public static final String EXTRA_BILLDATE = "NoBillDate";
     public static final String EXTRA_RECEIPT_KEY = "NoKey";
+    String public_name;
     public ReceiptAdapter(Context mContext, List<Receipt> receiptList) {
         this.mContext = mContext;
         this.receiptList = receiptList;
@@ -57,13 +64,28 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.GridView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReceiptAdapter.GridViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ReceiptAdapter.GridViewHolder holder, int position) {
         Receipt receipt = receiptList.get(position);
-        holder.ReceiptNum.setText("Receipt#" + String.valueOf(receipt.getReceipt_number()));
+        holder.ReceiptNum.setText("Receipt#" + String.valueOf(position));
         holder.ReceiptDate.setText(receipt.getBillDate());
-        holder.ReceiptTotal.setText("$" +String.valueOf(receipt.getGrand_total()));
-        holder.ReceiptUploader.setText(receipt.getUuid());
-        holder.ReceiptStatus.setText(receipt.getHis_status());
+        holder.ReceiptTotal.setText("Total $" +String.valueOf(receipt.getGrand_total()));
+
+        //get cooker name
+        DatabaseReference find = FirebaseDatabase.getInstance().getReference().child("users").child(receipt.getUuid());
+        find.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User u = dataSnapshot.getValue(User.class);
+                public_name = u.getUsername();
+                holder.ReceiptUploader.setText("cooker: " + public_name);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+
+        holder.ReceiptStatus.setText("status: " + receipt.getHis_status());
+
         final String cooker_uid = String.valueOf(receipt.getUuid());
         final String cooker_status = String.valueOf(receipt.getHis_status());
         final String billdate = String.valueOf(receipt.getBillDate());

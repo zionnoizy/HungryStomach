@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         public TextView FoodDescription;
         public TextView FoodPrice;
         public Button Fooddetail;
-        //public TextView FoodUploader;
+        public RatingBar FoodRatingBar;
 
         public static final String EXTRA_URL = "NoImage";
         public static final String EXTRA_NAME = "NoName";
@@ -52,6 +53,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         public static final String EXTRA_PRICE = "NoPrice";
         public static final String EXTRA_UUID = "NoUID";
         public static final String EXTRA_KEY = "NoKey";
+        public static final String EXTRA_RATING = "NoRating";
 
         public FoodViewHolder (View itemView){
             super(itemView);
@@ -60,6 +62,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             FoodDescription = itemView.findViewById(R.id.fooddescription);
             FoodPrice = itemView.findViewById(R.id.foodprice);
             Fooddetail = itemView.findViewById(R.id.fooddetail);
+            FoodRatingBar = itemView.findViewById(R.id.rating);
 
             Fooddetail.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -76,6 +79,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                         to_detail.putExtra(EXTRA_DES, clcikedItem.getDescription());
                         to_detail.putExtra(EXTRA_UUID, clcikedItem.getUploader_uid());
                         to_detail.putExtra(EXTRA_KEY, clcikedItem.getKey());
+                        to_detail.putExtra(EXTRA_RATING, String.valueOf(clcikedItem.getRating()));
 
 
                         m_context.startActivity(to_detail);
@@ -83,10 +87,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
                 }
             });
         }
-
-
-
-
     }
 
     @Override

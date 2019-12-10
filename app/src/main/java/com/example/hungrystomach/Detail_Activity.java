@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA
 import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA_NAME;
 import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA_PRICE;
 import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA_KEY;
+import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA_RATING;
 import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA_URL;
 import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA_UUID;
 
@@ -46,7 +48,8 @@ public class Detail_Activity extends AppCompatActivity  {
 
     ElegantNumberButton numberButton;
     String get_quanity;
-
+    RatingBar ratingbar;
+    String rating_int;
     DatabaseReference database_ref = FirebaseDatabase.getInstance().getReference("all_uploaded_image");
 
     FirebaseAuth m_auth = FirebaseAuth.getInstance();
@@ -67,6 +70,7 @@ public class Detail_Activity extends AppCompatActivity  {
         description = getIntent().getStringExtra(EXTRA_DES);
         uploader_uid = getIntent().getStringExtra(EXTRA_UUID);
         key = getIntent().getStringExtra(EXTRA_KEY);
+        rating_int = getIntent().getStringExtra(EXTRA_RATING);
         Query get_key = database_ref.child(key);
 
         Button detail_atc = findViewById(R.id.detail_atc);
@@ -75,6 +79,7 @@ public class Detail_Activity extends AppCompatActivity  {
         TextView detail_des = findViewById(R.id.text_detail_des);
         TextView detail_price = findViewById(R.id.text_detail_price);
         detail_uploader = findViewById(R.id.uploader);
+        ratingbar = findViewById(R.id.rating);
 
         numberButton = (ElegantNumberButton)findViewById(R.id.quantitiy);
         numberButton.setOnClickListener(new ElegantNumberButton.OnClickListener() {
@@ -88,6 +93,8 @@ public class Detail_Activity extends AppCompatActivity  {
         detail_name.setText(name);
         detail_price.setText(price);
         detail_des.setText(description);
+        ratingbar.setRating(Float.parseFloat(rating_int));
+
 
         //only detail could view info
         get_key.addValueEventListener(new ValueEventListener() {
@@ -132,7 +139,7 @@ public class Detail_Activity extends AppCompatActivity  {
                         ShoppingCart sc = snapshot.getValue(ShoppingCart.class);
                         if (sc.getUploader_uid().equals(uploader_uid)) { //same uploader
                             Toast.makeText(Detail_Activity.this, name + ": has been added To cart", Toast.LENGTH_SHORT).show();
-                            ShoppingCart atc = new ShoppingCart(name, price, Integer.parseInt(numberButton.getNumber()), imageUrl, mofDate, subTTL, my_uid, uploader_uid);
+                            ShoppingCart atc = new ShoppingCart(name, price, Integer.parseInt(numberButton.getNumber()), imageUrl, mofDate, subTTL, my_uid, uploader_uid, key);
                             cartListRef.child(name).setValue(atc);
                         } else
                             Toast.makeText(Detail_Activity.this, "Your cannot add item with different cooker(s) in shopping cart", Toast.LENGTH_SHORT).show();
@@ -158,7 +165,7 @@ public class Detail_Activity extends AppCompatActivity  {
         double subTTL = Double.parseDouble(price) * Integer.parseInt(numberButton.getNumber());
         Toast.makeText(Detail_Activity.this, "Your first Item has been added To cart", Toast.LENGTH_SHORT).show();
 
-        ShoppingCart sc = new ShoppingCart(name, price, Integer.parseInt(numberButton.getNumber()), imageUrl, mofDate, subTTL, my_uid, uploader_uid);
+        ShoppingCart sc = new ShoppingCart(name, price, Integer.parseInt(numberButton.getNumber()), imageUrl, mofDate, subTTL, my_uid, uploader_uid, key);
         usr_uid.child(name).setValue(sc);
     }
 

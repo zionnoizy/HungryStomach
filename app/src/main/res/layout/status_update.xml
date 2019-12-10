@@ -77,8 +77,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -89,13 +87,14 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="416dp">
+            android:layout_height="wrap_content">
             <!---->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/detailrequest_recycler_view"
+                android:id="@+id/ordered_recycler_view"
                 android:layout_width="wrap_content"
                 android:layout_height="400dp"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"
+                app:layoutManager="LinearLayoutManager" />
         </androidx.core.widget.NestedScrollView>
             <LinearLayout
                 android:id="@+id/groupbutton"
@@ -106,7 +105,7 @@
                 android:weightSum="2">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/share"
+                    android:id="@+id/chat_to"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"

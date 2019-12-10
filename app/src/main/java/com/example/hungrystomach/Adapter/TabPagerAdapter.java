@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.hungrystomach.Fragment.AllFoodFragment;
 import com.example.hungrystomach.Fragment.FromNewFragment;
-import com.example.hungrystomach.Fragment.FoodFragment3;
 
 
 public class TabPagerAdapter extends FragmentPagerAdapter {
@@ -27,9 +26,6 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
             return new AllFoodFragment();
         else if(position == 1)
             return new FromNewFragment();
-         else if (position == 2)
-            return new FoodFragment3();
-
         else
             return null;
     }

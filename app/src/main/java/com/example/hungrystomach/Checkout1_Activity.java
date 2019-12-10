@@ -51,6 +51,7 @@ public class Checkout1_Activity extends AppCompatActivity {
     public static final String PASS_ADDRESS = "NoAddress";
     public static final String PASS_STATE = "NoState";
     public static final String PASS_CITY = "NoCity";
+    public static final String PASS_ZIP = "NoZip";
 
 
     //changed info
@@ -92,6 +93,7 @@ public class Checkout1_Activity extends AppCompatActivity {
                 edit_address.setText(u.getAddress());
                 edit_state.setText(u.getState());
                 edit_city.setText(u.getCity());
+                edit_zip.setText(u.getZip());
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -136,6 +138,8 @@ public class Checkout1_Activity extends AppCompatActivity {
                 intent.putExtra(PASS_CITY, Ccity);
                 intent.putExtra(PASS_TOTAL_AMT, grandT);
                 intent.putExtra(PASS_UPLAODER_UID, uploader_uid);
+                intent.putExtra(PASS_ZIP, Czip);
+
 
                 startActivity(intent);
             }

@@ -53,7 +53,7 @@ public class Home_Activity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.it_upload:
-                Toast.makeText(this,"Upload Your Food Here", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"Upload Your Home Made Food Here", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(Home_Activity.this, Upload_Activity.class);
                 startActivity(i);
                 return true;
@@ -61,21 +61,17 @@ public class Home_Activity extends AppCompatActivity {
                 Intent intent = new Intent(Home_Activity.this, Cart_Activity.class);
                 startActivity(intent);
                 return true;
-            case R.id.it_chat:
-                Intent go_chat = new Intent(Home_Activity.this, RoomUser_Activity.class);
-                startActivity(go_chat);
+            case R.id.receipt:
+                Intent go_receipt = new Intent(Home_Activity.this, Receipt_Activity.class);
+                startActivity(go_receipt);
                 return true;
             case R.id.request:
                 Intent go_status = new Intent(Home_Activity.this, Request_Activity.class);
                 startActivity(go_status);
                 return true;
-            case R.id.receipt:
-                Intent go_receipt = new Intent(Home_Activity.this, Receipt_Activity.class);
-                startActivity(go_receipt);
-                return true;
-            case R.id.rating:
-                //Intent go_rating = new Intent(Home_Activity.this, Rating_Activity.class);
-                //startActivity(go_rating);
+            case R.id.rating_food:
+                Intent go_rating = new Intent(Home_Activity.this, Rating_Activity.class);
+                startActivity(go_rating);
                 return true;
             case R.id.it_settings:
                 Intent intent2 = new Intent(Home_Activity.this, Setting_Activity.class);
@@ -103,7 +99,7 @@ public class Home_Activity extends AppCompatActivity {
 
         tab_lyout.addTab(tab_lyout.newTab().setText("All Food"));
         tab_lyout.addTab(tab_lyout.newTab().setText("From Newest"));
-        tab_lyout.addTab(tab_lyout.newTab().setText("Search"));
+        //tab_lyout.addTab(tab_lyout.newTab().setText("Search"));
 
         final ViewPager view_pager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tab_lyout.getTabCount());
@@ -127,6 +123,4 @@ public class Home_Activity extends AppCompatActivity {
         });
     }
     //////////////////////////////////////////////////////////////////////////////////
-    public void sendNotification(View v){
-    }
 }

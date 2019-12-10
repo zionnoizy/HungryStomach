@@ -15,24 +15,18 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:scaleType="centerCrop"
-            android:visibility="gone"
             android:src="@drawable/default_icon" />
 
         <TextView
             android:id="@+id/sr_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_sender"
             android:text="Message"
             android:padding="15dp"
             android:textColor="@color/colorBlack"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:background="@drawable/bg_receiver_l"/>
 
-        <TextView
-            android:id="@+id/sr_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="dd/MM/yyyy hh:mm "/>
 
     </LinearLayout>
 

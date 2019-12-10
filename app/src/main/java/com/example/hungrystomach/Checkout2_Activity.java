@@ -22,10 +22,14 @@ import com.android.volley.toolbox.Volley;
 import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
+import com.braintreepayments.api.dropin.utils.PaymentMethodType;
+import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.example.hungrystomach.Model.BuyerFoodList;
 import com.example.hungrystomach.Model.FCMToken;
 import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.Model.Receipt;
 import com.example.hungrystomach.Model.Request;
+import com.example.hungrystomach.Model.SellerFoodList;
 import com.example.hungrystomach.Model.ShoppingCart;
 import com.example.hungrystomach.Notification.APIService;
 import com.example.hungrystomach.Notification.Client;
@@ -119,6 +123,7 @@ public class Checkout2_Activity extends AppCompatActivity {
         choose_pickup = findViewById(R.id.choose_pickup);
         */
 
+
         buy_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -157,6 +162,7 @@ public class Checkout2_Activity extends AppCompatActivity {
     public void onBraintreeSubmit(String responseToken){
         DropInRequest dropInRequest = new DropInRequest().clientToken(responseToken);
         Log.d(TAG, "Submiting to BrainTree.. " + responseToken);
+
         startActivityForResult(dropInRequest.getIntent(this), BRAINTREE_REQUEST_CODE);
     }
 
@@ -168,6 +174,8 @@ public class Checkout2_Activity extends AppCompatActivity {
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
                 String paymentMethodNonce = result.getPaymentMethodNonce().getNonce();
                 //Log.d(TAG, "Nonce.. " + paymentMethodNonce);
+
+
                 if(!format_gT.isEmpty())
                     submitNonce(paymentMethodNonce);
                 else
@@ -191,8 +199,8 @@ public class Checkout2_Activity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 //Log.e(TAG, "Payment Made Successuffly= " + statusCode + "headers" + headers + "response body" + responseBody);
-                createReceiptDatabase();
-                //sendNotification();
+                buyer_receipt();
+                create_bc_foodlist();
                 cooker_request();
                 Intent finish = new Intent(Checkout2_Activity.this, Checkout3_Activity.class);
                 finish.putExtra(EXTRA_UPLOADERUID, uploader_uid);
@@ -208,11 +216,13 @@ public class Checkout2_Activity extends AppCompatActivity {
         });
 
     }
+
+
     ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-    void createReceiptDatabase(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+    void buyer_receipt(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mmaa", Locale.getDefault());
         String currentDateandTime = sdf.format(new Date());
         String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
@@ -228,7 +238,36 @@ public class Checkout2_Activity extends AppCompatActivity {
         random_key = ref.push().getKey();
         Receipt one_receipt = new Receipt (my_uid, username, uploader_uid, Double.parseDouble(grandT), currentDateandTime, 0, save_food_list, first_status, invoice_entry_no+1, random_key);
         ref.child(random_key).setValue(one_receipt);
+
         invoice_notif = getString(R.string.invoice_text, username, grandT, currentDateandTime);
+    }
+
+
+    public void create_bc_foodlist(){
+        Query q1 = FirebaseDatabase.getInstance().getReference("shopping_cart").child(my_uid);
+        final DatabaseReference buyer_fl = FirebaseDatabase.getInstance().getReference().child("buyer_food_list").child(my_uid).child(random_key);
+        final DatabaseReference seller_fl = FirebaseDatabase.getInstance().getReference().child("seller_food_list").child(uploader_uid).child(random_key);
+        q1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    ShoppingCart data = d.getValue(ShoppingCart.class);
+                    String name = data.getProduct_name();
+                    String product_price = data.getProduct_price();
+                    String url = data.getImg_url();
+                    int uantity = data.getQuantity();
+                    double sub_total = data.getSubtotal();
+                    String cooker_uid = data.getUsr_uid();
+                    String random_key = data.getProduct_key();
+                    BuyerFoodList b = new BuyerFoodList(name, product_price, url, cooker_uid, uantity, sub_total, random_key);
+                    SellerFoodList s = new SellerFoodList(name, product_price, url, cooker_uid, uantity, sub_total, random_key);
+                    buyer_fl.child(name).setValue(b);
+                    seller_fl.child(name).setValue(s);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
     }
     /*
     //send notification

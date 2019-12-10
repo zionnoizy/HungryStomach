@@ -11,19 +11,20 @@
         android:layout_gravity="bottom"
         android:orientation="horizontal"
         android:weightSum="2">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Receit Detail"
-            android:textSize="46dp" />
+            android:text="Track"
+            android:textSize="40dp" />
 
 
         <TextView
             android:id="@+id/order_date"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Print Date"
-            android:textSize="24dp"/>
+            android:layout_height="wrap_content"
+            android:text="yyyy/MM/dd HH:mm aa"
+            android:textSize="28dp"/>
     </LinearLayout>
 
     <TextView

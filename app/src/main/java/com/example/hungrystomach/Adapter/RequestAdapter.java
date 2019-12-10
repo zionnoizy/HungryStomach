@@ -2,6 +2,7 @@ package com.example.hungrystomach.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private List<Request> m_listRequest;
     public static final String EXTRA_POSITION = "NoImage";
     public static final String EXTRA_RANDOM_KEY = "NoRandomKey";
+    public static final String EXTRA_BUYER_UID = "NoBuyerUID";
     public RequestAdapter(Context context, List<Request> request_list) {
         this.m_context = context;
         this.m_listRequest = request_list;
@@ -65,7 +67,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.RequestNum.setText("Request#" + String.valueOf(request.getRequest_entry_no()));
         final String num = String.valueOf(request.getRequest_entry_no());
         final String random_key = String.valueOf(request.getRandomkey());
-
+        final String buyer_uid = String.valueOf(request.getBuyer_uid());
         //click status_update.xml
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -73,6 +75,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 Intent detailreq = new Intent(m_context, Status_Update_Activity.class);
                 detailreq.putExtra(EXTRA_POSITION, num);
                 detailreq.putExtra(EXTRA_RANDOM_KEY, random_key);
+                detailreq.putExtra(EXTRA_BUYER_UID, buyer_uid);
+                Log.d("RA_Debug", num + random_key + buyer_uid);
                 m_context.startActivity(detailreq);
             }
         });

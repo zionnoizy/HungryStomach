@@ -4,20 +4,12 @@
     tools:context="com.example.hungrystomach.Home_Activity">
 
 
-
     <item
         android:id="@+id/it_upload"
         android:title="Upload"
-        app:showAsAction="never" />
-
-
-
-
-    <item
-        android:id="@+id/it_chat"
-        android:title="CartRoom"
-        android:icon="@drawable/ic_chat"
+        android:icon="@drawable/ic_upload_food"
         app:showAsAction="ifRoom" />
+
 
     <item
         android:id="@+id/it_shoppingcart"
@@ -25,53 +17,32 @@
         android:icon="@drawable/ic_shopping_cart"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/it_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
 
     <item
         android:id="@+id/transaction"
         android:title="Transaction"
         app:showAsAction="never">
         <menu>
-            <item
-                android:id="@+id/request"
-                android:title="Request" />
+
             <item
                 android:id="@+id/receipt"
                 android:title="Receipt" />
 
             <item
-                android:id="@+id/wallet"
-                android:title="Wallet" />
+                android:id="@+id/request"
+                android:title="Request" />
+
 
             <item
-                android:id="@+id/rating"
+                android:id="@+id/rating_food"
                 android:title="Rating Food" />
         </menu>
     </item>
-
-
-
-
-
-    <item
-        android:id="@+id/sorting"
-        android:title="Sort"
-        app:showAsAction="never">
-        <menu>
-            <item
-                android:id="@+id/sort_oldest"
-                android:title="Grid" />
-            <item
-                android:id="@+id/sort_newest"
-                android:title="List" />
-        </menu>
-    </item>
-
-
-
-    <item
-        android:id="@+id/it_settings"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
     <item
         android:id="@+id/it_logout"
         android:title="Logout"

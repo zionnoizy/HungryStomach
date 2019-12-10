@@ -28,7 +28,6 @@ public class Request_Activity extends AppCompatActivity {
     RequestAdapter adapter;
     RecyclerView recyclerView;
 
-
     String my_uid;
     DatabaseReference ref;
     @Override

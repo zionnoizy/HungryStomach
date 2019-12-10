@@ -79,11 +79,6 @@ public class Checkout3_Activity extends AppCompatActivity {
         his_uid = getIntent().getStringExtra(EXTRA_UPLOADERUID);
         grant_total = getIntent().getStringExtra(EXTRA_AMOUNT_TO_PAY);
 
-
-        //food_list = save_foodlist();
-        //Log.d("CA_Debug","z+" +food_list);
-        //create_receipt_buyer();
-        //create_request_seller();
         send_buyer_notif();
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -99,54 +94,6 @@ public class Checkout3_Activity extends AppCompatActivity {
         //show Google Map if available
 
     }
-
-    /*
-    void create_receipt_buyer(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mmaa", Locale.getDefault());
-        String currentDateandTime = sdf.format(new Date());
-        String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("receipt").child(my_uid);
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                invoice_entry_no = (int) dataSnapshot.getChildrenCount();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-        int x = invoice_entry_no + 1;
-        random_key = ref.push().getKey();
-
-        Receipt one_receipt = new Receipt (my_uid, username, his_uid, Double.parseDouble(grant_total), currentDateandTime, 0, food_list, first_status, x, random_key);
-        ref.child(random_key).setValue(one_receipt);
-        notif_text = getString(R.string.invoice_text, username, grant_total, currentDateandTime);
-    }
-
-    void create_request_seller(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        Date date = new Date();
-        String dateTime = dateFormat.format(date);
-
-        DatabaseReference new_request_db = FirebaseDatabase.getInstance().getReference("request").child(his_uid);
-        new_request_db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                    request_entry_no=(int)dataSnapshot.getChildrenCount();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-        int y = request_entry_no + 1;
-        Log.d("CA_Debug", "a_a" + food_list);
-
-        Request rq = new Request (food_list, my_uid, dateTime, Double.parseDouble(grant_total), first_status, his_uid, y, random_key);
-        new_request_db.child(random_key).setValue(rq);
-
-    }
-    */
 
     void send_buyer_notif(){
         createChannel();
@@ -192,7 +139,7 @@ public class Checkout3_Activity extends AppCompatActivity {
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
                     FCMToken FCMToken = ds.getValue(FCMToken.class);
 
-                    Data data = new Data("New Request", "You have a new request from: "+name+". Please check you invoice page", my_uid, hisUID, "RequestNotif");
+                    Data data = new Data("New Request", "You receive an order request! Please Look at your order that \"Request Transaction\"", my_uid, hisUID, "RequestNotif");
                     updateToken(FCMToken.getFcm_token());
                     Sender sender = new Sender(data, FCMToken.getFcm_token());
 
@@ -222,32 +169,6 @@ public class Checkout3_Activity extends AppCompatActivity {
         ref.child("fcm_token").setValue(new_token);
         Log.d("C3_D", "renew uploader uid: " + his_uid + " to " + new_token);
     }
-
-    /*
-    public List<ShoppingCart> save_foodlist(){
-        food_list = new ArrayList<>();
-        Query q1 = FirebaseDatabase.getInstance().getReference("shopping_cart").child(my_uid);
-        q1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                food_list.clear();
-                for (DataSnapshot d : dataSnapshot.getChildren()){
-                    ShoppingCart data = d.getValue(ShoppingCart.class);
-                    String name = data.getProduct_name();
-                    String price = data.getProduct_price();
-                    String uuid = data.getUploader_uid();
-                    String uri = data.getImg_url();
-                    food_list.add(data);
-                }
-                Log.d("CA_Debug", "zz" + food_list.size());
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-        return food_list;
-    }
-    */
 
     public void delete_foodlist(){
         final DatabaseReference delete_allitem = FirebaseDatabase.getInstance().getReference("shopping_cart");

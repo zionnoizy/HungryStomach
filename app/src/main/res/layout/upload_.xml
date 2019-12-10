@@ -71,27 +71,6 @@
         android:hint="Enter Food Name Here" />
 
     <TextView
-        android:id="@+id/desc_label"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_height="48dp"
-
-        android:paddingEnd="16dp"
-        style="@style/TextAppearance.AppCompat.Large"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/name_label"
-        android:text="Description" />
-
-    <EditText
-        android:id="@+id/et_fdesc"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_below="@+id/et_fname"
-        android:layout_marginTop="16dp"
-        android:layout_toEndOf="@id/desc_label"
-        android:hint="Enter Food Description Here" />
-
-    <TextView
         style="@style/TextAppearance.AppCompat.Large"
         android:id="@+id/price_label"
         android:layout_width="wrap_content"
@@ -100,7 +79,7 @@
         android:gravity="center"
         android:paddingEnd="16dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/desc_label"
+        android:layout_below="@id/name_label"
         android:layout_toStartOf="@+id/et_fname"
         android:text="Price" />
 
@@ -108,40 +87,64 @@
         android:id="@+id/et_fprice"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_below="@+id/desc_label"
+        android:layout_below="@+id/et_fname"
         android:layout_marginTop="16dp"
         android:inputType="numberDecimal"
         android:layout_toEndOf="@id/price_label"
         android:hint="Enter Food Price Here" />
 
-    <!---->
     <TextView
-        style="@style/TextAppearance.AppCompat.Large"
-        android:id="@+id/time_label"
+        android:id="@+id/desc_label"
         android:layout_width="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_height="48dp"
-        android:gravity="center"
         android:paddingEnd="16dp"
+        style="@style/TextAppearance.AppCompat.Large"
         android:layout_alignParentStart="true"
         android:layout_below="@id/price_label"
-        android:layout_toStartOf="@+id/et_fname"
-        android:text="Time" />
+        android:text="Description" />
 
-    <Button
-        android:id="@+id/choose_time"
+    <EditText
+        android:id="@+id/et_fdesc"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_below="@+id/et_fprice"
         android:layout_marginTop="16dp"
-        android:layout_toEndOf="@id/price_label"
-        android:hint="chooseTimeToEndTheSale" />
+        android:layout_toEndOf="@id/desc_label"
+        android:hint="Enter Food Description Here" />
+
+
+
+
+
+    <!---->
+<!--    <TextView-->
+<!--        style="@style/TextAppearance.AppCompat.Large"-->
+<!--        android:id="@+id/time_label"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:gravity="center"-->
+<!--        android:paddingEnd="16dp"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_below="@id/price_label"-->
+<!--        android:layout_toStartOf="@+id/et_fname"-->
+<!--        android:text="Time" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/choose_time"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_below="@+id/et_fprice"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_toEndOf="@id/price_label"-->
+<!--        android:hint="chooseTimeToEndTheSale" />-->
 
     <Button
         android:id="@+id/btn_upload"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/choose_time"
+        android:layout_below="@+id/et_fdesc"
         android:layout_alignParentStart="true"
         android:layout_marginTop="16dp"
         android:paddingStart="16dp"

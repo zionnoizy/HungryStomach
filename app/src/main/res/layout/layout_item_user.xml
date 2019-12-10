@@ -4,16 +4,6 @@
     android:padding="10dp"
     android:layout_height="match_parent">
 
-<!--    <TextView-->
-<!--        android:id="@+id/label"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:layout_marginLeft="13dp"-->
-<!--        android:layout_toEndOf="@+id/usr_icon"-->
-<!--        android:layout_toRightOf="@+id/usr_icon"-->
-<!--        android:text="Choose the user to chat with"-->
-<!--        android:textSize="18sp" />-->
 
     <ImageView
         android:id="@+id/usr_icon"
@@ -31,17 +21,5 @@
         android:layout_toRightOf="@+id/usr_icon"
         android:text="username"
         android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/lastMessageTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="The last message"
-        android:layout_marginStart="4dp"
-        android:maxLines="2"
-        android:layout_marginTop="3dp"
-        android:layout_toRightOf="@id/usr_icon"
-        android:layout_below="@id/tv_username"
-        android:layout_marginLeft="13dp" />
 
 </RelativeLayout>

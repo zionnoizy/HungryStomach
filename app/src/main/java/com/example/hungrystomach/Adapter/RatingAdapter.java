@@ -16,12 +16,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.hungrystomach.Model.Rating;
+import com.example.hungrystomach.Model.Comment;
+import com.example.hungrystomach.Model.Food;
+import com.example.hungrystomach.Model.UnRating;
 import com.example.hungrystomach.R;
-import com.example.hungrystomach.Rating_Activity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,11 +33,15 @@ import java.util.Map;
 
 public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingViewHolder> {
     private Context m_context;
-    private ArrayList<Rating> m_listCart;
+    private ArrayList<UnRating> m_listCart;
 
     DatabaseReference dbRef;
     String my_uid;
-    public RatingAdapter(Context context, ArrayList<Rating> cart_list) {
+    String food_key;
+    String food_name;
+    String each_random_key;
+
+    public RatingAdapter(Context context, ArrayList<UnRating> cart_list) {
         this.m_context = context;
         this.m_listCart = cart_list;
     }
@@ -52,9 +60,8 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
         private ImageView RatingIcon;
         public Button RatingBtn;
         private TextView RatingScale;
-        FirebaseAuth m_auth = FirebaseAuth.getInstance();
-        DatabaseReference rate = FirebaseDatabase.getInstance().getReference().child("rate");
-        //DatabaseReference usr_uid = cartListRef.child(m_auth.getCurrentUser().getUid());
+
+
 
         public RatingViewHolder(View itemView) {
             super(itemView);
@@ -89,13 +96,21 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
                     }
                 }
             });
+
             RatingBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //find position
+                    int position = getAdapterPosition();
+                    UnRating unrating_fd = m_listCart.get(position);
+                    final String random_key = unrating_fd.getRandom_key();
+
+
+
                     if (RatingComment.getText().toString().isEmpty()) {
                         Toast.makeText(m_context, "Your Comment Empty", Toast.LENGTH_LONG).show();
                     } if(RatingBar.getRating() == 0.0) {
-                        Toast.makeText(m_context, "Your Rating Is Empty", Toast.LENGTH_LONG).show();
+                        Toast.makeText(m_context, "Your UnRating Is Empty", Toast.LENGTH_LONG).show();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
                         builder.setTitle("Submit");
@@ -103,7 +118,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
                         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                save_rating(RatingBar.getRating());
+                                Save_Rating(RatingBar.getRating(), RatingComment.getText().toString(), random_key); //food_name needed
                                 RatingComment.setText("");
                                 RatingBar.setRating(0);
                                 Toast.makeText(m_context, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
@@ -124,10 +139,12 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
 
     @Override
     public void onBindViewHolder(@NonNull RatingAdapter.RatingViewHolder holder, int position) {
-        Rating rating = m_listCart.get(holder.getAdapterPosition());
+        UnRating unRating = m_listCart.get(holder.getAdapterPosition());
         my_uid =FirebaseAuth.getInstance().getCurrentUser().getUid();
-        dbRef = FirebaseDatabase.getInstance().getReference("unrate").child(my_uid).child(String.valueOf(holder.getAdapterPosition()));
-        //Glide.with(m_context).load(rating.getIcon_url()).into(holder.RatingIcon);
+        food_name = unRating.getName();
+        dbRef = FirebaseDatabase.getInstance().getReference().child("unrate").child(my_uid).child(food_name);
+
+        Glide.with(m_context).load(unRating.getUrl()).into(holder.RatingIcon);
     }
 
     @Override
@@ -135,12 +152,25 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
         return m_listCart.size();
     }
 
-    public void save_rating(float r){
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("all_uploaded_image");
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("rating", r);
 
-        mDatabase.child("-Luk55E0wNUE9bXk_pZ0").updateChildren(childUpdates);
+    public void Save_Rating(final float r, String comment, String random_key){ //add each item random_key
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("all_uploaded_image").child(random_key);
+        DatabaseReference rated = FirebaseDatabase.getInstance().getReference().child("rated");
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Food u = dataSnapshot.getValue(Food.class);
+                if (u.getRating() == 0)
+                    mDatabase.child("rating").setValue(r);
+                else
+                    mDatabase.child("rating").setValue(r/5);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+        Comment one_comment = new Comment(r, comment);
+        rated.child(random_key).setValue(one_comment);
+
     }
 
     public void delete_rating(){

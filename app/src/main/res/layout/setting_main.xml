@@ -73,18 +73,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-            <TextView
-                android:id="@+id/setting_id_"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/setting_icon"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="7dp"
-                android:layout_marginRight="10dp"
-                android:gravity="center"
-                android:text="your user id: "
-                android:textSize="17dp"
-                android:textStyle="bold" />
+
 
             <TextView
                 android:id="@+id/id_num"
@@ -94,7 +83,6 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="5dp"
-                android:layout_toRightOf="@+id/setting_id_"
                 android:gravity="center"
                 android:text="id_num"
                 android:textSize="17dp"

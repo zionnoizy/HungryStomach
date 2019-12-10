@@ -63,6 +63,7 @@ public class Cart_Activity extends AppCompatActivity {
         adapter = new CartAdapter(this, m_listCart);
         recycler_view.setAdapter(adapter);
 
+
         btn_chceckout = findViewById(R.id.btn_co);
         btn_delete = findViewById(R.id.delete_item);
         sub_total = findViewById(R.id.sub_total);
@@ -74,7 +75,6 @@ public class Cart_Activity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ShoppingCart data = dataSnapshot.getValue(ShoppingCart.class);
-
                 m_listCart.add(data);
                 adapter.notifyDataSetChanged();
                 grandT += Double.parseDouble(data.getProduct_price())*data.getQuantity();
@@ -88,6 +88,7 @@ public class Cart_Activity extends AppCompatActivity {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 //deleted item
+                adapter.notifyDataSetChanged();
             }
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
@@ -119,6 +120,11 @@ public class Cart_Activity extends AppCompatActivity {
                 }
             }
         });
+    }
+    public void onActivityResult(int requestCode, int resultCode) {
+
+
+
     }
 
 }

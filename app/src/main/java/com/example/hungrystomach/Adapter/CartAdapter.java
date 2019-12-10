@@ -82,32 +82,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             delete_item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
-                    builder.setTitle("Delete");
-                    builder.setMessage("Are you sure to delete this item?");
-                    builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //delete comment
-                            int position = getAdapterPosition();
-                            ShoppingCart get_deleting_item = m_listCart.get(position);
-                            final String user_uid = m_auth.getCurrentUser().getUid();
-                            final DatabaseReference delete_item_Ref = FirebaseDatabase.getInstance().getReference("shopping_cart").child(user_uid);
+                    //delete comment
+                    int position = getAdapterPosition();
+                    ShoppingCart get_deleting_item = m_listCart.get(position);
+                    final String deleting_food_name = get_deleting_item.getProduct_name();
+                    final String user_uid = m_auth.getCurrentUser().getUid();
 
-                            final String deleting_food_name = get_deleting_item.getProduct_name();
-
-                            delete_item_Ref.child(deleting_food_name).removeValue();
-                            notifyDataSetChanged();
-
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.create().show();
+                    final DatabaseReference delete_item_Ref = FirebaseDatabase.getInstance().getReference("shopping_cart").child(user_uid);
+                    delete_item_Ref.child(deleting_food_name).removeValue();
+                    notifyDataSetChanged(); //no change immediately
                 }
             });
 
@@ -128,6 +111,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.sub_total.setText(String.valueOf(sub_t));
 
         Glide.with(m_context).load(sc.getImg_url()).into(holder.CartFoodIcon);
+
     }
 
     @Override
@@ -139,6 +123,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public void setListCart(ArrayList<ShoppingCart> m_listCart){
         this.m_listCart = m_listCart;
     }
+
 
 
 }

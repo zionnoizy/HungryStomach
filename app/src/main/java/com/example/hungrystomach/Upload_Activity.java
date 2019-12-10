@@ -117,9 +117,9 @@ public class Upload_Activity extends AppCompatActivity{
         });
 
         //time
-        btnDateTime = findViewById(R.id.choose_time);
-        btnDateTime.setOnClickListener(textListener);
-        mSimpleDataFormat = new SimpleDateFormat("MM/dd/yyy hh:mm a", Locale.getDefault());
+        //btnDateTime = findViewById(R.id.choose_time);
+        //btnDateTime.setOnClickListener(textListener);
+        //mSimpleDataFormat = new SimpleDateFormat("MM/dd/yyy hh:mm a", Locale.getDefault());
 
     }
 
@@ -154,8 +154,6 @@ public class Upload_Activity extends AppCompatActivity{
         String image_name = et_fname.getText().toString().trim();
 
 
-
-
         if(image_name.length()==0){
             et_fname.setError("Food name cannot be empty");
             et_fname.requestFocus();
@@ -188,13 +186,13 @@ public class Upload_Activity extends AppCompatActivity{
                                         String url = uri.toString();
                                         String uuid = m_auth.getCurrentUser().getUid();
                                         String uploader = m_auth.getCurrentUser().getDisplayName();
-                                        String DateTime = mSimpleDataFormat.format(mCalender.getTime());
+                                        //String DateTime = mSimpleDataFormat.format(mCalender.getTime());
 
                                         String key = database_ref.push().getKey();
                                         Food fd = new Food(et_fname.getText().toString().trim(),
                                                 et_fdesc.getText().toString().trim(),
                                                 et_fprice.getText().toString().trim(),
-                                                url, DateTime, uuid, key, uploader, 0);
+                                                url, uuid, key, uploader, 0); //DateTime
                                         database_ref.child(key).setValue(fd);
 
                                         Toast.makeText(Upload_Activity.this, "Upload successfully", Toast.LENGTH_LONG).show();
@@ -227,6 +225,7 @@ public class Upload_Activity extends AppCompatActivity{
     startActivity(i);
     }
     /////////////////////////////////////////////////////////////////////////////
+    /*
     private final View.OnClickListener textListener = new View.OnClickListener() {
         @Override
         public void onClick(View v){
@@ -238,7 +237,7 @@ public class Upload_Activity extends AppCompatActivity{
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User u = dataSnapshot.getValue(User.class);
                     int point = u.getDonut();//if empty
-                    /*
+
                     if(point <= 500){
                         AlertDialog.Builder builder = new AlertDialog.Builder(Upload_Activity.this);
                         builder.setTitle("Donut Point Not Enough")
@@ -251,11 +250,11 @@ public class Upload_Activity extends AppCompatActivity{
                         alert.show();
                     }
                     else {
-                    */
+
                         mCalender = Calendar.getInstance();
                         new DatePickerDialog(Upload_Activity.this, mDataDataSet, mCalender.get(Calendar.YEAR),
                                 mCalender.get(Calendar.MONTH), mCalender.get(Calendar.DAY_OF_MONTH)).show();
-                    //}
+                    }
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -263,7 +262,8 @@ public class Upload_Activity extends AppCompatActivity{
             });
         }
     };
-
+    */
+    /*
     private final DatePickerDialog.OnDateSetListener mDataDataSet = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int y, int m, int d) {
@@ -281,4 +281,5 @@ public class Upload_Activity extends AppCompatActivity{
             mCalender.set(Calendar.MINUTE, m);
         }
     };
+    */
 }
