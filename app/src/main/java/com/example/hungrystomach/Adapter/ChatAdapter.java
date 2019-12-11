@@ -60,16 +60,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatRoomViewHo
     public void onBindViewHolder(@NonNull ChatRoomViewHolder myHolder, final int i) {
         String msg = chatList.get(i).getMessage();
         String receiver = chatList.get(i).getReceiver();
-        //String timeStamp = chatList.get(i).getTimes();
-
-        //Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-        //cal.setTimeInMillis(Long.parseLong(timeStamp));
-        //String dateTime = DateFormat.format("dd/MM/yyyy hh:mm", cal).toString();
 
         myHolder.RoomMsg.setText(msg);
-        //myHolder.RoomTime.setText(dateTime);
 
-        //Glide.with(context).load(image_url).into(holder.FoodIcon);
     }
 
 

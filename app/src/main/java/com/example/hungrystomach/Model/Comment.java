@@ -1,20 +1,23 @@
 package com.example.hungrystomach.Model;
 
 public class Comment {
-    private float rating_star;
+    private float rating;
     private String comment;
 
-    public Comment(float rating_star, String comment) {
-        this.rating_star = rating_star;
+    public Comment() {
+        //empty
+    }
+    public Comment(float rating, String comment) {
+        this.rating = rating;
         this.comment = comment;
     }
 
-    public float getRating_star() {
-        return rating_star;
+    public float getRating() {
+        return rating;
     }
 
     public void setRating_star(float rating_star) {
-        this.rating_star = rating_star;
+        this.rating = rating_star;
     }
 
     public String getComment() {

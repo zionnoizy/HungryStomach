@@ -3,6 +3,7 @@ package com.example.hungrystomach.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         public Button Fooddetail;
         public RatingBar FoodRatingBar;
 
+
         public static final String EXTRA_URL = "NoImage";
         public static final String EXTRA_NAME = "NoName";
         public static final String EXTRA_DES = "NoDes";
@@ -63,6 +65,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             FoodPrice = itemView.findViewById(R.id.foodprice);
             Fooddetail = itemView.findViewById(R.id.fooddetail);
             FoodRatingBar = itemView.findViewById(R.id.rating);
+
+
 
             Fooddetail.setOnClickListener(new View.OnClickListener() {
                 @Override

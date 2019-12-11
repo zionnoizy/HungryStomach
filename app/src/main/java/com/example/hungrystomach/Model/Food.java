@@ -17,7 +17,7 @@ public class Food {
         //empty
     }
 
-    public Food(String name, String description, String price, String uri, String uploader_uid, String key, String uploader, float rating) { //, String dateTime
+    public Food(String name, String description, String price, String uri, String uploader_uid, String key, String uploader, float rating) {
         this.name = name;
         this.description = description;
         this.price = price;

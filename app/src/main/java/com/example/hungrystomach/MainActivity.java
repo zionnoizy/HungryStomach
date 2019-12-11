@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 final String email = et_email.getText().toString().trim();
                 final String username = email.split("@")[0];
                 final String pwd = et_password.getText().toString().trim();

@@ -74,7 +74,7 @@ public class Checkout2_Activity extends AppCompatActivity {
     final int BRAINTREE_REQUEST_CODE = 1; //4949
     final String TAG = "Braintree_Debug";
     final String TAG2 = "Notiifcaiton_Debug";
-    final String API_GET_TOKEN = " http://192.168.0.15/braintree/main.php";
+    final String API_GET_TOKEN = "http://192.168.0.15/braintree/main.php"; //home:192.168.0.15 campus:/10.242.190.183
     final String API_CHECKOUT = "http://192.168.0.15/braintree/checkout.php";
 
     Button buy_button;
@@ -102,7 +102,7 @@ public class Checkout2_Activity extends AppCompatActivity {
     APIService api_service;
     List<ShoppingCart> save_food_list = new ArrayList<>();
 
-
+    final String clientToken = "not_implement_yet";
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkout_payment);
@@ -131,15 +131,17 @@ public class Checkout2_Activity extends AppCompatActivity {
             }
         });
 
+
         ///////////////////////////////////////////////////////send notification
         //https://www.androidauthority.com/android-push-notifications-with-firebase-cloud-messaging-925075/
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( Checkout2_Activity.this,  new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String mToken = instanceIdResult.getToken();
-                Log.e(TAG, "what token?" + mToken);
+                Log.e(TAG, "what fcm_token?" + mToken);
             }
         });
+
         mRequestQue = Volley.newRequestQueue(this);
 
     }
@@ -269,75 +271,6 @@ public class Checkout2_Activity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
-    /*
-    //send notification
-    void sendNotification(){
-        createChannel();
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,CHANNEL_ID);
-
-        builder.setSmallIcon(R.drawable.bt_ic_sms_code);
-        builder.setContentTitle("Invoie Notificaiton");
-        builder.setContentText(invoice_notif);
-
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
-
-        String buyer_name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        sendRequestNotification(uploader_uid, buyer_name);
-    }
-
-    private void createChannel(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "Order Notifications";
-            String description = "Invoice";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, importance);
-            notificationChannel.setDescription(description);
-
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-    }
-    //////////////////////////////////////////////////////////////
-    private void sendRequestNotification(final String hisUID, final String name){//, final String chat_message){
-        notify = true;
-        Log.d(TAG, hisUID+ " "+ name);
-        api_service = Client.getRetrofit(FCM_SEND_URL).create(APIService.class);
-
-        DatabaseReference find_fcm = FirebaseDatabase.getInstance().getReference("FCMToken");
-
-        Query query = find_fcm.orderByKey().equalTo(uploader_uid);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    FCMToken FCMToken = ds.getValue(FCMToken.class);
-
-                    Data data = new Data("New Request", "You have a new request from: "+name+". Please check you invoice page", my_uid, hisUID, "RequestNotif");
-                    updateToken(FCMToken.getFcm_token());
-                    Log.d(TAG, "ready to send notif to: " + hisUID+ " with msg");
-                    Sender sender = new Sender(data, FCMToken.getFcm_token());
-
-                    api_service.sendNotification(sender)
-                            .enqueue(new Callback<Response>() {
-                                @Override
-                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                                    Log.d(TAG, response + " sent? "+ call);
-                                }
-
-                                @Override
-                                public void onFailure(Call<Response> call, Throwable t) {
-                                    Log.d(TAG, t + " not sent? "+ call);
-                                }
-                            });
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-    }
 
     public void updateToken(String token){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("FCMToken").child(uploader_uid);
@@ -346,10 +279,10 @@ public class Checkout2_Activity extends AppCompatActivity {
         ref.child("fcm_token").setValue(new_token);
         Log.d(TAG, "renew uploader uid: " + uploader_uid + " to " + new_token);
     }
-    */
+
     //https://stackoverflow.com/questions/47854504/how-to-add-and-retrieve-data-into-firebase-using-lists-arraylists
     public void cooker_request(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd  HH:mmaa");
         Date date = new Date();
         String dateTime = dateFormat.format(date);
 

@@ -19,8 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.hungrystomach.Detail_Activity;
 
+import com.example.hungrystomach.Home_Activity;
 import com.example.hungrystomach.Model.ShoppingCart;
 import com.example.hungrystomach.R;
+import com.example.hungrystomach.Upload_Activity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,9 +54,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         return new CartViewHolder(itemv);
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
 
 
     public class CartViewHolder extends RecyclerView.ViewHolder{
@@ -82,15 +81,58 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             delete_item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //delete comment
+                    /*
+                    //delete items
                     int position = getAdapterPosition();
                     ShoppingCart get_deleting_item = m_listCart.get(position);
                     final String deleting_food_name = get_deleting_item.getProduct_name();
                     final String user_uid = m_auth.getCurrentUser().getUid();
 
-                    final DatabaseReference delete_item_Ref = FirebaseDatabase.getInstance().getReference("shopping_cart").child(user_uid);
-                    delete_item_Ref.child(deleting_food_name).removeValue();
-                    notifyDataSetChanged(); //no change immediately
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(v.getRootView().getContext());
+                    builder.setTitle("Item Deleting")
+                            .setMessage("Your food Item has been deleted.")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    delete_item(deleting_food_name, user_uid);
+                                    Intent intent = new Intent(m_context, Home_Activity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    m_context.startActivity(intent);
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    */
+                    int position = getAdapterPosition();
+                    ShoppingCart get_deleting_item = m_listCart.get(position);
+                    final String deleting_food_name = get_deleting_item.getProduct_name();
+                    final String user_uid = m_auth.getCurrentUser().getUid();
+
+                    androidx.appcompat.app.AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
+                    builder.setTitle("Deleting");
+                    builder.setMessage("Are you to delete items?");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            delete_item(deleting_food_name, user_uid); //food_name needed
+                            Toast.makeText(m_context, "Item deleted", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(m_context, Home_Activity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            m_context.startActivity(intent);
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+
+
+
+
+
                 }
             });
 
@@ -122,6 +164,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     public void setListCart(ArrayList<ShoppingCart> m_listCart){
         this.m_listCart = m_listCart;
+    }
+
+    public void delete_item(String food_name, String uid){
+        DatabaseReference delete_item_Ref = FirebaseDatabase.getInstance().getReference("shopping_cart").child(uid).child(food_name);
+        delete_item_Ref.removeValue();
+
     }
 
 

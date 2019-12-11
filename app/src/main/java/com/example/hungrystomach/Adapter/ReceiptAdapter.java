@@ -66,7 +66,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.GridView
     @Override
     public void onBindViewHolder(@NonNull final ReceiptAdapter.GridViewHolder holder, int position) {
         Receipt receipt = receiptList.get(position);
-        holder.ReceiptNum.setText("Receipt#" + String.valueOf(position));
+        holder.ReceiptNum.setText("Receipt#" + String.valueOf(position+1));
         holder.ReceiptDate.setText(receipt.getBillDate());
         holder.ReceiptTotal.setText("Total $" +String.valueOf(receipt.getGrand_total()));
 

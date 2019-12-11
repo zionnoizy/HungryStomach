@@ -1,5 +1,6 @@
 package com.example.hungrystomach;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,11 +12,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.example.hungrystomach.Adapter.ChatAdapter;
+import com.example.hungrystomach.Adapter.CommentAdapter;
+import com.example.hungrystomach.Adapter.RatingAdapter;
+import com.example.hungrystomach.Model.Chat;
+import com.example.hungrystomach.Model.Comment;
 import com.example.hungrystomach.Model.Food;
 import com.example.hungrystomach.Model.ShoppingCart;
+import com.example.hungrystomach.Model.UnRating;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA_DES;
@@ -49,7 +59,7 @@ public class Detail_Activity extends AppCompatActivity  {
     ElegantNumberButton numberButton;
     String get_quanity;
     RatingBar ratingbar;
-    String rating_int;
+    String rating_float;
     DatabaseReference database_ref = FirebaseDatabase.getInstance().getReference("all_uploaded_image");
 
     FirebaseAuth m_auth = FirebaseAuth.getInstance();
@@ -58,6 +68,12 @@ public class Detail_Activity extends AppCompatActivity  {
     DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference("shopping_cart").child(my_uid);
 
     TextView detail_uploader;
+
+    ArrayList<Comment> list_rating;
+    CommentAdapter adapter;
+    RecyclerView recyclerView;
+    public Button FoodClickComment;
+    public static final String READ_RANDOM_KEY = "NoRandomKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -70,7 +86,7 @@ public class Detail_Activity extends AppCompatActivity  {
         description = getIntent().getStringExtra(EXTRA_DES);
         uploader_uid = getIntent().getStringExtra(EXTRA_UUID);
         key = getIntent().getStringExtra(EXTRA_KEY);
-        rating_int = getIntent().getStringExtra(EXTRA_RATING);
+        rating_float = getIntent().getStringExtra(EXTRA_RATING);
         Query get_key = database_ref.child(key);
 
         Button detail_atc = findViewById(R.id.detail_atc);
@@ -80,6 +96,16 @@ public class Detail_Activity extends AppCompatActivity  {
         TextView detail_price = findViewById(R.id.text_detail_price);
         detail_uploader = findViewById(R.id.uploader);
         ratingbar = findViewById(R.id.rating);
+        FoodClickComment = findViewById(R.id.click_view_comment_btn);
+
+        FoodClickComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent view_comment = new Intent(Detail_Activity.this, Read_Comment_Activity.class);
+                view_comment.putExtra(READ_RANDOM_KEY, key);
+                startActivity(view_comment);
+            }
+        });
 
         numberButton = (ElegantNumberButton)findViewById(R.id.quantitiy);
         numberButton.setOnClickListener(new ElegantNumberButton.OnClickListener() {
@@ -93,10 +119,13 @@ public class Detail_Activity extends AppCompatActivity  {
         detail_name.setText(name);
         detail_price.setText(price);
         detail_des.setText(description);
-        ratingbar.setRating(Float.parseFloat(rating_int));
+        ratingbar.setRating(Float.parseFloat(rating_float));
+
+        //recyclerView = (RecyclerView) findViewById(R.id.commented_recyclerView);
+        //loadAllRatingComment();
 
 
-        //only detail could view info
+        //only detail could view these info
         get_key.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -119,7 +148,6 @@ public class Detail_Activity extends AppCompatActivity  {
                 }
             }
         });
-
     }
 
     public void CheckWithSameCookerToCart(){
@@ -167,6 +195,34 @@ public class Detail_Activity extends AppCompatActivity  {
 
         ShoppingCart sc = new ShoppingCart(name, price, Integer.parseInt(numberButton.getNumber()), imageUrl, mofDate, subTTL, my_uid, uploader_uid, key);
         usr_uid.child(name).setValue(sc);
+    }
+
+
+    public void loadAllRatingComment(){
+        LinearLayoutManager lm = new LinearLayoutManager(Detail_Activity.this);
+        recyclerView.setLayoutManager(lm);
+
+        DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("comment").child(key);
+        list_rating = new ArrayList<>();
+
+        cartListRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //if(dataSnapshot.exists()) {
+                    list_rating.clear();
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        Comment comment = ds.getValue(Comment.class);
+                        list_rating.add(comment);
+                        adapter = new CommentAdapter(Detail_Activity.this, list_rating);
+                        recyclerView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                    }
+                //}
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+
     }
 
 }

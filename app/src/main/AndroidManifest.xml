@@ -21,7 +21,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true">
 
         <activity
             android:name=".MainActivity"
@@ -46,6 +47,7 @@
         <activity android:name=".RoomChat_Activity" />
         <activity android:name=".Track_Order_Activity" />
         <activity android:name=".Rating_Activity" />
+        <activity android:name=".Read_Comment_Activity" />
 
 
         <!--braintree-->
