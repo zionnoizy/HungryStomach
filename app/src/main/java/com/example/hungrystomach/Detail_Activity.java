@@ -48,32 +48,34 @@ import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA
 import static com.example.hungrystomach.Adapter.FoodAdapter.FoodViewHolder.EXTRA_UUID;
 
 public class Detail_Activity extends AppCompatActivity  {
-    private String TAG = "Detail_debug";
+
     String imageUrl;
     String name;
     String price;
     String description;
     String uploader_uid;
     String key;
+    DatabaseReference findKeyRef = FirebaseDatabase.getInstance().getReference("all_uploaded_image");
+    String rating_float;
 
+    TextView detail_uploader;
+    RatingBar ratingbar;
+    Button FoodClickComment;
     ElegantNumberButton numberButton;
     String get_quanity;
-    RatingBar ratingbar;
-    String rating_float;
-    DatabaseReference database_ref = FirebaseDatabase.getInstance().getReference("all_uploaded_image");
+
 
     FirebaseAuth m_auth = FirebaseAuth.getInstance();
     String my_uid = m_auth.getCurrentUser().getUid();
 
+    //CheckWithSameCookerToCart helper
     DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference("shopping_cart").child(my_uid);
+    String find_uuid;
 
-    TextView detail_uploader;
-
-    ArrayList<Comment> list_rating;
+    //comment activity
     CommentAdapter adapter;
-    RecyclerView recyclerView;
-    public Button FoodClickComment;
     public static final String READ_RANDOM_KEY = "NoRandomKey";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -87,7 +89,7 @@ public class Detail_Activity extends AppCompatActivity  {
         uploader_uid = getIntent().getStringExtra(EXTRA_UUID);
         key = getIntent().getStringExtra(EXTRA_KEY);
         rating_float = getIntent().getStringExtra(EXTRA_RATING);
-        Query get_key = database_ref.child(key);
+        Query get_key = findKeyRef.child(key);
 
         Button detail_atc = findViewById(R.id.detail_atc);
         ImageView detail_img = findViewById(R.id.img_detail);
@@ -121,10 +123,6 @@ public class Detail_Activity extends AppCompatActivity  {
         detail_des.setText(description);
         ratingbar.setRating(Float.parseFloat(rating_float));
 
-        //recyclerView = (RecyclerView) findViewById(R.id.commented_recyclerView);
-        //loadAllRatingComment();
-
-
         //only detail could view these info
         get_key.addValueEventListener(new ValueEventListener() {
             @Override
@@ -140,7 +138,7 @@ public class Detail_Activity extends AppCompatActivity  {
         detail_atc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, my_uid + uploader_uid);
+                Log.d("Detail_debug", my_uid + uploader_uid);
                 if (my_uid.equals(uploader_uid)) {//cannot add your food
                     Toast.makeText(Detail_Activity.this, "You cannot add your prepared food in to cart.", Toast.LENGTH_SHORT).show();
                 } else {
@@ -151,31 +149,41 @@ public class Detail_Activity extends AppCompatActivity  {
     }
 
     public void CheckWithSameCookerToCart(){
-        Query query = FirebaseDatabase.getInstance().getReference("shopping_cart").child(my_uid);
-        query.addValueEventListener(new ValueEventListener() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("shopping_cart").child(my_uid);
+        ref.addValueEventListener(new ValueEventListener() {
+            boolean processDone = false;
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //Log.d("DTAG", "s:" + dataSnapshot.getChildrenCount());
-                if (dataSnapshot.getChildrenCount() != 0){ //if exist
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                    Date date = new Date();
-                    String mofDate = dateFormat.format(date);
-                    double subTTL = Double.parseDouble(price) * Integer.parseInt(numberButton.getNumber());
+                Log.d("Detail_debug","+" + dataSnapshot.getChildrenCount());
+                if(!processDone) {
+                    if (dataSnapshot.getChildrenCount() != 0) { //if exist
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        Date date = new Date();
+                        String mofDate = dateFormat.format(date);
+                        double subTTL = Double.parseDouble(price) * Integer.parseInt(numberButton.getNumber());
 
-                    //shopping cart exist
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        ShoppingCart sc = snapshot.getValue(ShoppingCart.class);
-                        if (sc.getUploader_uid().equals(uploader_uid)) { //same uploader
-                            Toast.makeText(Detail_Activity.this, name + ": has been added To cart", Toast.LENGTH_SHORT).show();
+                        //shopping cart exist
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            ShoppingCart sc = snapshot.getValue(ShoppingCart.class);
+                            find_uuid = sc.getUploader_uid();
+                        }
+
+                        if (find_uuid.equals(uploader_uid)) { //items are same cooker
+                            Toast.makeText(Detail_Activity.this, name + ": has been added To cart.", Toast.LENGTH_SHORT).show();
                             ShoppingCart atc = new ShoppingCart(name, price, Integer.parseInt(numberButton.getNumber()), imageUrl, mofDate, subTTL, my_uid, uploader_uid, key);
                             cartListRef.child(name).setValue(atc);
-                        } else
-                            Toast.makeText(Detail_Activity.this, "Your cannot add item with different cooker(s) in shopping cart", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(Detail_Activity.this, "You cannot add item with different cooker(s) in shopping cart", Toast.LENGTH_SHORT).show();
+
+                        }
+                        processDone = true;
+                    } else { //cart empty
+                        AddItemToEmptyCart();
+                        processDone = true;
                     }
                 }
-                else{ //cart empty
-                    AddItemToEmptyCart();
-                }
+                processDone = true;
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -185,7 +193,6 @@ public class Detail_Activity extends AppCompatActivity  {
     public void AddItemToEmptyCart(){
         DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("shopping_cart");
         DatabaseReference usr_uid = cartListRef.child(m_auth.getCurrentUser().getUid());
-        DatabaseReference product = usr_uid.child(name);
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
@@ -195,34 +202,6 @@ public class Detail_Activity extends AppCompatActivity  {
 
         ShoppingCart sc = new ShoppingCart(name, price, Integer.parseInt(numberButton.getNumber()), imageUrl, mofDate, subTTL, my_uid, uploader_uid, key);
         usr_uid.child(name).setValue(sc);
-    }
-
-
-    public void loadAllRatingComment(){
-        LinearLayoutManager lm = new LinearLayoutManager(Detail_Activity.this);
-        recyclerView.setLayoutManager(lm);
-
-        DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("comment").child(key);
-        list_rating = new ArrayList<>();
-
-        cartListRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //if(dataSnapshot.exists()) {
-                    list_rating.clear();
-                    for(DataSnapshot ds: dataSnapshot.getChildren()){
-                        Comment comment = ds.getValue(Comment.class);
-                        list_rating.add(comment);
-                        adapter = new CommentAdapter(Detail_Activity.this, list_rating);
-                        recyclerView.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
-                    }
-                //}
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-
     }
 
 }

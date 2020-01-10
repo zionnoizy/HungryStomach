@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.hungrystomach.Adapter.SellerFoodListAdapter;
 import com.example.hungrystomach.Model.BuyerFoodList;
 import com.example.hungrystomach.Model.FCMToken;
+import com.example.hungrystomach.Model.Receipt;
 import com.example.hungrystomach.Model.UnRating;
 import com.example.hungrystomach.Model.SellerFoodList;
 import com.example.hungrystomach.Model.User;
@@ -46,6 +47,14 @@ import static com.example.hungrystomach.Adapter.RequestAdapter.EXTRA_RANDOM_KEY;
 
 public class Status_Update_Activity extends AppCompatActivity {
 
+    String request_num;
+    String random_key;
+    String buyer_uid;
+    String cooker_uid;
+
+    RecyclerView recyclerView;
+    DatabaseReference get_foodlist;
+
     RadioGroup radio_group;
     RadioButton radio_button1, radio_button2, radio_button3;
     Button btn_chat_to;
@@ -54,20 +63,11 @@ public class Status_Update_Activity extends AppCompatActivity {
     APIService api_service;
     private String FCM_SEND_URL = "https://fcm.googleapis.com/";
 
-    String cooker_uid;
-    String buyer_uid;
-    String buyer_name;
     String my_name;
-    String request_num;
-    String random_key;
-    List<BuyerFoodList> buyer_food_list = new ArrayList<>();
+    String buyer_name;
     public static final String EXTRA_HISUID = "NoHisUID";
 
-    //RequestAdapter adapter;
     ArrayList<SellerFoodList> list_request;
-    RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
-    DatabaseReference get_foodlist;
     SellerFoodListAdapter adapter;
 
 
@@ -76,13 +76,15 @@ public class Status_Update_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.status_update);
 
-        request_num = getIntent().getStringExtra(EXTRA_POSITION); //
+        //getStringExtra
+        request_num = getIntent().getStringExtra(EXTRA_POSITION);
         random_key = getIntent().getStringExtra(EXTRA_RANDOM_KEY);
         buyer_uid = getIntent().getStringExtra(EXTRA_BUYER_UID);
         cooker_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         recyclerView = (RecyclerView) findViewById(R.id.ordered_recycler_view);
         get_foodlist = FirebaseDatabase.getInstance().getReference().child("seller_food_list").child(cooker_uid).child(random_key); //need to be query and limit to
+
         //get my name
         DatabaseReference find = FirebaseDatabase.getInstance().getReference().child("users");
         Query query = find.child(cooker_uid);
@@ -97,7 +99,6 @@ public class Status_Update_Activity extends AppCompatActivity {
         });
 
         //get buyer name
-        DatabaseReference buyer = FirebaseDatabase.getInstance().getReference().child("users");
         Query q = find.child(buyer_uid);
         q.addValueEventListener(new ValueEventListener() {
             @Override
@@ -109,7 +110,8 @@ public class Status_Update_Activity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-        Log.d("SU_DEBUG", "z"+request_num+"/"+random_key+"/"+buyer_uid+"/"+cooker_uid+"/"+my_name+"/"+buyer_name);
+
+        //Log.d("SU_DEBUG", "z"+request_num+"/"+random_key+"/"+buyer_uid+"/"+cooker_uid+"/"+my_name+"/"+buyer_name);
         radio_group = findViewById(R.id.rg_due_date);
         radio_button1 = findViewById(R.id.cb_1_receive);
         radio_button2 = findViewById(R.id.cb_2_preparing);
@@ -118,8 +120,7 @@ public class Status_Update_Activity extends AppCompatActivity {
 
 
         radio_group.setOnCheckedChangeListener (new RadioGroup.OnCheckedChangeListener(){
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.cb_1_receive) {
                     for(int i = 0; i < group.getChildCount()-2; i++){
                         ((RadioButton)group.getChildAt(i)).setEnabled(false);
@@ -149,10 +150,9 @@ public class Status_Update_Activity extends AppCompatActivity {
                 }
             }
         });
-
-
         loadSellerRequiteFoodList();
 
+        //Chat to Buyer; putExtra status_update
         btn_chat_to.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,7 +192,7 @@ public class Status_Update_Activity extends AppCompatActivity {
                     switch(radioID) {
                         case R.id.cb_1_receive:
                             Data data = new Data("Order Status Update", "Your Order from " + myname + " receive your order.", cooker_uid, buyerUID, "RequestNotif");
-                            //Log.d("su_debug", "z-cb_1_receive");
+                            //Log.d("su_debug", "receive");
                             Sender sender = new Sender(data, FCMToken.getFcm_token());
                             api_service.sendNotification(sender)
                                     .enqueue(new Callback<Response>() {
@@ -210,7 +210,7 @@ public class Status_Update_Activity extends AppCompatActivity {
                         case R.id.cb_2_preparing:
                             Data data2 = new Data("Order Status Update", "Your Order from " + myname + " preparing your order.", cooker_uid, buyerUID, "RequestNotif");
                             Sender sender2 = new Sender(data2, FCMToken.getFcm_token());
-                            //Log.d("su_debug", "z-cb_2");
+                            //Log.d("su_debug", "preparing");
                             api_service.sendNotification(sender2)
                                     .enqueue(new Callback<Response>() {
                                         @Override
@@ -226,7 +226,7 @@ public class Status_Update_Activity extends AppCompatActivity {
                         case R.id.cb_3_finish:
                             Data data3 = new Data("Order Status Update", "Your Order from " + myname + " finish your order. Please go to Rating Session to rate your favorite food", cooker_uid, buyerUID, "RequestNotif");
                             Sender sender3 = new Sender(data3, FCMToken.getFcm_token());
-                            //Log.d("su_debug", "z-cb_3");
+                            //Log.d("su_debug", "finish");
                             api_service.sendNotification(sender3)
                                     .enqueue(new Callback<Response>() {
                                         @Override
@@ -250,10 +250,30 @@ public class Status_Update_Activity extends AppCompatActivity {
 
     void update_firebase(final String status){
         DatabaseReference seller = FirebaseDatabase.getInstance().getReference().child("request").child(cooker_uid);
-        seller.child(random_key).child("my_status").setValue(status);
+        seller.child(random_key).child("his_status").setValue(status);
+        seller.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Receipt u = dataSnapshot.getValue(Receipt.class);
+                u.setHis_status(status);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
 
         DatabaseReference buyer = FirebaseDatabase.getInstance().getReference().child("receipt").child(buyer_uid);
-        buyer.child(random_key).child("my_status").setValue(status);
+        buyer.child(random_key).child("his_status").setValue(status);
+        buyer.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Receipt u = dataSnapshot.getValue(Receipt.class);
+                u.setHis_status(status);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
     }
 
     public void create_unrating_food(){
@@ -276,9 +296,6 @@ public class Status_Update_Activity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-
-
-
     }
 
     /////////////////////////////////////////////////////////////////////////

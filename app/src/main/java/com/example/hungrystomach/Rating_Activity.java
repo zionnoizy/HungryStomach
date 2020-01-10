@@ -45,6 +45,7 @@ public class Rating_Activity extends AppCompatActivity {
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("unrate").child(my_uid);
         ref.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 list_Un_rating.clear();

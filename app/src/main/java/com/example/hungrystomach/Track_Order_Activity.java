@@ -46,18 +46,19 @@ public class Track_Order_Activity extends AppCompatActivity {
     String transaction_key;
 
     TextView cookername;
+    public static final String EXTRA_COOKER_UID2 = "NoCookerUID";
     TextView cookerplace;
     TextView orderstatus;
     TextView orderdate;
 
-    String cooker_fulladdr_text;
     String my_uid;
-    public static final String EXTRA_COOKER_UID2 = "NoCookerUID";
-    ArrayList<BuyerFoodList> list_request;
+    String cooker_fulladdr_text;
+
     RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
+    ArrayList<BuyerFoodList> list_request;
     DatabaseReference ref;
     BuyerFoodListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +70,7 @@ public class Track_Order_Activity extends AppCompatActivity {
         transaction_key = getIntent().getStringExtra(EXTRA_RECEIPT_KEY);
 
         cookername = findViewById(R.id.order_name);
+        //Chat to Cooker; putExtra track_order
         cookername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

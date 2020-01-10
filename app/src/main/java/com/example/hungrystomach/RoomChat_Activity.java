@@ -54,20 +54,26 @@ import static com.example.hungrystomach.Track_Order_Activity.EXTRA_COOKER_UID2;
 
 public class RoomChat_Activity extends AppCompatActivity {
 
-    String my_uid;
     String his_uid;
-    Boolean notify = true;
+    String my_uid;
+    String receiver_name;
+
     ImageButton send_btn;
     EditText input_message;
     TextView tv_recevier;
-    String receiver_name;
     private RequestQueue requestQueue;
-
-    String whattype = "ChatNotif";
-    List<Chat> chat_list;
-
-    ChatAdapter adapter;
     RecyclerView recyclerView;
+
+    //send_message
+    Boolean notify = true;
+
+    //read_message
+    List<Chat> chat_list;
+    ChatAdapter adapter;
+
+    //send notify
+    String whattype = "ChatNotif";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,13 +88,7 @@ public class RoomChat_Activity extends AppCompatActivity {
         if (previousActivity.equals("track_order")){
             his_uid = getIntent().getStringExtra(EXTRA_COOKER_UID2);
         }
-        send_btn = findViewById(R.id.room_send);
-        input_message = findViewById(R.id.room_message);
-        tv_recevier = findViewById(R.id.sr_receivername);
-
         my_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        requestQueue = Volley.newRequestQueue(getApplicationContext());
-
 
         //get receiver name
         DatabaseReference find = FirebaseDatabase.getInstance().getReference().child("users").child(his_uid);
@@ -102,6 +102,11 @@ public class RoomChat_Activity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+        send_btn = findViewById(R.id.room_send);
+        input_message = findViewById(R.id.room_message);
+        tv_recevier = findViewById(R.id.sr_receivername);
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
+
         recyclerView = (RecyclerView) findViewById(R.id.chatroom_recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -215,7 +220,5 @@ public class RoomChat_Activity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
-
-    //https://www.youtube.com/watch?v=MblszhqIWI8
 
 }

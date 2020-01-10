@@ -63,17 +63,18 @@ public class Upload_Activity extends AppCompatActivity{
     private ImageView img_view;
 
     private Uri image_uri;
-    private StorageReference storage_ref ;
+
     StorageReference sf;
     private DatabaseReference database_ref;
-
-    private ArrayList<Food> entries;
+    private StorageReference storage_ref ;
     private FirebaseAuth m_auth = FirebaseAuth.getInstance();
 
+    /*
     //time
     private SimpleDateFormat mSimpleDataFormat;
     private Calendar mCalender;
     private Button btnDateTime;
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,10 +117,12 @@ public class Upload_Activity extends AppCompatActivity{
             }
         });
 
+        /*
         //time
-        //btnDateTime = findViewById(R.id.choose_time);
-        //btnDateTime.setOnClickListener(textListener);
-        //mSimpleDataFormat = new SimpleDateFormat("MM/dd/yyy hh:mm a", Locale.getDefault());
+        btnDateTime = findViewById(R.id.choose_time);
+        btnDateTime.setOnClickListener(textListener);
+        mSimpleDataFormat = new SimpleDateFormat("MM/dd/yyy hh:mm a", Locale.getDefault());
+        */
 
     }
 
@@ -224,6 +227,7 @@ public class Upload_Activity extends AppCompatActivity{
     Intent i = new Intent(this,Home_Activity.class);
     startActivity(i);
     }
+
     /////////////////////////////////////////////////////////////////////////////
     /*
     private final View.OnClickListener textListener = new View.OnClickListener() {
@@ -262,8 +266,7 @@ public class Upload_Activity extends AppCompatActivity{
             });
         }
     };
-    */
-    /*
+
     private final DatePickerDialog.OnDateSetListener mDataDataSet = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int y, int m, int d) {

@@ -146,7 +146,7 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
         my_uid =FirebaseAuth.getInstance().getCurrentUser().getUid();
         food_name = unRating.getName();
         get_random_key = unRating.getRandom_key();
-        dbRef = FirebaseDatabase.getInstance().getReference().child("comment").child(get_random_key);
+
 
         Glide.with(m_context).load(unRating.getUrl()).into(holder.RatingIcon);
     }
@@ -171,20 +171,25 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
                 float get_cur_rating = u.getRating();
                 if (get_cur_rating == 0.0 && !processDone) {
                     mDatabase.child("rating").setValue(r);
+                    u.setRating(r);
                     processDone = true;
                 }
                 else if (!processDone){
                     mDatabase.child("rating").setValue(r / 5);
+                    u.setRating(r/5);
                     processDone = true;
                 }
+
 
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
         delete_rating(food_name);
+
+        DatabaseReference create_comment = FirebaseDatabase.getInstance().getReference().child("comment").child(random_key);
         Comment one_comment = new Comment(r, comment);
-        dbRef.push().setValue(one_comment);
+        create_comment.push().setValue(one_comment);
 
     }
 
@@ -192,4 +197,6 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.RatingView
         final DatabaseReference delete_rateditem = FirebaseDatabase.getInstance().getReference("unrate").child(my_uid).child(food_name);
         delete_rateditem.removeValue();
     }
+
+
 }

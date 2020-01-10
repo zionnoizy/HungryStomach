@@ -37,6 +37,7 @@ public class Cart_Activity extends AppCompatActivity {
     RecyclerView recycler_view;
     RecyclerView.LayoutManager lm;
     private ArrayList<ShoppingCart> m_listCart;
+
     TextView total_amount, sub_total;
     Button btn_chceckout, btn_delete;
     CartAdapter adapter;
@@ -63,7 +64,6 @@ public class Cart_Activity extends AppCompatActivity {
         adapter = new CartAdapter(this, m_listCart);
         recycler_view.setAdapter(adapter);
 
-
         btn_chceckout = findViewById(R.id.btn_co);
         btn_delete = findViewById(R.id.delete_item);
         sub_total = findViewById(R.id.sub_total);
@@ -87,7 +87,6 @@ public class Cart_Activity extends AppCompatActivity {
             }
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //deleted item
                 adapter.notifyDataSetChanged();
             }
             @Override
@@ -120,11 +119,6 @@ public class Cart_Activity extends AppCompatActivity {
                 }
             }
         });
-    }
-    public void onActivityResult(int requestCode, int resultCode) {
-
-
-
     }
 
 }

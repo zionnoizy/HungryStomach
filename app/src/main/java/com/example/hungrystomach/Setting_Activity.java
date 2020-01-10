@@ -27,26 +27,25 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class Setting_Activity extends AppCompatActivity {
-    FirebaseAuth m_auth;
-    String myuid = m_auth.getInstance().getCurrentUser().getUid();
-    FirebaseUser cur_usrname = m_auth.getInstance().getCurrentUser();
 
-    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-    DatabaseReference usr_uid = ref.child(myuid);
-
+    EditText display_usrname;
+    EditText display_email;
     EditText et_phone;
     EditText et_fullname;
     EditText et_address;
     EditText et_state;
     EditText et_city;
     EditText et_zip;
-    TextView clickupdate;
-    EditText display_usrname;
-    EditText display_email;
     TextView uid;
     TextView close;
     ImageView image_icon;
 
+    FirebaseAuth m_auth;
+    String myuid = m_auth.getInstance().getCurrentUser().getUid();
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+    DatabaseReference usr_uid = ref.child(myuid);
+
+    TextView clickupdate;
     String c_phone;
     String c_fullname;
     String c_address;
@@ -85,7 +84,7 @@ public class Setting_Activity extends AppCompatActivity {
 
         clickupdate = findViewById(R.id.update_info);
 
-        //set info
+        //setText
         Query query = ref.child(myuid);
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -142,16 +141,16 @@ public class Setting_Activity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         try {
                             c_phone = et_phone.getText().toString();
-                            usr_uid.child("phone").setValue(c_phone);
-                            c_address = et_address.getText().toString();
-                            usr_uid.child("address").setValue(c_address);
                             c_state = et_state.getText().toString();
-                            usr_uid.child("state").setValue(c_state);
                             c_city = et_city.getText().toString();
-                            usr_uid.child("city").setValue(c_city);
                             c_zip = et_zip.getText().toString();
-                            usr_uid.child("zip").setValue(c_zip);
+                            c_address = et_address.getText().toString();
 
+                            usr_uid.child("phone").setValue(c_phone);
+                            usr_uid.child("address").setValue(c_address);
+                            usr_uid.child("state").setValue(c_state);
+                            usr_uid.child("city").setValue(c_city);
+                            usr_uid.child("zip").setValue(c_zip);
                             //usr_uid.child("fullName").setValue(c_fullname);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -165,7 +164,6 @@ public class Setting_Activity extends AppCompatActivity {
                 }));
             }
         });
-
 
         //when click close btn
         close.setOnClickListener(new View.OnClickListener() {

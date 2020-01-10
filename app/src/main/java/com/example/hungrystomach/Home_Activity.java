@@ -6,8 +6,11 @@ import android.os.Bundle;
 
 import com.example.hungrystomach.Adapter.TabPagerAdapter;
 import com.example.hungrystomach.Fragment.FromNewFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,6 +18,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,10 +28,6 @@ import android.widget.Toast;
 
 public class Home_Activity extends AppCompatActivity {
 
-    FirebaseAuth m_auth;
-
-    FromNewFragment fragment;
-    NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,14 @@ public class Home_Activity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         configureTabLayout();
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(Home_Activity.this,  new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String mToken = instanceIdResult.getToken();
+                Log.e("token", "find fcm token" + mToken);
+            }
+        });
 
     }
 
@@ -99,7 +107,6 @@ public class Home_Activity extends AppCompatActivity {
 
         tab_lyout.addTab(tab_lyout.newTab().setText("All Food"));
         tab_lyout.addTab(tab_lyout.newTab().setText("From Newest"));
-        //tab_lyout.addTab(tab_lyout.newTab().setText("Search"));
 
         final ViewPager view_pager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tab_lyout.getTabCount());
@@ -122,5 +129,5 @@ public class Home_Activity extends AppCompatActivity {
 
         });
     }
-    //////////////////////////////////////////////////////////////////////////////////
+
 }

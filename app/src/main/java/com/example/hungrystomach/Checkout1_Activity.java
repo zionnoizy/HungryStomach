@@ -53,7 +53,6 @@ public class Checkout1_Activity extends AppCompatActivity {
     public static final String PASS_CITY = "NoCity";
     public static final String PASS_ZIP = "NoZip";
 
-
     //changed info
     String Cname;
     String Cemail;
@@ -100,25 +99,24 @@ public class Checkout1_Activity extends AppCompatActivity {
             }
         });
 
-
-
         but_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Checkout1_Activity.this,"Moving to Payment Method..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Checkout1_Activity.this,"Moving to Payment Method.", Toast.LENGTH_SHORT).show();
                 uid.addListenerForSingleValueEvent((new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         try {
                             Cphone = edit_phone.getText().toString();
-                            uid.child("phone").setValue(Cphone);
                             Caddress = edit_address.getText().toString();
-                            uid.child("address").setValue(Caddress);
                             Cstate = edit_state.getText().toString();
-                            uid.child("state").setValue(Cstate);
                             Ccity = edit_city.getText().toString();
-                            uid.child("city").setValue(Ccity);
                             Czip = edit_zip.getText().toString();
+
+                            uid.child("phone").setValue(Cphone);
+                            uid.child("address").setValue(Caddress);
+                            uid.child("state").setValue(Cstate);
+                            uid.child("city").setValue(Ccity);
                             uid.child("zip").setValue(Czip);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -139,8 +137,6 @@ public class Checkout1_Activity extends AppCompatActivity {
                 intent.putExtra(PASS_TOTAL_AMT, grandT);
                 intent.putExtra(PASS_UPLAODER_UID, uploader_uid);
                 intent.putExtra(PASS_ZIP, Czip);
-
-
                 startActivity(intent);
             }
         });

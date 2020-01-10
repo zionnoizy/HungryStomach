@@ -71,14 +71,13 @@ import retrofit2.Callback;
 
 public class Checkout2_Activity extends AppCompatActivity {
 
-    final int BRAINTREE_REQUEST_CODE = 1; //4949
-    final String TAG = "Braintree_Debug";
-    final String TAG2 = "Notiifcaiton_Debug";
-    final String API_GET_TOKEN = "http://192.168.0.15/braintree/main.php"; //home:192.168.0.15 campus:/10.242.190.183
-    final String API_CHECKOUT = "http://192.168.0.15/braintree/checkout.php";
-
     Button buy_button;
     TextView total_amount;
+
+    final int BRAINTREE_REQUEST_CODE = 1;
+    final String TAG = "Braintree_Debug";
+    final String API_GET_TOKEN = "http://192.168.0.15/braintree/main.php"; //home:192.168.0.15 //pixel:192.168.137.1
+    final String API_CHECKOUT = "http://192.168.0.15/braintree/checkout.php";
 
     String grandT;
     String format_gT;
@@ -89,20 +88,12 @@ public class Checkout2_Activity extends AppCompatActivity {
     String invoice_notif;
     String my_uid = FirebaseAuth.getInstance().getUid();
 
-    private final String CHANNEL_ID = "Invoice Notification";
-    private final int NOTIFICATION_ID = 001;
-    private String FCM_SEND_URL = "https://fcm.googleapis.com/";
-    private RequestQueue mRequestQue;
-    boolean notify = false;
-
     public static final String EXTRA_UPLOADERUID = "NoUploaderUid";
     public static final String EXTRA_AMOUNT_TO_PAY = "NoTotalAmount";
     String random_key;
     String first_status = "not response";
-    APIService api_service;
     List<ShoppingCart> save_food_list = new ArrayList<>();
 
-    final String clientToken = "not_implement_yet";
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkout_payment);
@@ -110,19 +101,13 @@ public class Checkout2_Activity extends AppCompatActivity {
         buy_button = findViewById(R.id.btnBuy);
         total_amount = findViewById(R.id.TTprice);
 
-        get_foodlist();
         grandT = getIntent().getStringExtra(PASS_TOTAL_AMT);
         DecimalFormat df = new DecimalFormat("#.##");
         format_gT = df.format(Double.parseDouble(grandT));
         total_amount.setText("Your total is: $" + format_gT);
+
+        get_foodlist();
         uploader_uid = getIntent().getStringExtra(PASS_UPLAODER_UID);
-
-        /*
-        //choose utnesil and pick up choose
-        choose_utensil = findViewById(R.id.choose_utensil);
-        choose_pickup = findViewById(R.id.choose_pickup);
-        */
-
 
         buy_button.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -130,20 +115,6 @@ public class Checkout2_Activity extends AppCompatActivity {
                 startPayment();
             }
         });
-
-
-        ///////////////////////////////////////////////////////send notification
-        //https://www.androidauthority.com/android-push-notifications-with-firebase-cloud-messaging-925075/
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( Checkout2_Activity.this,  new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String mToken = instanceIdResult.getToken();
-                Log.e(TAG, "what fcm_token?" + mToken);
-            }
-        });
-
-        mRequestQue = Volley.newRequestQueue(this);
-
     }
 
     void startPayment(){
@@ -163,8 +134,7 @@ public class Checkout2_Activity extends AppCompatActivity {
 
     public void onBraintreeSubmit(String responseToken){
         DropInRequest dropInRequest = new DropInRequest().clientToken(responseToken);
-        Log.d(TAG, "Submiting to BrainTree.. " + responseToken);
-
+        Log.d(TAG, "Submiting to BrainTree. " + responseToken);
         startActivityForResult(dropInRequest.getIntent(this), BRAINTREE_REQUEST_CODE);
     }
 
@@ -175,8 +145,7 @@ public class Checkout2_Activity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
                 String paymentMethodNonce = result.getPaymentMethodNonce().getNonce();
-                //Log.d(TAG, "Nonce.. " + paymentMethodNonce);
-
+                Log.d(TAG, "Nonce " + paymentMethodNonce);
 
                 if(!format_gT.isEmpty())
                     submitNonce(paymentMethodNonce);
@@ -200,7 +169,7 @@ public class Checkout2_Activity extends AppCompatActivity {
         client.post(API_CHECKOUT, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                //Log.e(TAG, "Payment Made Successuffly= " + statusCode + "headers" + headers + "response body" + responseBody);
+                //Log.e(TAG, "Payment Made Successuffly " + statusCode + "headers" + headers + "response body" + responseBody);
                 buyer_receipt();
                 create_bc_foodlist();
                 cooker_request();
@@ -221,8 +190,6 @@ public class Checkout2_Activity extends AppCompatActivity {
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////
-
-
     void buyer_receipt(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mmaa", Locale.getDefault());
         String currentDateandTime = sdf.format(new Date());
@@ -238,7 +205,7 @@ public class Checkout2_Activity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
         random_key = ref.push().getKey();
-        Receipt one_receipt = new Receipt (my_uid, username, uploader_uid, Double.parseDouble(grandT), currentDateandTime, 0, save_food_list, first_status, invoice_entry_no+1, random_key);
+        Receipt one_receipt = new Receipt (my_uid, username, uploader_uid, Double.parseDouble(format_gT), currentDateandTime, 0, save_food_list, first_status, invoice_entry_no+1, random_key);
         ref.child(random_key).setValue(one_receipt);
 
         invoice_notif = getString(R.string.invoice_text, username, grandT, currentDateandTime);
@@ -272,13 +239,6 @@ public class Checkout2_Activity extends AppCompatActivity {
         });
     }
 
-    public void updateToken(String token){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("FCMToken").child(uploader_uid);
-        FCMToken mFCMToken = new FCMToken(token);
-        String new_token = mFCMToken.getFcm_token();
-        ref.child("fcm_token").setValue(new_token);
-        Log.d(TAG, "renew uploader uid: " + uploader_uid + " to " + new_token);
-    }
 
     //https://stackoverflow.com/questions/47854504/how-to-add-and-retrieve-data-into-firebase-using-lists-arraylists
     public void cooker_request(){
@@ -297,11 +257,9 @@ public class Checkout2_Activity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
-        Request rq = new Request (save_food_list, my_uid, dateTime, Double.parseDouble(grandT), first_status, uploader_uid, request_entry_no+1, random_key); //image_url
+        Request rq = new Request (save_food_list, my_uid, dateTime, Double.parseDouble(format_gT), first_status, uploader_uid, request_entry_no+1, random_key); //image_url
         new_request_db.child(random_key).setValue(rq);
     }
-
-
 
     public void get_foodlist(){
         Query q1 = FirebaseDatabase.getInstance().getReference("shopping_cart").child(my_uid);
@@ -320,6 +278,5 @@ public class Checkout2_Activity extends AppCompatActivity {
              public void onCancelled(@NonNull DatabaseError databaseError) { }
          });
     }
-
 
 }

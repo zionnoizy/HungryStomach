@@ -55,7 +55,7 @@ public class SellerFoodListAdapter extends RecyclerView.Adapter<SellerFoodListAd
         SellerFoodList sfl = m_listFood.get(position);
         Glide.with(m_context).load(sfl.getUrl()).into(holder.SFLIMAGE);
         holder.SFLNAME.setText(sfl.getName());
-        holder.SFLPRICE.setText(sfl.getProduct_price());
+        holder.SFLPRICE.setText(" $" + sfl.getProduct_price());
         holder.SFLQUANTITY.setText("x " + sfl.getQuantity());
     }
 

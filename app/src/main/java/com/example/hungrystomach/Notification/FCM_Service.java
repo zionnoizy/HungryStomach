@@ -83,27 +83,3 @@ public class FCM_Service extends FirebaseMessagingService {
         notifMger.notify(1, nBuilder.build());
     }
 }
-
-//remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody()
-/*
-if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){ //show in Activity?
-            NotificationChannel nChannel = new NotificationChannel(getString(R.string.default_notification_channel_id), "notifications", NotificationManager.IMPORTANCE_DEFAULT);
-            Log.e(TAG, "send_Notification: "+ nChannel);
-            //if (mChannel == null)
-            nChannel.setDescription("Your Invoice");
-            nChannel.enableLights(true);
-            nChannel.setLightColor(Color.BLUE);
-            nChannel.setVibrationPattern(new long[]{1,1000,500,1000});
-            nm.createNotificationChannel(nChannel);
-        }
- */
-
-
-/*
-CreateChannel notif1 = new CreateChannel(this);
-NotificationCompat.Builder nBuilder = new notif1.getNotification1(title, body, pI, sound_uri, icon);//
- */
-
-/*
-remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody()
- */

@@ -233,13 +233,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void GenerateToken(){
         FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = m_auth.getCurrentUser().getUid();
 
         mUser.getIdToken(true)
                 .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if (task.isSuccessful()) {
-                            String idToken = task.getResult().getToken();
+
                             String fcm_token = FirebaseInstanceId.getInstance().getToken();
                             String uid = m_auth.getCurrentUser().getUid();
 
@@ -247,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
                             DatabaseReference id = ref.child(uid);
 
                             FCMToken FCMToken = new FCMToken(fcm_token);
+                            Log.e("Main_Debug", "token" , task.getException());
                             id.setValue(FCMToken);
 
                         } else {
@@ -269,7 +269,6 @@ public class MainActivity extends AppCompatActivity {
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users").child(id);
                     ref.child("full_name").setValue("empty");
                 }
-
             }
 
             @Override

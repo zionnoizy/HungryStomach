@@ -30,8 +30,8 @@ public class Read_Comment_Activity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     String my_uid;
-
     String item_random_key;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

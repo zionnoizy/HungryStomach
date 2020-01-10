@@ -24,12 +24,13 @@ import java.util.List;
 
 public class Request_Activity extends AppCompatActivity {
 
-    List<Request> list_request;
-    RequestAdapter adapter;
-    RecyclerView recyclerView;
-
     String my_uid;
+
+    RecyclerView recyclerView;
+    List<Request> list_request;
     DatabaseReference ref;
+    RequestAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

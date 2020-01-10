@@ -51,14 +51,9 @@ import static com.example.hungrystomach.Checkout2_Activity.EXTRA_UPLOADERUID;
 public class Checkout3_Activity extends AppCompatActivity {
 
     Button back;
-
     String my_uid;
     String his_uid;
     String grant_total;
-    int invoice_entry_no=0;
-    int request_entry_no=0;
-    String first_status = "not response";
-    String random_key;
 
     //notification
     private final String CHANNEL_ID = "Receipt Notification";
@@ -68,7 +63,6 @@ public class Checkout3_Activity extends AppCompatActivity {
     private String FCM_SEND_URL = "https://fcm.googleapis.com/";
     APIService api_service;
 
-    List<ShoppingCart> food_list;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,18 +74,16 @@ public class Checkout3_Activity extends AppCompatActivity {
         grant_total = getIntent().getStringExtra(EXTRA_AMOUNT_TO_PAY);
 
         send_buyer_notif();
+        delete_foodlist();
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent home = new Intent(Checkout3_Activity.this, Home_Activity.class);
                 startActivity(home);
-                delete_foodlist();
                 finish();
             }
         });
-
-        //show Google Map if available
 
     }
 
@@ -127,13 +119,12 @@ public class Checkout3_Activity extends AppCompatActivity {
 
     void send_seller_notif(final String hisUID, final String name){
         notify = true;
-
         api_service = Client.getRetrofit(FCM_SEND_URL).create(APIService.class);
-
         DatabaseReference find_fcm = FirebaseDatabase.getInstance().getReference("FCMToken");
 
         Query query = find_fcm.orderByKey().equalTo(his_uid);
         query.addValueEventListener(new ValueEventListener() {
+            boolean processDone = false;
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
@@ -147,12 +138,11 @@ public class Checkout3_Activity extends AppCompatActivity {
                             .enqueue(new Callback<Response>() {
                                 @Override
                                 public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                                    Log.d("C3_D", response + " sent "+ call);
+                                    Log.d("Checkout3_debug", response + " sent "+ call);
                                 }
-
                                 @Override
                                 public void onFailure(Call<Response> call, Throwable t) {
-                                    Log.d("C3_D", t + " not send "+ call);
+                                    Log.d("Checkout3_debug", t + " not send "+ call);
                                 }
                             });
                 }
@@ -167,14 +157,30 @@ public class Checkout3_Activity extends AppCompatActivity {
         FCMToken mFCMToken = new FCMToken(token);
         String new_token = mFCMToken.getFcm_token();
         ref.child("fcm_token").setValue(new_token);
-        Log.d("C3_D", "renew uploader uid: " + his_uid + " to " + new_token);
+        Log.d("Checkout3_debug", "renew uploader uid: " + his_uid + " to " + new_token);
     }
 
     public void delete_foodlist(){
-        final DatabaseReference delete_allitem = FirebaseDatabase.getInstance().getReference("shopping_cart");
-        delete_allitem.child(my_uid).removeValue();
-    }
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        Query applesQuery = ref.child("shopping_cart").child(my_uid);
+        applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            boolean processDone = false;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!processDone) {
+                    for (DataSnapshot appleSnapshot : dataSnapshot.getChildren()) {
+                        appleSnapshot.getRef().removeValue();
+                        processDone = true;
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Checkout3_debug", "onCancelled", databaseError.toException());
+            }
+        });
 
+    }
 
 
 

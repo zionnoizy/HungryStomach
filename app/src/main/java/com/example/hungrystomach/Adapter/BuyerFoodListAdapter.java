@@ -58,7 +58,7 @@ public class BuyerFoodListAdapter extends RecyclerView.Adapter<BuyerFoodListAdap
         BuyerFoodList bfl = m_listFood.get(position);
         Glide.with(m_context).load(bfl.getUrl()).into(holder.BFLIMAGE);
         holder.BFLNAME.setText(bfl.getName());
-        holder.BFLPRICE.setText("$" + bfl.getProduct_price());
+        holder.BFLPRICE.setText(" $" + bfl.getProduct_price());
         holder.BFLQUANTITY.setText("x " + bfl.getQuantity());
     }
 

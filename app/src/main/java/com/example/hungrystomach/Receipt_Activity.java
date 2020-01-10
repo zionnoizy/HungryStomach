@@ -24,20 +24,19 @@ import java.util.List;
 
 public class Receipt_Activity extends AppCompatActivity {
 
-    ReceiptAdapter adapter;
-    RecyclerView recyclerView;
-
-    List<Receipt> list_receipt;
-    FirebaseAuth m_auth;
-    DatabaseReference receipt_ref;
     String my_uid;
     String my_name;
+
+    List<Receipt> list_receipt;
+    RecyclerView recyclerView;
+    ReceiptAdapter adapter;
+
+    DatabaseReference receipt_ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.receipt_main);
-
 
         my_uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -48,7 +47,6 @@ public class Receipt_Activity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User u = dataSnapshot.getValue(User.class);
                 my_name = u.getUsername();
-                Log.d("recepipt_", "AA" + my_name);
                 Toolbar toolbar = findViewById(R.id.receipt_toolbar);
                 toolbar.setTitle(my_name + "'s Receipt");
                 setSupportActionBar(toolbar);
@@ -56,12 +54,6 @@ public class Receipt_Activity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-
-
-
-
-
-
 
         recyclerView = (RecyclerView) findViewById(R.id.receipt_recycler_view);
         loadReceipt();
